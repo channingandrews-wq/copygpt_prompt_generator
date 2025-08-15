@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campaign Builder Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    .hidden { display: none; }
+    label { font-weight: bold; margin-top: 1em; display: block; }
+    select, textarea, input[type="text"], input[type="date"], input[type="number"], input[type="checkbox"] { width: 100%; max-width: 500px; margin-bottom: 1em; }
+    .section { margin-bottom: 2em; border-bottom: 1px solid #eee; padding-bottom: 2em; }
+    .response-box { background: #f4f4f4; border-radius: 6px; padding: 1em; margin-top: 2em; }
+  </style>
+</head>
+<body>
+  <h1>Campaign Builder Form</h1>
+  <form id="campaignForm" onsubmit="event.preventDefault(); generateResponse();">
+    <!-- Audience -->
+    <div class="section">
+      <label for="audience">What audience are you building your campaign for?</label>
+      <select id="audience" name="audience" onchange="toggleConsumerSection()">
+        <option value="">Select an audience</option>
+        <option value="Consumer">Consumer</option>
+        <option value="Dasher">Dasher</option>
+        <option value="Merchant">Merchant</option>
+      </select>
+    </div>
+
+    <!-- Consumer Section -->
+    <div id="consumer-section" class="section hidden">
+      <label for="channel">What channel is your campaign?</label>
+      <select id="channel" name="channel" onchange="toggleChannelSection()">
+        <option value="">Select a channel</option>
+        <option value="Email">Email</option>
+        <option value="Push">Push</option>
+      </select>
+    </div>
+
+    <!-- Channel Section -->
+    <div id="channel-section" class="section hidden">
+      <label for="segment">What is your Audience Segment?</label>
+      <select id="segment" name="segment">
+        <option value="">Select a segment</option>
+        <option value="Active Consumer">Active Consumer</option>
+        <option value="Churned Consumer">Churned Consumer</option>
+        <option value="DashPass Member">DashPass Member</option>
+        <option value="Dormant Consumer">Dormant Consumer</option>
+        <option value="New Consumer">New Consumer</option>
+      </select>
+
+      <label for="mindset">
+        What has this user done or not done recently? What’s their current mindset or situation? <br>
+        <span style="font-weight:normal;font-size:smaller;">(Begin your answer with “who…?”)</span>
+      </label>
+      <textarea id="mindset" name="mindset" rows="3" placeholder='who...'></textarea>
+
+      <label for="submarkets">Is this campaign specific to a specific set of submarkets?</label>
+      <textarea id="submarkets" name="submarkets" rows="2"></textarea>
+
+      <label for="usecase">What is your Use Case?</label>
+      <select id="usecase" name="usecase">
+        <option value="">Select a use case</option>
+        <option value="Convert New Customers">Convert New Customers</option>
+        <option value="Reactivate Dormant Users">Reactivate Dormant Users</option>
+        <option value="Apology/Trust Recovery">Apology/Trust Recovery</option>
+        <option value="Promote New Feature, Service, Mx">Promote New Feature, Service, Mx</option>
+        <option value="Drive Promo Redemptions">Drive Promo Redemptions</option>
+        <option value="Non-monetary engagement">Non-monetary engagement</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="msgObjective">Provide the message objective of this campaign. What do you want them to do? What method, offer, or feature supports that action?</label>
+      <textarea id="msgObjective" name="msgObjective" rows="2"></textarea>
+
+      <label for="highlightFeature">Is there a feature or service you want to highlight in this campaign?</label>
+      <textarea id="highlightFeature" name="highlightFeature" rows="2"></textarea>
+
+      <label for="businessLine">What line of business is this focused on?</label>
+      <select id="businessLine" name="businessLine">
+        <option value="">Select a business line</option>
+        <option value="Restaurant">Restaurant</option>
+        <option value="Grocery & Convenience">Grocery & Convenience</option>
+        <option value="Retail">Retail</option>
+        <option value="Alcohol">Alcohol</option>
+        <option value="N/A">N/A</option>
+      </select>
+
+      <label for="primaryCTA">What is your primary CTA?</label>
+      <select id="primaryCTA" name="primaryCTA">
+        <option value="">Select a CTA</option>
+        <option value="Order now">Order now</option>
+        <option value="Get DashPass">Get DashPass</option>
+        <option value="Sign up">Sign up</option>
+        <option value="Upgrade now">Upgrade now</option>
+        <option value="Activate now">Activate now</option>
+        <option value="Shop now">Shop now</option>
+        <option value="Order drinks">Order drinks</option>
+        <option value="Shop gifts">Shop gifts</option>
+        <option value="See deals">See deals</option>
+      </select>
+
+      <label for="hasPromotion">Is there a promotion tied to your campaign?</label>
+      <select id="hasPromotion" name="hasPromotion" onchange="togglePromotionSection()">
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+    </div>
+
+    <!-- Promotion Section -->
+    <div id="promotion-section" class="section hidden">
+      <label for="promoType">Promotion Type</label>
+      <input type="text" id="promoType" name="promoType">
+
+      <label for="otherPromoType">Other Promo Type (optional)</label>
+      <input type="text" id="otherPromoType" name="otherPromoType">
+
+      <label for="promoStart">Start Date (mm/dd/yy)</label>
+      <input type="text" id="promoStart" name="promoStart" placeholder="mm/dd/yy">
+
+      <label for="promoEnd">End Date (mm/dd/yy)</label>
+      <input type="text" id="promoEnd" name="promoEnd" placeholder="mm/dd/yy">
+
+      <label for="discountLevel">Discount Level</label>
+      <input type="text" id="discountLevel" name="discountLevel">
+
+      <label for="minSubtotal">Minimum Subtotal</label>
+      <input type="text" id="minSubtotal" name="minSubtotal">
+
+      <label for="maxDiscount">Max Discount</label>
+      <input type="text" id="maxDiscount" name="maxDiscount">
+
+      <label for="pickup">Pickup?</label>
+      <select id="pickup" name="pickup">
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+
+      <label for="code">CODE</label>
+      <input type="text" id="code" name="code">
+
+      <label for="dashPassOnly">DashPass Only?</label>
+      <select id="dashPassOnly" name="dashPassOnly">
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <!-- Secondary Module Section (moved to appear after channel is selected) -->
+    <div id="secondarymodule-section" class="section hidden">
+      <label for="hasSecondaryModule">Is there a secondary module needed for your campaign?</label>
+      <select id="hasSecondaryModule" name="hasSecondaryModule" onchange="toggleSecondarySection()">
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+    </div>
+
+    <div id="secondary-section" class="section hidden">
+      <label for="secondaryObjective">Provide the message objective of this secondary module? What do you want them to do? What method, offer, or feature supports that action?</label>
+      <textarea id="secondaryObjective" name="secondaryObjective" rows="2"></textarea>
+
+      <label for="secondaryBusinessLine">What line of business is this focused on?</label>
+      <select id="secondaryBusinessLine" name="secondaryBusinessLine">
+        <option value="">Select a business line</option>
+        <option value="Restaurant">Restaurant</option>
+        <option value="Grocery & Convenience">Grocery & Convenience</option>
+        <option value="Retail">Retail</option>
+        <option value="Alcohol">Alcohol</option>
+        <option value="N/A">N/A</option>
+      </select>
+
+      <label for="secondaryCTA">What is your CTA for this secondary module?</label>
+      <select id="secondaryCTA" name="secondaryCTA">
+        <option value="">Select a CTA</option>
+        <option value="Order now">Order now</option>
+        <option value="Get DashPass">Get DashPass</option>
+        <option value="Sign up">Sign up</option>
+        <option value="Upgrade now">Upgrade now</option>
+        <option value="Activate now">Activate now</option>
+        <option value="Shop now">Shop now</option>
+        <option value="Order drinks">Order drinks</option>
+        <option value="Shop gifts">Shop gifts</option>
+        <option value="See deals">See deals</option>
+      </select>
+    </div>
+
+    <input type="submit" value="Generate Campaign Response">
+  </form>
+
+  <div id="response" class="response-box hidden"></div>
+
+  <script>
+    function toggleConsumerSection() {
+      var audience = document.getElementById('audience').value;
+      var consumerSection = document.getElementById('consumer-section');
+      consumerSection.classList.toggle('hidden', audience !== 'Consumer');
+      document.getElementById('channel-section').classList.add('hidden');
+      document.getElementById('secondarymodule-section').classList.add('hidden');
+      document.getElementById('secondary-section').classList.add('hidden');
+    }
+    function toggleChannelSection() {
+      var channel = document.getElementById('channel').value;
+      var showChannelSection = (channel === 'Email' || channel === 'Push');
+      document.getElementById('channel-section').classList.toggle('hidden', !showChannelSection);
+      // Show secondary module section after selecting channel
+      document.getElementById('secondarymodule-section').classList.toggle('hidden', !showChannelSection);
+      document.getElementById('secondary-section').classList.add('hidden');
+    }
+    function togglePromotionSection() {
+      var hasPromotion = document.getElementById('hasPromotion').value;
+      document.getElementById('promotion-section').classList.toggle('hidden', hasPromotion !== 'Yes');
+    }
+    function toggleSecondarySection() {
+      var hasSecondary = document.getElementById('hasSecondaryModule').value;
+      document.getElementById('secondary-section').classList.toggle('hidden', hasSecondary !== 'Yes');
+    }
+
+    function generateResponse() {
+      const audience = document.getElementById('audience').value;
+      const channel = document.getElementById('channel').value;
+      const segment = document.getElementById('segment').value;
+      const mindset = document.getElementById('mindset').value;
+      const submarkets = document.getElementById('submarkets').value;
+      const usecase = document.getElementById('usecase').value;
+      const msgObjective = document.getElementById('msgObjective').value;
+      const highlightFeature = document.getElementById('highlightFeature').value;
+      const businessLine = document.getElementById('businessLine').value;
+      const primaryCTA = document.getElementById('primaryCTA').value;
+
+      const hasPromotion = document.getElementById('hasPromotion').value;
+      let promoText = '';
+      if (hasPromotion === 'Yes') {
+        promoText = ` Promotion details:
+        Type: ${document.getElementById('promoType').value}
+        Other Type: ${document.getElementById('otherPromoType').value}
+        Start: ${document.getElementById('promoStart').value}
+        End: ${document.getElementById('promoEnd').value}
+        Discount: ${document.getElementById('discountLevel').value}
+        Min Subtotal: ${document.getElementById('minSubtotal').value}
+        Max Discount: ${document.getElementById('maxDiscount').value}
+        Pickup: ${document.getElementById('pickup').value}
+        Code: ${document.getElementById('code').value}
+        DashPass Only: ${document.getElementById('dashPassOnly').value}`;
+      }
+
+      const hasSecondaryModule = document.getElementById('hasSecondaryModule').value;
+      let secondaryText = '';
+      if (hasSecondaryModule === 'Yes') {
+        secondaryText = `Also include a secondary message where the objective is "${document.getElementById('secondaryObjective').value}" focused on "${document.getElementById('secondaryBusinessLine').value}" and cta should be "${document.getElementById('secondaryCTA').value}".`;
+      }
+
+      let response = `I need an ${channel} for our DoorDash ${audience} Retention team targeting ${segment} ${mindset} in ${submarkets}. Use Case: ${usecase} Objective: ${msgObjective} Highlight: ${highlightFeature} Vertical: ${businessLine} CTA: ${primaryCTA}.`;
+
+      if (promoText) response += "\n" + promoText;
+      if (secondaryText) response += "\n" + secondaryText;
+
+      document.getElementById('response').classList.remove('hidden');
+      document.getElementById('response').textContent = response;
+    }
+  </script>
+</body>
+</html>
