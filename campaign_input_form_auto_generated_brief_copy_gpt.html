@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CopyGPT Campaign Intake</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #121822;
+      --text: #e6eef8;
+      --muted: #a9b4c2;
+      --accent: #4da3ff;
+      --danger: #ff6b6b;
+      --ok: #20c997;
+      --border: #1f2733;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, #0b0f14 0%, #0d131b 60%, #0b0f14 100%);
+      color: var(--text);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 28px; margin: 0 0 8px; letter-spacing: 0.3px; }
+    p.lead { margin: 0 0 24px; color: var(--muted); }
+
+    form { display: grid; gap: 14px; }
+    fieldset { border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: var(--panel); }
+    legend { padding: 0 8px; color: var(--muted); }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .row-1 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    .desc { font-weight: 500; color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    input[type="text"], input[type="date"], input[type="search"], select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: #0f1520; color: var(--text); }
+    textarea { min-height: 100px; resize: vertical; }
+
+    .hint { font-size: 12px; color: var(--muted); }
+    .required::after { content: " *"; color: var(--danger); font-weight: 700; }
+
+    .note { background: #0e1724; border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 10px; color: var(--muted); }
+
+    .error { color: var(--danger); font-size: 13px; margin-top: 6px; display: none; }
+    .hidden { display: none !important; }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    button { appearance: none; border: 1px solid var(--border); background: #101827; color: var(--text); padding: 10px 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    button.primary { background: linear-gradient(135deg, #3d8bfd, #4da3ff); border: none; }
+    button.ghost { background: transparent; }
+
+    .output { white-space: pre-wrap; background: #0e1420; border: 1px dashed #2b3646; border-radius: 12px; padding: 14px; min-height: 120px; }
+    .support-msg { color: var(--danger); font-weight: 600; }
+
+    /* compact date placeholders */
+    input[type="date"]::-webkit-datetime-edit { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CopyGPT Campaign Intake</h1>
+    <p class="lead">Fill out the form. Fields marked with * are required. Visibility updates as you choose options.</p>
+
+    <form id="intakeForm" novalidate>
+      <!-- Audience -->
+      <fieldset>
+        <legend>Audience</legend>
+        <div class="row">
+          <div>
+            <label for="audience" class="required">What audience are you building your campaign for?</label>
+            <select id="audience" required>
+              <option value="" selected disabled>Select audience</option>
+              <option>Consumer</option>
+              <option>Dasher</option>
+              <option>Merchant</option>
+            </select>
+            <div class="error" id="audienceErr">Audience is required.</div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Consumer-only block -->
+      <fieldset id="consumerBlock" class="hidden">
+        <legend>Consumer Campaign Details</legend>
+        <div class="row">
+          <div>
+            <label for="channel" class="required">What channel is your campaign?</label>
+            <select id="channel" required>
+              <option value="" selected disabled>Select channel</option>
+              <option>Email</option>
+              <option>Push Notification</option>
+              <option>Paid Media</option>
+              <option>Organic Social</option>
+              <option>Long-Form Content</option>
+              <option>In-app Merchandising</option>
+            </select>
+            <div class="error" id="channelErr">Channel is required.</div>
+          </div>
+        </div>
+        <div id="unsupportedMsg" class="note hidden">
+          <span class="support-msg">CopyGPT does not currently support these channels.</span>
+        </div>
+
+        <!-- Email/Push only block -->
+        <div id="epBlock" class="hidden">
+          <div class="row">
+            <div>
+              <label for="segment" class="required">What is your Audience Segment?</label>
+              <select id="segment" required>
+                <option value="" selected disabled>Select segment</option>
+                <option>Active Consumer</option>
+                <option>Churned Consumer</option>
+                <option>DashPass Member</option>
+                <option>Dormant Consumer</option>
+                <option>New Consumer</option>
+              </select>
+              <div class="error" id="segmentErr">Audience Segment is required.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="behavior" class="required">What has this user done or not done recently? What’s their current mindset or situation?</label>
+              <textarea id="behavior" placeholder="Start with ‘who…?’ e.g., who haven’t ordered in 30 days and are craving convenience" required></textarea>
+              <div class="hint">Please start your response with "who".</div>
+              <div class="error" id="behaviorErr">This field is required and must start with "who".</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="submarkets" class="required">Is this campaign specific to a specific set of submarkets?</label>
+              <textarea id="submarkets" placeholder="e.g., Phoenix, Denver, Minneapolis" required></textarea>
+              <div class="error" id="submarketsErr">This field is required.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="usecase" class="required">What is your Use Case?</label>
+              <select id="usecase" required>
+                <option value="" selected disabled>Select use case</option>
+                <option>Convert New Customers</option>
+                <option>Reactivate Dormant Users</option>
+                <option>Apology/Trust Recovery</option>
+                <option>Promote New Feature, Service, Mx</option>
+                <option>Drive Promo Redemptions</option>
+                <option>Non-monetary engagement</option>
+                <option>Other</option>
+              </select>
+              <div class="error" id="usecaseErr">Use Case is required.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="objective">Provide the message objective of this campaign.</label>
+              <textarea id="objective" placeholder="e.g., Remind lapsed users of quick grocery delivery"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="action" class="required">What action do you want the consumer to take?</label>
+              <textarea id="action" placeholder="What do you want them to do? What method, offer, or feature supports that action?" required></textarea>
+              <div class="error" id="actionErr">This field is required.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="takeaway" class="required">What is the most important takeaway for the consumer?</label>
+              <textarea id="takeaway" placeholder="What's the one thing you want them to remember? Is there a claim or value prop to substantiate it?" required></textarea>
+              <div class="error" id="takeawayErr">This field is required.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="feature">Is there a feature or service you want to highlight in this campaign?</label>
+              <textarea id="feature" placeholder="e.g., Snap EBT on grocery, DoubleDash, saved addresses"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="lob">What line of business is this focused on?</label>
+              <select id="lob">
+                <option value="" selected disabled>Select line of business</option>
+                <option>Restaurant</option>
+                <option>Grocery &amp; Convenience</option>
+                <option>Retail</option>
+                <option>Alcohol</option>
+                <option>N/A</option>
+              </select>
+            </div>
+            <div>
+              <label for="cta">What is your primary CTA?</label>
+              <select id="cta">
+                <option value="" selected disabled>Select CTA</option>
+                <option>Order now</option>
+                <option>Get DashPass</option>
+                <option>Sign up</option>
+                <option>Upgrade now</option>
+                <option>Activate now</option>
+                <option>Shop now</option>
+                <option>Order drinks</option>
+                <option>Shop gifts</option>
+                <option>See deals</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Promotion toggle -->
+          <fieldset>
+            <legend>Promotion</legend>
+            <div class="row">
+              <div>
+                <label for="hasPromo">Is there a promotion tied to your campaign?</label>
+                <select id="hasPromo">
+                  <option>No</option>
+                  <option>Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="promoBlock" class="hidden">
+              <div class="row">
+                <div>
+                  <label for="promoType" class="required">What is your primary Promo Deal</label>
+                  <select id="promoType">
+                    <option value="" selected disabled>Select promo type</option>
+                    <option>X Off Your Order</option>
+                    <option>Save Up To $X</option>
+                    <option>$0 Delivery Fee</option>
+                    <option>$ X off Delivery Fee</option>
+                    <option>Other</option>
+                  </select>
+                  <div class="error" id="promoTypeErr">Promo Type is required.</div>
+                </div>
+                <div>
+                  <label for="discount" class="required">What is the discount? Must include $ or %</label>
+                  <input id="discount" type="text" placeholder="$10 or 20%" />
+                  <div class="error" id="discountErr">Include $ or % (e.g., $10 or 20%).</div>
+                </div>
+              </div>
+
+              <div class="row-3">
+                <div>
+                  <label for="startDate" class="required">Start date (mm/dd/yy)</label>
+                  <input id="startDate" type="text" placeholder="mm/dd/yy" />
+                  <div class="error" id="startErr">Use mm/dd/yy.</div>
+                </div>
+                <div>
+                  <label for="endDate" class="required">End date (mm/dd/yy)</label>
+                  <input id="endDate" type="text" placeholder="mm/dd/yy" />
+                  <div class="error" id="endErr">Use mm/dd/yy.</div>
+                </div>
+                <div>
+                  <label for="minSubtotal" class="required">Minimum subtotal (0 if none)</label>
+                  <input id="minSubtotal" type="text" placeholder="e.g., 20 or 0" />
+                  <div class="error" id="minErr">Enter a non-negative number.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="maxDiscount" class="required">Max discount (0 if none)</label>
+                  <input id="maxDiscount" type="text" placeholder="e.g., 25 or 0" />
+                  <div class="error" id="maxErr">Enter a non-negative number.</div>
+                </div>
+                <div>
+                  <label for="pickupOnly">Is this promotion for pick-up orders only?</label>
+                  <select id="pickupOnly">
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="promoCode">What is the promotion code? (n/a if none)</label>
+                  <input id="promoCode" type="text" placeholder="e.g., SAVE10 or n/a" />
+                </div>
+                <div>
+                  <label for="dashpassOnly">Is this promotion for DashPass members only?</label>
+                  <select id="dashpassOnly">
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Secondary module -->
+          <fieldset>
+            <legend>Secondary Module</legend>
+            <div class="row">
+              <div>
+                <label for="hasSecondary">Is there a secondary module needed for your campaign?</label>
+                <select id="hasSecondary">
+                  <option>No</option>
+                  <option>Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="secondaryBlock" class="hidden">
+              <div class="row">
+                <div>
+                  <label for="secondaryObjective">Provide the message objective of this secondary module</label>
+                  <textarea id="secondaryObjective" placeholder="What do you want them to do? What method, offer, or feature supports that action?"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div>
+                  <label for="secondaryLOB">What line of business is this focused on?</label>
+                  <select id="secondaryLOB">
+                    <option value="" selected disabled>Select line of business</option>
+                    <option>Restaurant</option>
+                    <option>Grocery &amp; Convenience</option>
+                    <option>Retail</option>
+                    <option>Alcohol</option>
+                    <option>N/A</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="secondaryCTA">What is your CTA for this secondary module</label>
+                  <select id="secondaryCTA">
+                    <option value="" selected disabled>Select CTA</option>
+                    <option>Order now</option>
+                    <option>Get DashPass</option>
+                    <option>Sign up</option>
+                    <option>Upgrade now</option>
+                    <option>Activate now</option>
+                    <option>Shop now</option>
+                    <option>Order drinks</option>
+                    <option>Shop gifts</option>
+                    <option>See deals</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="primary" id="generateBtn">Generate Response</button>
+        <button type="button" id="copyBtn">Copy Text</button>
+        <button type="reset" class="ghost">Reset</button>
+      </div>
+
+      <fieldset>
+        <legend>Generated Response</legend>
+        <div id="output" class="output" aria-live="polite"></div>
+      </fieldset>
+    </form>
+  </div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    const audience = el('audience');
+    const consumerBlock = el('consumerBlock');
+    const channel = el('channel');
+    const unsupportedMsg = el('unsupportedMsg');
+    const epBlock = el('epBlock');
+
+    const segment = el('segment');
+    const behavior = el('behavior');
+    const submarkets = el('submarkets');
+    const usecase = el('usecase');
+    const objective = el('objective');
+    const action = el('action');
+    const takeaway = el('takeaway');
+    const feature = el('feature');
+    const lob = el('lob');
+    const cta = el('cta');
+
+    const hasPromo = el('hasPromo');
+    const promoBlock = el('promoBlock');
+    const promoType = el('promoType');
+    const discount = el('discount');
+    const startDate = el('startDate');
+    const endDate = el('endDate');
+    const minSubtotal = el('minSubtotal');
+    const maxDiscount = el('maxDiscount');
+    const pickupOnly = el('pickupOnly');
+    const promoCode = el('promoCode');
+    const dashpassOnly = el('dashpassOnly');
+
+    const hasSecondary = el('hasSecondary');
+    const secondaryBlock = el('secondaryBlock');
+    const secondaryObjective = el('secondaryObjective');
+    const secondaryLOB = el('secondaryLOB');
+    const secondaryCTA = el('secondaryCTA');
+
+    const output = el('output');
+    const copyBtn = el('copyBtn');
+    const generateBtn = el('generateBtn');
+
+    // Show/hide sections based on selections
+    function updateVisibility() {
+      consumerBlock.classList.toggle('hidden', audience.value !== 'Consumer');
+
+      if (audience.value === 'Consumer') {
+        const ch = channel.value;
+        const isEP = ch === 'Email' || ch === 'Push Notification';
+        epBlock.classList.toggle('hidden', !isEP);
+        unsupportedMsg.classList.toggle('hidden', isEP || !ch);
+      } else {
+        unsupportedMsg.classList.add('hidden');
+        epBlock.classList.add('hidden');
+      }
+
+      promoBlock.classList.toggle('hidden', hasPromo.value !== 'Yes');
+      secondaryBlock.classList.toggle('hidden', hasSecondary.value !== 'Yes');
+    }
+
+    audience.addEventListener('change', updateVisibility);
+    channel.addEventListener('change', updateVisibility);
+    hasPromo.addEventListener('change', updateVisibility);
+    hasSecondary.addEventListener('change', updateVisibility);
+
+    // Validation helpers
+    const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; // mm/dd/yy
+    const reMoneyNum = /^\d+(?:\.\d{1,2})?$/;
+
+    function showError(id, show) {
+      const e = el(id);
+      if (!e) return;
+      e.style.display = show ? 'block' : 'none';
+    }
+
+    function validateRequired(elm, errId) {
+      const ok = !!(elm && elm.value && elm.value.trim().length);
+      showError(errId, !ok);
+      return ok;
+    }
+
+    function validateStartsWithWho(elm, errId) {
+      const v = (elm.value || '').trim().toLowerCase();
+      const ok = v.length > 0 && v.startsWith('who');
+      showError(errId, !ok);
+      return ok;
+    }
+
+    function validateDate(elm, errId) {
+      const v = (elm.value || '').trim();
+      const ok = reDate.test(v);
+      showError(errId, !ok);
+      return ok;
+    }
+
+    function validateNumber(elm, errId) {
+      const v = (elm.value || '').trim();
+      const ok = reMoneyNum.test(v);
+      showError(errId, !ok);
+      return ok;
+    }
+
+    function validateDiscount(elm, errId) {
+      const v = (elm.value || '').trim();
+      const ok = /[$%]/.test(v) && v.length > 0;
+      showError(errId, !ok);
+      return ok;
+    }
+
+    function gatherAndGenerate() {
+      output.textContent = '';
+
+      // Base validations
+      let valid = true;
+      valid &= validateRequired(audience, 'audienceErr');
+
+      if (audience.value === 'Consumer') {
+        valid &= validateRequired(channel, 'channelErr');
+        const ch = channel.value;
+        const isEP = ch === 'Email' || ch === 'Push Notification';
+        if (isEP) {
+          valid &= validateRequired(segment, 'segmentErr');
+          valid &= validateStartsWithWho(behavior, 'behaviorErr');
+          valid &= validateRequired(submarkets, 'submarketsErr');
+          valid &= validateRequired(usecase, 'usecaseErr');
+          valid &= validateRequired(action, 'actionErr');
+          valid &= validateRequired(takeaway, 'takeawayErr');
+
+          if (hasPromo.value === 'Yes') {
+            valid &= validateRequired(promoType, 'promoTypeErr');
+            valid &= validateDiscount(discount, 'discountErr');
+            valid &= validateDate(startDate, 'startErr');
+            valid &= validateDate(endDate, 'endErr');
+            valid &= validateNumber(minSubtotal, 'minErr');
+            valid &= validateNumber(maxDiscount, 'maxErr');
+          }
+        }
+      }
+
+      if (!valid) { return; }
+
+      // Build response
+      const aud = audience.value || '';
+      const ch = channel.value || '';
+      const seg = segment.value || '';
+      const beh = behavior.value ? behavior.value.trim() : '';
+      const loc = submarkets.value ? submarkets.value.trim() : '';
+      const uc = usecase.value || '';
+      const obj = (objective.value || '').trim();
+      const callToAction = cta.value || '';
+
+      let base = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj || 'N/A'} CTA: ${callToAction || 'N/A'}.`;
+
+      // Promotion text per rules
+      if (hasPromo.value === 'Yes') {
+        const pType = promoType.value;
+        const disc = discount.value.trim();
+        const start = startDate.value.trim();
+        const end = endDate.value.trim();
+        const min = Number(minSubtotal.value.trim() || '0');
+        const max = Number(maxDiscount.value.trim() || '0');
+        const pickOnly = pickupOnly.value === 'Yes';
+        const code = (promoCode.value || '').trim();
+        const dpOnly = dashpassOnly.value === 'Yes';
+
+        // Announce promo existence
+        base += `\nThis campaign include a [${pType} promo]`;
+
+        const fmtMoney = (n) => (isNaN(n) ? '0' : n.toString());
+        const minTxt = `$${fmtMoney(min)}`;
+        const maxTxt = `$${fmtMoney(max)}`;
+
+        if (pType === 'X Off Your Order' || pType === 'Save Up To $X') {
+          if (pType === 'Save Up To $X') {
+            base += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
+          } else {
+            // X off your order (no max language)
+            base += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
+          }
+        } else if (pType === '$0 Delivery Fee') {
+          base += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
+        } else if (pType === '$ X off Delivery Fee') {
+          base += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
+        } else {
+          // Other – generic line
+          base += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
+        }
+
+        if (pickOnly) base += ' Pick up orders only.';
+        if (dpOnly) base += ' DashPass Members only.';
+        if (code && code.toLowerCase() !== 'n/a') base += ` ${code}.`;
+      }
+
+      // Secondary module text
+      if (hasSecondary.value === 'Yes') {
+        const sObj = (secondaryObjective.value || 'N/A').trim();
+        const sLOB = secondaryLOB.value || 'N/A';
+        const sCTA = secondaryCTA.value || 'N/A';
+        base += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+      }
+
+      output.textContent = base.trim();
+      // Scroll to output
+      output.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    generateBtn.addEventListener('click', gatherAndGenerate);
+
+    copyBtn.addEventListener('click', async () => {
+      const text = output.textContent.trim();
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = 'Copied!';
+        copyBtn.style.borderColor = 'var(--ok)';
+        setTimeout(() => { copyBtn.textContent = 'Copy Text'; copyBtn.style.borderColor = 'var(--border)'; }, 1200);
+      } catch (e) {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      }
+    });
+
+    // initialize
+    updateVisibility();
+  </script>
+</body>
+</html>
