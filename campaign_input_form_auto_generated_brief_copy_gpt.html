@@ -5,59 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CopyGPT Campaign Intake</title>
   <style>
-    :root {
-      --bg: #0b0f14;
-      --panel: #121822;
-      --text: #e6eef8;
-      --muted: #a9b4c2;
-      --accent: #4da3ff;
-      --danger: #ff6b6b;
-      --ok: #20c997;
-      --border: #1f2733;
+    :root{
+      --bg:#ffffff;
+      --panel:#f7f7f7;
+      --text:#111111;
+      --muted:#444444;
+      --accent:#0b57d0;
+      --danger:#c62828;
+      --ok:#2e7d32;
+      --border:#dddddd;
     }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: linear-gradient(180deg, #0b0f14 0%, #0d131b 60%, #0b0f14 100%);
-      color: var(--text);
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--text);
     }
-    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-    h1 { font-size: 28px; margin: 0 0 8px; letter-spacing: 0.3px; }
-    p.lead { margin: 0 0 24px; color: var(--muted); }
-
-    form { display: grid; gap: 14px; }
-    fieldset { border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: var(--panel); }
-    legend { padding: 0 8px; color: var(--muted); }
-
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    .row-1 { display: grid; grid-template-columns: 1fr; gap: 12px; }
-
-    label { display: block; font-weight: 600; margin-bottom: 6px; }
-    .desc { font-weight: 500; color: var(--muted); font-size: 13px; margin-top: 4px; }
-
-    input[type="text"], input[type="date"], input[type="search"], select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: #0f1520; color: var(--text); }
-    textarea { min-height: 100px; resize: vertical; }
-
-    .hint { font-size: 12px; color: var(--muted); }
-    .required::after { content: " *"; color: var(--danger); font-weight: 700; }
-
-    .note { background: #0e1724; border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 10px; color: var(--muted); }
-
-    .error { color: var(--danger); font-size: 13px; margin-top: 6px; display: none; }
-    .hidden { display: none !important; }
-
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    button { appearance: none; border: 1px solid var(--border); background: #101827; color: var(--text); padding: 10px 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
-    button.primary { background: linear-gradient(135deg, #3d8bfd, #4da3ff); border: none; }
-    button.ghost { background: transparent; }
-
-    .output { white-space: pre-wrap; background: #0e1420; border: 1px dashed #2b3646; border-radius: 12px; padding: 14px; min-height: 120px; }
-    .support-msg { color: var(--danger); font-weight: 600; }
-
-    /* compact date placeholders */
-    input[type="date"]::-webkit-datetime-edit { color: var(--muted); }
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    h1{font-size:28px;margin:0 0 8px}
+    p.lead{margin:0 0 24px;color:var(--muted)}
+    form{display:grid;gap:14px}
+    fieldset{border:1px solid var(--border);border-radius:14px;padding:16px;background:var(--panel)}
+    legend{padding:0 8px;color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .row-1{display:grid;grid-template-columns:1fr;gap:12px}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    .desc{font-weight:500;color:var(--muted);font-size:13px;margin-top:4px}
+    input[type="text"], input[type="date"], input[type="search"], select, textarea{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)
+    }
+    textarea{min-height:100px;resize:vertical}
+    .hint{font-size:12px;color:var(--muted)}
+    .required::after{content:" *";color:var(--danger);font-weight:700}
+    .note{background:#fff;border-left:3px solid var(--accent);padding:10px 12px;border-radius:10px;color:var(--muted)}
+    .error{color:var(--danger);font-size:13px;margin-top:6px;display:none}
+    .hidden{display:none !important}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    button{appearance:none;border:1px solid var(--border);background:#ffffff;color:var(--text);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+    button.primary{background:linear-gradient(135deg,#0b57d0,#3b82f6);border:none;color:#fff}
+    button.ghost{background:transparent}
+    .output{white-space:pre-wrap;background:#fff;border:1px dashed #cfcfcf;border-radius:12px;padding:14px;min-height:120px}
+    .support-msg{color:var(--danger);font-weight:600}
   </style>
 </head>
 <body>
@@ -83,7 +74,7 @@
         </div>
       </fieldset>
 
-      <!-- Consumer-only block -->
+      <!-- CONSUMER -->
       <fieldset id="consumerBlock" class="hidden">
         <legend>Consumer Campaign Details</legend>
         <div class="row">
@@ -105,7 +96,7 @@
           <span class="support-msg">CopyGPT does not currently support these channels.</span>
         </div>
 
-        <!-- Email/Push only block -->
+        <!-- Email/Push only -->
         <div id="epBlock" class="hidden">
           <div class="row">
             <div>
@@ -215,7 +206,7 @@
             </div>
           </div>
 
-          <!-- Promotion toggle -->
+          <!-- Promotion toggle (Consumer) -->
           <fieldset>
             <legend>Promotion</legend>
             <div class="row">
@@ -298,7 +289,7 @@
             </div>
           </fieldset>
 
-          <!-- Secondary module -->
+          <!-- Secondary module (Consumer) -->
           <fieldset>
             <legend>Secondary Module</legend>
             <div class="row">
@@ -351,10 +342,259 @@
         </div>
       </fieldset>
 
+      <!-- DASHER -->
+      <fieldset id="dasherBlock" class="hidden">
+        <legend>Dasher Campaign Details</legend>
+        <div class="row">
+          <div>
+            <label for="d_channel" class="required">What channel is your campaign?</label>
+            <select id="d_channel" required>
+              <option value="" selected disabled>Select channel</option>
+              <option>Email</option>
+              <option>Push Notification</option>
+              <option>Paid Media</option>
+              <option>Organic Social</option>
+              <option>Long-Form Content</option>
+              <option>In-app Merchandising</option>
+            </select>
+            <div class="error" id="d_channelErr">Channel is required.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_segment" class="required">What is your Audience Segment?</label>
+            <select id="d_segment" required>
+              <option value="" selected disabled>Select segment</option>
+              <option>Active Dasher</option>
+              <option>ANFD Dasher</option>
+              <option>Churned Dasher</option>
+              <option>New Dasher</option>
+            </select>
+            <div class="error" id="d_segmentErr">Audience Segment is required.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_behavior" class="required">What has this Dasher done or not done recently? What’s their current mindset or situation?</label>
+            <textarea id="d_behavior" placeholder="Start with ‘who…?’" required></textarea>
+            <div class="hint">Please start your response with "who".</div>
+            <div class="error" id="d_behaviorErr">This field is required and must start with "who".</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_submarkets">Is this campaign specific to a specific set of submarkets?</label>
+            <textarea id="d_submarkets" placeholder="e.g., Phoenix, Denver, Minneapolis"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_usecase" class="required">What is your Use Case?</label>
+            <select id="d_usecase" required>
+              <option value="" selected disabled>Select use case</option>
+              <option>First Dash Conversion (New Dx)</option>
+              <option>Churn/Reactivation</option>
+              <option>Promotions: Challenge/Streak/Boost</option>
+              <option>Apology/Outage</option>
+              <option>New Feature/Order Type</option>
+              <option>Education/Retention</option>
+              <option>Programs: Rewards/Crimson</option>
+              <option>Other</option>
+            </select>
+            <div class="error" id="d_usecaseErr">Use Case is required.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_objective">Provide the message objective of this campaign.</label>
+            <textarea id="d_objective"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_action" class="required">What action do you want the Dasher to take?</label>
+            <textarea id="d_action" placeholder="What do you want them to do? What method, offer, or feature supports that action?" required></textarea>
+            <div class="error" id="d_actionErr">This field is required.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_takeaway" class="required">What is the most important takeaway for the Dasher?</label>
+            <textarea id="d_takeaway" placeholder="What's the one thing you want them to remember? Is there a claim or value prop to substantiate it?" required></textarea>
+            <div class="error" id="d_takeawayErr">This field is required.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_feature">Is there a feature or service you want to highlight in this campaign?</label>
+            <textarea id="d_feature"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="d_cta">What is your primary CTA?</label>
+            <select id="d_cta">
+              <option value="" selected disabled>Select CTA</option>
+              <option>Dash now</option>
+              <option>Get Download now</option>
+              <option>Get started</option>
+              <option>Learn more</option>
+              <option>Activate now</option>
+              <option>See deals</option>
+              <option>Sign up</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Promotion (Dasher) -->
+        <fieldset>
+          <legend>Promotion</legend>
+          <div class="row">
+            <div>
+              <label for="d_hasPromo">Is there a promotion tied to your campaign?</label>
+              <select id="d_hasPromo">
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="d_promoBlock" class="hidden">
+            <div class="row">
+              <div>
+                <label for="d_promoType" class="required">What is your primary Promotion?</label>
+                <select id="d_promoType">
+                  <option value="" selected disabled>Select promotion</option>
+                  <option>Complete x dashers, receive $x</option>
+                  <option>streaks</option>
+                  <option>other</option>
+                </select>
+                <div class="error" id="d_promoTypeErr">Promotion type is required.</div>
+              </div>
+              <div id="d_otherWrap" class="hidden">
+                <label for="d_otherPromo">If other, describe</label>
+                <input id="d_otherPromo" type="text" placeholder="Describe your promotion" />
+              </div>
+            </div>
+
+            <div class="row-3">
+              <div>
+                <label for="d_startDate" class="required">Start date (mm/dd/yy)</label>
+                <input id="d_startDate" type="text" placeholder="mm/dd/yy" />
+                <div class="error" id="d_startErr">Use mm/dd/yy.</div>
+              </div>
+              <div>
+                <label for="d_endDate" class="required">End date (mm/dd/yy)</label>
+                <input id="d_endDate" type="text" placeholder="mm/dd/yy" />
+                <div class="error" id="d_endErr">Use mm/dd/yy.</div>
+              </div>
+              <div>
+                <label for="d_minDeliveries" class="required">Minimum Deliveries (0 if none)</label>
+                <input id="d_minDeliveries" type="text" placeholder="e.g., 10 or 0" />
+                <div class="error" id="d_minErr">Enter a non-negative number.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="d_stdPayout" class="required">Standard Payout (must include $)</label>
+                <input id="d_stdPayout" type="text" placeholder="$50" />
+                <div class="error" id="d_stdErr">Must include $ (e.g., $50).</div>
+              </div>
+              <div>
+                <label for="d_maxPayout" class="required">Max Payout (N/A if not applicable; must include $)</label>
+                <input id="d_maxPayout" type="text" placeholder="$100 or N/A" />
+                <div class="error" id="d_maxErr">Include $ or write N/A.</div>
+              </div>
+            </div>
+
+            <!-- Streaks-only -->
+            <div id="d_streaksBlock" class="hidden">
+              <div class="row">
+                <div>
+                  <label for="d_consecDays" class="required">How many consecutive days required to earn payout?</label>
+                  <input id="d_consecDays" type="text" placeholder="e.g., 3" />
+                  <div class="error" id="d_daysErr">Enter a non-negative number.</div>
+                </div>
+                <div>
+                  <label for="d_additionalPayout" class="required">Additional payout amount if more than minimum consecutive days</label>
+                  <input id="d_additionalPayout" type="text" placeholder="$20" />
+                  <div class="error" id="d_additionalErr">Must include $ (e.g., $20).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Secondary module (Dasher) -->
+        <fieldset>
+          <legend>Secondary Module</legend>
+          <div class="row">
+            <div>
+              <label for="d_hasSecondary">Is there a secondary module needed for your campaign?</label>
+              <select id="d_hasSecondary">
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="d_secondaryBlock" class="hidden">
+            <div class="row">
+              <div>
+                <label for="d_secondaryObjective">Provide the message objective of this secondary module</label>
+                <textarea id="d_secondaryObjective" placeholder="What do you want them to do? What method, offer, or feature supports that action?"></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label for="d_secondaryLOB">What line of business is this focused on?</label>
+                <select id="d_secondaryLOB">
+                  <option value="" selected disabled>Select line of business</option>
+                  <option>Restaurant</option>
+                  <option>Grocery &amp; Convenience</option>
+                  <option>Retail</option>
+                  <option>Alcohol</option>
+                  <option>N/A</option>
+                </select>
+              </div>
+              <div>
+                <label for="d_secondaryCTA">What is your CTA for this secondary module</label>
+                <select id="d_secondaryCTA">
+                  <option value="" selected disabled>Select CTA</option>
+                  <option>Dash now</option>
+                  <option>Get Download now</option>
+                  <option>Get started</option>
+                  <option>Learn more</option>
+                  <option>Activate now</option>
+                  <option>See deals</option>
+                  <option>Sign up</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <!-- MERCHANT (placeholder) -->
+      <fieldset id="merchantBlock" class="hidden">
+        <legend>Merchant</legend>
+        <div class="note"><span class="support-msg">Merchant workflow not yet supported in this form.</span></div>
+      </fieldset>
+
       <div class="actions">
         <button type="button" class="primary" id="generateBtn">Generate Response</button>
         <button type="button" id="copyBtn">Copy Text</button>
-        <button type="reset" class="ghost">Reset</button>
+        <button type="reset" class="ghost" id="resetBtn">Reset</button>
       </div>
 
       <fieldset>
@@ -367,7 +607,14 @@
   <script>
     const el = (id) => document.getElementById(id);
 
+    // Shared
     const audience = el('audience');
+    const output = el('output');
+    const copyBtn = el('copyBtn');
+    const generateBtn = el('generateBtn');
+    const resetBtn = el('resetBtn');
+
+    // Consumer refs (kept from original & extended)
     const consumerBlock = el('consumerBlock');
     const channel = el('channel');
     const unsupportedMsg = el('unsupportedMsg');
@@ -402,32 +649,35 @@
     const secondaryLOB = el('secondaryLOB');
     const secondaryCTA = el('secondaryCTA');
 
-    const output = el('output');
-    const copyBtn = el('copyBtn');
-    const generateBtn = el('generateBtn');
+    // Dasher refs
+    const dasherBlock = el('dasherBlock');
+    const d_channel = el('d_channel');
+    const d_segment = el('d_segment');
+    const d_behavior = el('d_behavior');
+    const d_submarkets = el('d_submarkets');
+    const d_usecase = el('d_usecase');
+    const d_objective = el('d_objective');
+    const d_action = el('d_action');
+    const d_takeaway = el('d_takeaway');
+    const d_feature = el('d_feature');
+    const d_cta = el('d_cta');
 
-    // Show/hide sections based on selections
-    function updateVisibility() {
-      consumerBlock.classList.toggle('hidden', audience.value !== 'Consumer');
+    const d_hasPromo = el('d_hasPromo');
+    const d_promoBlock = el('d_promoBlock');
+    const d_promoType = el('d_promoType');
+    const d_otherWrap = el('d_otherWrap');
+    const d_otherPromo = el('d_otherPromo');
+    const d_startDate = el('d_startDate');
+    const d_endDate = el('d_endDate');
+    const d_minDeliveries = el('d_minDeliveries');
+    const d_stdPayout = el('d_stdPayout');
+    const d_maxPayout = el('d_maxPayout');
+    const d_streaksBlock = el('d_streaksBlock');
+    const d_consecDays = el('d_consecDays');
+    const d_additionalPayout = el('d_additionalPayout');
 
-      if (audience.value === 'Consumer') {
-        const ch = channel.value;
-        const isEP = ch === 'Email' || ch === 'Push Notification';
-        epBlock.classList.toggle('hidden', !isEP);
-        unsupportedMsg.classList.toggle('hidden', isEP || !ch);
-      } else {
-        unsupportedMsg.classList.add('hidden');
-        epBlock.classList.add('hidden');
-      }
-
-      promoBlock.classList.toggle('hidden', hasPromo.value !== 'Yes');
-      secondaryBlock.classList.toggle('hidden', hasSecondary.value !== 'Yes');
-    }
-
-    audience.addEventListener('change', updateVisibility);
-    channel.addEventListener('change', updateVisibility);
-    hasPromo.addEventListener('change', updateVisibility);
-    hasSecondary.addEventListener('change', updateVisibility);
+    // Merchant placeholder
+    const merchantBlock = el('merchantBlock');
 
     // Validation helpers
     const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; // mm/dd/yy
@@ -438,156 +688,240 @@
       if (!e) return;
       e.style.display = show ? 'block' : 'none';
     }
+    function validateRequired(node, errId){ const ok = !!(node && node.value && node.value.trim().length); showError(errId, !ok); return ok; }
+    function validateStartsWithWho(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok=v.length>0 && v.startsWith('who'); showError(errId,!ok); return ok; }
+    function validateDate(node, errId){ const v=(node.value||'').trim(); const ok=reDate.test(v); showError(errId,!ok); return ok; }
+    function validateNumber(node, errId){ const v=(node.value||'').trim(); const ok=reMoneyNum.test(v); showError(errId,!ok); return ok; }
+    function validateHasDollar(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok = v.includes('$'); showError(errId, !ok); return ok; }
+    function validateHasDollarOrNA(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok = v==='n/a' || v.includes('$'); showError(errId, !ok); return ok; }
 
-    function validateRequired(elm, errId) {
-      const ok = !!(elm && elm.value && elm.value.trim().length);
-      showError(errId, !ok);
-      return ok;
-    }
+    // Visibility
+    function updateVisibility(){
+      consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
+      dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
+      merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
 
-    function validateStartsWithWho(elm, errId) {
-      const v = (elm.value || '').trim().toLowerCase();
-      const ok = v.length > 0 && v.startsWith('who');
-      showError(errId, !ok);
-      return ok;
-    }
-
-    function validateDate(elm, errId) {
-      const v = (elm.value || '').trim();
-      const ok = reDate.test(v);
-      showError(errId, !ok);
-      return ok;
-    }
-
-    function validateNumber(elm, errId) {
-      const v = (elm.value || '').trim();
-      const ok = reMoneyNum.test(v);
-      showError(errId, !ok);
-      return ok;
-    }
-
-    function validateDiscount(elm, errId) {
-      const v = (elm.value || '').trim();
-      const ok = /[$%]/.test(v) && v.length > 0;
-      showError(errId, !ok);
-      return ok;
-    }
-
-    function gatherAndGenerate() {
-      output.textContent = '';
-
-      // Base validations
-      let valid = true;
-      valid &= validateRequired(audience, 'audienceErr');
-
-      if (audience.value === 'Consumer') {
-        valid &= validateRequired(channel, 'channelErr');
+      if (audience.value==='Consumer'){
         const ch = channel.value;
-        const isEP = ch === 'Email' || ch === 'Push Notification';
-        if (isEP) {
-          valid &= validateRequired(segment, 'segmentErr');
-          valid &= validateStartsWithWho(behavior, 'behaviorErr');
-          valid &= validateRequired(submarkets, 'submarketsErr');
-          valid &= validateRequired(usecase, 'usecaseErr');
-          valid &= validateRequired(action, 'actionErr');
-          valid &= validateRequired(takeaway, 'takeawayErr');
-
-          if (hasPromo.value === 'Yes') {
-            valid &= validateRequired(promoType, 'promoTypeErr');
-            valid &= validateDiscount(discount, 'discountErr');
-            valid &= validateDate(startDate, 'startErr');
-            valid &= validateDate(endDate, 'endErr');
-            valid &= validateNumber(minSubtotal, 'minErr');
-            valid &= validateNumber(maxDiscount, 'maxErr');
-          }
-        }
+        const isEP = ch==='Email' || ch==='Push Notification';
+        epBlock.classList.toggle('hidden', !isEP);
+        unsupportedMsg.classList.toggle('hidden', isEP || !ch);
+      } else {
+        unsupportedMsg.classList.add('hidden');
+        epBlock.classList.add('hidden');
       }
 
-      if (!valid) { return; }
+      promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
+      secondaryBlock.classList.toggle('hidden', hasSecondary.value!=='Yes');
 
-      // Build response
-      const aud = audience.value || '';
-      const ch = channel.value || '';
+      d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
+      d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
+      d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
+    }
+
+    audience.addEventListener('change', updateVisibility);
+    channel.addEventListener('change', updateVisibility);
+    hasPromo.addEventListener('change', updateVisibility);
+    hasSecondary.addEventListener('change', updateVisibility);
+
+    d_hasPromo.addEventListener('change', updateVisibility);
+    d_promoType.addEventListener('change', updateVisibility);
+
+    // Generate
+    function generateConsumer(){
+      let valid = true;
+      valid &= validateRequired(channel, 'channelErr');
+      const ch = channel.value;
+      const isEP = ch==='Email' || ch==='Push Notification';
+      if (isEP){
+        valid &= validateRequired(segment,'segmentErr');
+        valid &= validateStartsWithWho(behavior,'behaviorErr');
+        valid &= validateRequired(submarkets,'submarketsErr');
+        valid &= validateRequired(usecase,'usecaseErr');
+        valid &= validateRequired(action,'actionErr');
+        valid &= validateRequired(takeaway,'takeawayErr');
+
+        if (hasPromo.value==='Yes'){
+          valid &= validateRequired(promoType,'promoTypeErr');
+          valid &= validateHasDollarOrPercent(discount,'discountErr');
+          valid &= validateDate(startDate,'startErr');
+          valid &= validateDate(endDate,'endErr');
+          valid &= validateNumber(minSubtotal,'minErr');
+          valid &= validateNumber(maxDiscount,'maxErr');
+        }
+      }
+      if (!valid) return '';
+
+      const aud = 'Consumer';
       const seg = segment.value || '';
-      const beh = behavior.value ? behavior.value.trim() : '';
-      const loc = submarkets.value ? submarkets.value.trim() : '';
-      const uc = usecase.value || '';
-      const obj = (objective.value || '').trim();
-      const callToAction = cta.value || '';
+      const beh = (behavior.value||'').trim();
+      const loc = (submarkets.value||'').trim();
+      const uc  = usecase.value || '';
+      const obj = (objective.value||'').trim() || 'N/A';
+      const callToAction = cta.value || 'N/A';
 
-      let base = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj || 'N/A'} CTA: ${callToAction || 'N/A'}.`;
+      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
 
-      // Promotion text per rules
-      if (hasPromo.value === 'Yes') {
+      if (hasPromo.value==='Yes'){
         const pType = promoType.value;
-        const disc = discount.value.trim();
-        const start = startDate.value.trim();
-        const end = endDate.value.trim();
-        const min = Number(minSubtotal.value.trim() || '0');
-        const max = Number(maxDiscount.value.trim() || '0');
-        const pickOnly = pickupOnly.value === 'Yes';
-        const code = (promoCode.value || '').trim();
-        const dpOnly = dashpassOnly.value === 'Yes';
+        const disc = (discount.value||'').trim();
+        const start = (startDate.value||'').trim();
+        const end = (endDate.value||'').trim();
+        const min = Number((minSubtotal.value||'0').trim());
+        const max = Number((maxDiscount.value||'0').trim());
+        const pickOnly = pickupOnly.value==='Yes';
+        const code = (promoCode.value||'').trim();
+        const dpOnly = dashpassOnly.value==='Yes';
 
-        // Announce promo existence
-        base += `\nThis campaign include a [${pType} promo]`;
+        txt += `\nThis campaign include a [${pType} promo]`;
 
-        const fmtMoney = (n) => (isNaN(n) ? '0' : n.toString());
-        const minTxt = `$${fmtMoney(min)}`;
-        const maxTxt = `$${fmtMoney(max)}`;
+        const money = (n)=> isNaN(n)?'0':n.toString();
+        const minTxt = `$${money(min)}`;
+        const maxTxt = `$${money(max)}`;
 
-        if (pType === 'X Off Your Order' || pType === 'Save Up To $X') {
-          if (pType === 'Save Up To $X') {
-            base += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
-          } else {
-            // X off your order (no max language)
-            base += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
-          }
-        } else if (pType === '$0 Delivery Fee') {
-          base += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
-        } else if (pType === '$ X off Delivery Fee') {
-          base += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
+        if (pType==='Save Up To $X'){
+          txt += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
+        } else if (pType==='X Off Your Order'){
+          txt += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
+        } else if (pType==='$0 Delivery Fee'){
+          txt += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
+        } else if (pType==='$ X off Delivery Fee'){
+          txt += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
         } else {
-          // Other – generic line
-          base += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
+          txt += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
         }
 
-        if (pickOnly) base += ' Pick up orders only.';
-        if (dpOnly) base += ' DashPass Members only.';
-        if (code && code.toLowerCase() !== 'n/a') base += ` ${code}.`;
+        if (pickOnly) txt += ' Pick up orders only.';
+        if (dpOnly) txt += ' DashPass Members only.';
+        if (code && code.toLowerCase()!=='n/a') txt += ` ${code}.`;
       }
 
-      // Secondary module text
-      if (hasSecondary.value === 'Yes') {
-        const sObj = (secondaryObjective.value || 'N/A').trim();
+      if (hasSecondary.value==='Yes'){
+        const sObj = (secondaryObjective.value||'N/A').trim();
         const sLOB = secondaryLOB.value || 'N/A';
         const sCTA = secondaryCTA.value || 'N/A';
-        base += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+        txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
       }
 
-      output.textContent = base.trim();
-      // Scroll to output
-      output.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return txt.trim();
+
+      function validateHasDollarOrPercent(node, errId){
+        const v=(node.value||'').trim();
+        const ok = /[$%]/.test(v) && v.length>0;
+        showError(errId,!ok);
+        return ok;
+      }
     }
 
-    generateBtn.addEventListener('click', gatherAndGenerate);
+    function generateDasher(){
+      let valid = true;
+      valid &= validateRequired(d_channel,'d_channelErr');
+      valid &= validateRequired(d_segment,'d_segmentErr');
+      valid &= validateStartsWithWho(d_behavior,'d_behaviorErr');
+      valid &= validateRequired(d_usecase,'d_usecaseErr');
+      valid &= validateRequired(d_action,'d_actionErr');
+      valid &= validateRequired(d_takeaway,'d_takeawayErr');
 
+      if (d_hasPromo.value==='Yes'){
+        valid &= validateRequired(d_promoType,'d_promoTypeErr');
+        valid &= validateDate(d_startDate,'d_startErr');
+        valid &= validateDate(d_endDate,'d_endErr');
+        valid &= validateNumber(d_minDeliveries,'d_minErr');
+        valid &= validateHasDollar(d_stdPayout,'d_stdErr');
+        valid &= validateHasDollarOrNA(d_maxPayout,'d_maxErr');
+
+        if (d_promoType.value==='streaks'){
+          valid &= validateNumber(d_consecDays,'d_daysErr');
+          valid &= validateHasDollar(d_additionalPayout,'d_additionalErr');
+        }
+      }
+      if (!valid) return '';
+
+      const aud = 'Dasher';
+      const ch = d_channel.value || '';
+      const seg = d_segment.value || '';
+      const beh = (d_behavior.value||'').trim();
+      const loc = (d_submarkets.value||'').trim();
+      const uc  = d_usecase.value || '';
+      const obj = (d_objective.value||'').trim() || 'N/A';
+      const callToAction = d_cta.value || 'N/A';
+
+      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
+
+      if (d_hasPromo.value==='Yes'){
+        const pType = d_promoType.value;
+        const start = (d_startDate.value||'').trim();
+        const end = (d_endDate.value||'').trim();
+        const minDel = (d_minDeliveries.value||'0').trim();
+        const stdPay = (d_stdPayout.value||'').trim();
+        const maxPay = (d_maxPayout.value||'').trim();
+
+        if (pType==='Complete x dashers, receive $x'){
+          txt += `\nThis campaign include a promotion say the below:\nOffer: Get ${stdPay} when you complete ${minDel} between ${start} and ${end}`;
+        } else if (pType==='streaks'){
+          const days = (d_consecDays.value||'').trim();
+          const addPay = (d_additionalPayout.value||'').trim();
+          txt += `\nThis campaign include a promotion say the below:\nOffer: Get ${stdPay} when you complete ${minDel} for ${days} plus receive an additional ${addPay} for a max of ${maxPay}  between ${start} and ${end}`;
+        } else {
+          const other = (d_otherPromo.value||'').trim();
+          txt += `\nThis campaign include a promotion say the below:\nOffer: ${other || stdPay} between ${start} and ${end}`;
+        }
+      }
+
+      if (el('d_hasSecondary').value==='Yes'){
+        const sObj = (d_secondaryObjective.value||'N/A').trim();
+        const sLOB = d_secondaryLOB.value || 'N/A';
+        const sCTA = d_secondaryCTA.value || 'N/A';
+        txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+      }
+
+      return txt.trim();
+    }
+
+    function gatherAndGenerate(){
+      output.textContent='';
+      let valid = true;
+      valid &= validateRequired(audience,'audienceErr');
+      if (!valid) return;
+
+      let text='';
+      if (audience.value==='Consumer'){
+        text = generateConsumer();
+      } else if (audience.value==='Dasher'){
+        text = generateDasher();
+      } else if (audience.value==='Merchant'){
+        text = 'Merchant workflow not yet supported in this form.';
+      }
+      output.textContent = (text||'').trim();
+      if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function validateHasDollarOrPercent(node, errId){
+      const v=(node.value||'').trim();
+      const ok = /[$%]/.test(v) && v.length>0;
+      showError(errId,!ok);
+      return ok;
+    }
+
+    // Events
+    audience.addEventListener('change', updateVisibility);
+    generateBtn.addEventListener('click', gatherAndGenerate);
     copyBtn.addEventListener('click', async () => {
       const text = output.textContent.trim();
       if (!text) return;
-      try {
+      try{
         await navigator.clipboard.writeText(text);
         copyBtn.textContent = 'Copied!';
         copyBtn.style.borderColor = 'var(--ok)';
-        setTimeout(() => { copyBtn.textContent = 'Copy Text'; copyBtn.style.borderColor = 'var(--border)'; }, 1200);
-      } catch (e) {
-        // Fallback
-        const ta = document.createElement('textarea');
-        ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        setTimeout(()=>{copyBtn.textContent='Copy Text';copyBtn.style.borderColor='var(--border)';},1200);
+      }catch(e){
+        const ta=document.createElement('textarea');
+        ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
       }
     });
+    resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
 
-    // initialize
+    // init
     updateVisibility();
   </script>
 </body>
