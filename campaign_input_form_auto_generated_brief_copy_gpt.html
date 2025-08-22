@@ -17,12 +17,7 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:var(--bg);
-      color:var(--text);
-    }
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial,"Apple Color Emoji","Segoe UI Emoji";background:var(--bg);color:var(--text)}
     .container{max-width:1100px;margin:0 auto;padding:24px}
     h1{font-size:28px;margin:0 0 8px}
     p.lead{margin:0 0 24px;color:var(--muted)}
@@ -34,9 +29,7 @@
     .row-1{display:grid;grid-template-columns:1fr;gap:12px}
     label{display:block;font-weight:600;margin-bottom:6px}
     .desc{font-weight:500;color:var(--muted);font-size:13px;margin-top:4px}
-    input[type="text"], input[type="date"], input[type="search"], select, textarea{
-      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)
-    }
+    input[type="text"],input[type="date"],input[type="search"],select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)}
     textarea{min-height:100px;resize:vertical}
     .hint{font-size:12px;color:var(--muted)}
     .required::after{content:" *";color:var(--danger);font-weight:700}
@@ -74,7 +67,7 @@
         </div>
       </fieldset>
 
-      <!-- CONSUMER -->
+      <!-- CONSUMER (unchanged from your input) -->
       <fieldset id="consumerBlock" class="hidden">
         <legend>Consumer Campaign Details</legend>
         <div class="row">
@@ -96,7 +89,6 @@
           <span class="support-msg">CopyGPT does not currently support these channels.</span>
         </div>
 
-        <!-- Email/Push only -->
         <div id="epBlock" class="hidden">
           <div class="row">
             <div>
@@ -614,7 +606,7 @@
     const generateBtn = el('generateBtn');
     const resetBtn = el('resetBtn');
 
-    // Consumer refs (kept from original & extended)
+    // Consumer refs
     const consumerBlock = el('consumerBlock');
     const channel = el('channel');
     const unsupportedMsg = el('unsupportedMsg');
@@ -676,6 +668,13 @@
     const d_consecDays = el('d_consecDays');
     const d_additionalPayout = el('d_additionalPayout');
 
+    // NEW: Dasher secondary refs
+    const d_hasSecondary = el('d_hasSecondary');
+    const d_secondaryBlock = el('d_secondaryBlock');
+    const d_secondaryObjective = el('d_secondaryObjective');
+    const d_secondaryLOB = el('d_secondaryLOB');
+    const d_secondaryCTA = el('d_secondaryCTA');
+
     // Merchant placeholder
     const merchantBlock = el('merchantBlock');
 
@@ -683,11 +682,7 @@
     const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; // mm/dd/yy
     const reMoneyNum = /^\d+(?:\.\d{1,2})?$/;
 
-    function showError(id, show) {
-      const e = el(id);
-      if (!e) return;
-      e.style.display = show ? 'block' : 'none';
-    }
+    function showError(id, show) { const e = el(id); if (!e) return; e.style.display = show ? 'block' : 'none'; }
     function validateRequired(node, errId){ const ok = !!(node && node.value && node.value.trim().length); showError(errId, !ok); return ok; }
     function validateStartsWithWho(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok=v.length>0 && v.startsWith('who'); showError(errId,!ok); return ok; }
     function validateDate(node, errId){ const v=(node.value||'').trim(); const ok=reDate.test(v); showError(errId,!ok); return ok; }
@@ -717,8 +712,12 @@
       d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
       d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
       d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
+
+      // NEW: toggle Dasher secondary module
+      d_secondaryBlock.classList.toggle('hidden', d_hasSecondary.value!=='Yes');
     }
 
+    // Events
     audience.addEventListener('change', updateVisibility);
     channel.addEventListener('change', updateVisibility);
     hasPromo.addEventListener('change', updateVisibility);
@@ -726,8 +725,10 @@
 
     d_hasPromo.addEventListener('change', updateVisibility);
     d_promoType.addEventListener('change', updateVisibility);
+    // NEW: listen for Dasher secondary
+    d_hasSecondary.addEventListener('change', updateVisibility);
 
-    // Generate
+    // Generate (Consumer)
     function generateConsumer(){
       let valid = true;
       valid &= validateRequired(channel, 'channelErr');
@@ -743,7 +744,7 @@
 
         if (hasPromo.value==='Yes'){
           valid &= validateRequired(promoType,'promoTypeErr');
-          valid &= validateHasDollarOrPercent(discount,'discountErr');
+          valid &= (function(node, errId){const v=(node.value||'').trim();const ok=/[$%]/.test(v)&&v.length>0;showError(errId,!ok);return ok;})(discount,'discountErr');
           valid &= validateDate(startDate,'startErr');
           valid &= validateDate(endDate,'endErr');
           valid &= validateNumber(minSubtotal,'minErr');
@@ -804,15 +805,9 @@
       }
 
       return txt.trim();
-
-      function validateHasDollarOrPercent(node, errId){
-        const v=(node.value||'').trim();
-        const ok = /[$%]/.test(v) && v.length>0;
-        showError(errId,!ok);
-        return ok;
-      }
     }
 
+    // Generate (Dasher)
     function generateDasher(){
       let valid = true;
       valid &= validateRequired(d_channel,'d_channelErr');
@@ -868,7 +863,7 @@
         }
       }
 
-      if (el('d_hasSecondary').value==='Yes'){
+      if (d_hasSecondary.value==='Yes'){
         const sObj = (d_secondaryObjective.value||'N/A').trim();
         const sLOB = d_secondaryLOB.value || 'N/A';
         const sCTA = d_secondaryCTA.value || 'N/A';
@@ -903,8 +898,7 @@
       return ok;
     }
 
-    // Events
-    audience.addEventListener('change', updateVisibility);
+    // Events (global)
     generateBtn.addEventListener('click', gatherAndGenerate);
     copyBtn.addEventListener('click', async () => {
       const text = output.textContent.trim();
@@ -922,6 +916,7 @@
     resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
 
     // init
+    audience.addEventListener('change', updateVisibility);
     updateVisibility();
   </script>
 </body>
