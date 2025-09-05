@@ -79,14 +79,14 @@
         <legend>Consumer Campaign Details</legend>
         <div class="row">
           <div>
-            <label for="channel" class="required">What channel is your campaign?</label>
+            <label for="channel" class="required">For which channel is your asset?</label>
             <select id="channel" required>
               <option value="" selected disabled>Select channel</option>
               <option>Email</option>
               <option>Push Notification</option>
               <option>Paid Media</option>
               <option>Organic Social</option>
-              <option>Long-Form Content</option>
+              <option>Long-form Content</option>
               <option>In-app Merchandising</option>
             </select>
             <div class="error" id="channelErr">Channel is required.</div>
@@ -116,7 +116,7 @@
           <div class="row">
             <div>
               <label for="behavior" class="required">What has this user done or not done recently? What’s their current mindset or situation?</label>
-              <textarea id="behavior" placeholder="Start with ‘who…?’ e.g., who haven’t ordered in 30 days and are craving convenience" required></textarea>
+              <textarea id="behavior" placeholder="Start with &quot;who…?&quot; e.g., who haven’t ordered in 30 days and are craving convenience" required></textarea>
               <div class="hint">Please start your response with "who".</div>
               <div class="error" id="behaviorErr">This field is required and must start with "who".</div>
             </div>
@@ -124,7 +124,7 @@
 
           <div class="row">
             <div>
-              <label for="submarkets" class="required">Is this campaign specific to a specific set of submarkets?</label>
+              <label for="submarkets" class="required">Is this asset specific to a specific set of submarkets?</label>
               <textarea id="submarkets" placeholder="e.g., Phoenix, Denver, Minneapolis" required></textarea>
               <div class="error" id="submarketsErr">This field is required.</div>
             </div>
@@ -132,7 +132,7 @@
 
           <div class="row">
             <div>
-              <label for="usecase" class="required">What is your Use Case?</label>
+              <label for="usecase" class="required">What is your use case?</label>
               <select id="usecase" required>
                 <option value="" selected disabled>Select use case</option>
                 <option>Convert New Customers</option>
@@ -144,13 +144,6 @@
                 <option>Other</option>
               </select>
               <div class="error" id="usecaseErr">Use Case is required.</div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="objective">Provide the message objective of this campaign.</label>
-              <textarea id="objective" placeholder="e.g., Remind lapsed users of quick grocery delivery"></textarea>
             </div>
           </div>
 
@@ -172,7 +165,7 @@
 
           <div class="row">
             <div>
-              <label for="feature">Is there a feature or service you want to highlight in this campaign?</label>
+              <label for="feature">Can you provide more details or context about the feature or service you’d like to highlight in this campaign?</label>
               <textarea id="feature" placeholder="e.g., Snap EBT on grocery, DoubleDash, saved addresses"></textarea>
             </div>
           </div>
@@ -222,7 +215,7 @@
             <div id="promoBlock" class="hidden">
               <div class="row">
                 <div>
-                  <label for="promoType" class="required">What is your primary Promo Deal</label>
+                  <label for="promoType" class="required">What is your primary promo deal</label>
                   <select id="promoType">
                     <option value="" selected disabled>Select promo type</option>
                     <option>X Off Your Order</option>
@@ -265,7 +258,7 @@
                   <div class="error" id="maxErr">Enter a non-negative number.</div>
                 </div>
                 <div>
-                  <label for="pickupOnly">Is this promotion for pick-up orders only?</label>
+                  <label for="pickupOnly">Is this promotion for pickup orders only?</label>
                   <select id="pickupOnly">
                     <option>No</option>
                     <option>Yes</option>
@@ -292,21 +285,26 @@
           <!-- Secondary module (Consumer) -->
           <fieldset>
             <legend>Secondary Module</legend>
-            <div class="row">
-              <div>
-                <label for="hasSecondary">Is there a secondary module needed for your campaign?</label>
-                <select id="hasSecondary">
-                  <option>No</option>
-                  <option>Yes</option>
-                </select>
-              </div>
-            </div>
+  <div class="row">
+    <div>
+      <label for="hasSecondary">Does your asset need a secondary module?</label>
+      <select id="hasSecondary">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+      <p class="subtext">
+        Add a secondary module if you’re featuring multiple categories or adding necessary context. 
+        Keep the message clear, scannable, and distinct from the lead.
+      </p>
+    </div>
+  </div>
 
             <div id="secondaryBlock" class="hidden">
               <div class="row">
                 <div>
                   <label for="secondaryObjective">Provide the message objective of this secondary module</label>
-                  <textarea id="secondaryObjective" placeholder="What do you want them to do? What method, offer, or feature supports that action?"></textarea>
+                  <textarea id="secondaryObjective" placeholder="What value prop, product offering, or feature supports that action?
+"></textarea>
                 </div>
               </div>
               <div class="row">
@@ -347,7 +345,7 @@
         <legend>Dasher Campaign Details</legend>
         <div class="row">
           <div>
-            <label for="d_channel" class="required">What channel is your campaign?</label>
+            <label for="d_channel" class="required">What channel is your asset?</label>
             <select id="d_channel" required>
               <option value="" selected disabled>Select channel</option>
               <option>Email</option>
@@ -378,7 +376,7 @@
         <div class="row">
           <div>
             <label for="d_behavior" class="required">What has this Dasher done or not done recently? What’s their current mindset or situation?</label>
-            <textarea id="d_behavior" placeholder="Start with ‘who…?’" required></textarea>
+            <textarea id="d_behavior" placeholder="Start with &quot;who…?&quot;" required></textarea>
             <div class="hint">Please start your response with "who".</div>
             <div class="error" id="d_behaviorErr">This field is required and must start with "who".</div>
           </div>
@@ -386,14 +384,14 @@
 
         <div class="row">
           <div>
-            <label for="d_submarkets">Is this campaign specific to a specific set of submarkets?</label>
+            <label for="d_submarkets">Is this asset specific to a specific set of submarkets?</label>
             <textarea id="d_submarkets" placeholder="e.g., Phoenix, Denver, Minneapolis"></textarea>
           </div>
         </div>
 
         <div class="row">
           <div>
-            <label for="d_usecase" class="required">What is your Use Case?</label>
+            <label for="d_usecase" class="required">What is your use case?</label>
             <select id="d_usecase" required>
               <option value="" selected disabled>Select use case</option>
               <option>First Dash Conversion (New Dx)</option>
@@ -406,13 +404,6 @@
               <option>Other</option>
             </select>
             <div class="error" id="d_usecaseErr">Use Case is required.</div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="d_objective">Provide the message objective of this campaign.</label>
-            <textarea id="d_objective"></textarea>
           </div>
         </div>
 
@@ -471,7 +462,7 @@
           <div id="d_promoBlock" class="hidden">
             <div class="row">
               <div>
-                <label for="d_promoType" class="required">What is your primary Promotion?</label>
+                <label for="d_promoType" class="required">What is your primary promotion?</label>
                 <select id="d_promoType">
                   <option value="" selected disabled>Select promotion</option>
                   <option>Complete x dashers, receive $x</option>
@@ -521,7 +512,7 @@
             <div id="d_streaksBlock" class="hidden">
               <div class="row">
                 <div>
-                  <label for="d_consecDays" class="required">How many consecutive days required to earn payout?</label>
+                  <label for="d_consecDays" class="required">How many consecutive days are required to earn the payout?</label>
                   <input id="d_consecDays" type="text" placeholder="e.g., 3" />
                   <div class="error" id="d_daysErr">Enter a non-negative number.</div>
                 </div>
@@ -539,14 +530,20 @@
         <fieldset>
           <legend>Secondary Module</legend>
           <div class="row">
-            <div>
-              <label for="d_hasSecondary">Is there a secondary module needed for your campaign?</label>
-              <select id="d_hasSecondary">
-                <option>No</option>
-                <option>Yes</option>
-              </select>
-            </div>
-          </div>
+    <div>
+      <label for="hasSecondary">Does your asset need a secondary module?</label>
+      <select id="hasSecondary">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+      <p class="subtext">
+        Add a secondary module if you’re featuring multiple categories or adding necessary context. 
+        Keep the message clear, scannable, and distinct from the lead.
+      </p>
+    </div>
+  </div>
+
+          
 
           <div id="d_secondaryBlock" class="hidden">
             <div class="row">
@@ -760,7 +757,7 @@
       const obj = (objective.value||'').trim() || 'N/A';
       const callToAction = cta.value || 'N/A';
 
-      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
+      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
 
       if (hasPromo.value==='Yes'){
         const pType = promoType.value;
