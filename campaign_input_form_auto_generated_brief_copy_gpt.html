@@ -756,11 +756,11 @@
       const beh = (behavior.value||'').trim();
       const loc = (submarkets.value||'').trim();
       const uc  = usecase.value || '';
-      const action = (action.value||'').trim() || 'N/A';
-    const takeaway = (takeaway.value||'').trim() || 'N/A';
+      const actVal = (action.value||'').trim() || 'N/A';
+const takeVal = (takeaway.value||'').trim() || 'N/A'
       const callToAction = cta.value || 'N/A';
 
-      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Main action we want to the consumer to take : ${action} The main takeaway we want to the consumer to take : ${takeaway} CTA: ${callToAction}.`;
+      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Main action we want to the consumer to take : ${actVal} The main takeaway we want to the consumer to take : ${takeVal} CTA: ${callToAction}.`;
 
       if (hasPromo.value==='Yes'){
         const pType = promoType.value;
@@ -843,11 +843,11 @@
       const beh = (d_behavior.value||'').trim();
       const loc = (d_submarkets.value||'').trim();
       const uc  = d_usecase.value || '';
-      const d_action = (d_action.value||'').trim() || 'N/A';
-    const d_takeaway = (d_takeaway.value||'').trim() || 'N/A';
+      const actVal = (d_action.value||'').trim() || 'N/A';
+const takeVal = (d_takeaway.value||'').trim() || 'N/A';
       const callToAction = d_cta.value || 'N/A';
 
-      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} The main action we want the Dasher to take is:  ${d_action}. The main takeaway for the Dasher is: ${d_takeaway}  CTA: ${callToAction}.`;
+      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} The main action we want the Dasher to take is:  ${actVal}. The main takeaway for the Dasher is: ${takeVal}  CTA: ${callToAction}.`;
 
       if (d_hasPromo.value==='Yes'){
         const pType = d_promoType.value;
