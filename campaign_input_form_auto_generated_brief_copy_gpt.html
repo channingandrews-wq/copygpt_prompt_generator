@@ -17,7 +17,12 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial,"Apple Color Emoji","Segoe UI Emoji";background:var(--bg);color:var(--text)}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--text);
+    }
     .container{max-width:1100px;margin:0 auto;padding:24px}
     h1{font-size:28px;margin:0 0 8px}
     p.lead{margin:0 0 24px;color:var(--muted)}
@@ -29,7 +34,9 @@
     .row-1{display:grid;grid-template-columns:1fr;gap:12px}
     label{display:block;font-weight:600;margin-bottom:6px}
     .desc{font-weight:500;color:var(--muted);font-size:13px;margin-top:4px}
-    input[type="text"],input[type="date"],input[type="search"],select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)}
+    input[type="text"], input[type="date"], input[type="search"], select, textarea{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)
+    }
     textarea{min-height:100px;resize:vertical}
     .hint{font-size:12px;color:var(--muted)}
     .required::after{content:" *";color:var(--danger);font-weight:700}
@@ -41,13 +48,14 @@
     button.primary{background:linear-gradient(135deg,#0b57d0,#3b82f6);border:none;color:#fff}
     button.ghost{background:transparent}
     .output{white-space:pre-wrap;background:#fff;border:1px dashed #cfcfcf;border-radius:12px;padding:14px;min-height:120px}
+    .copy-section {margin-top: 10px;text-align: center;}
     .support-msg{color:var(--danger);font-weight:600}
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>CopyGPT Campaign Intake</h1>
-    <p class="lead">Fill out the form. Fields marked with * are required. Visibility updates as you choose options.</p>
+    <h1>CopyGPT Prompt Generator</h1>
+    <p class="lead">Fill out the form to generate a complete prompt for you. The fields will update as you make selections.</p>
 
     <form id="intakeForm" novalidate>
       <!-- Audience -->
@@ -67,19 +75,19 @@
         </div>
       </fieldset>
 
-      <!-- CONSUMER (unchanged from your input) -->
+      <!-- CONSUMER -->
       <fieldset id="consumerBlock" class="hidden">
         <legend>Consumer Campaign Details</legend>
         <div class="row">
           <div>
-            <label for="channel" class="required">What channel is your campaign?</label>
+            <label for="channel" class="required">For which channel is your asset?</label>
             <select id="channel" required>
               <option value="" selected disabled>Select channel</option>
               <option>Email</option>
               <option>Push Notification</option>
               <option>Paid Media</option>
               <option>Organic Social</option>
-              <option>Long-Form Content</option>
+              <option>Long-form Content</option>
               <option>In-app Merchandising</option>
             </select>
             <div class="error" id="channelErr">Channel is required.</div>
@@ -89,6 +97,7 @@
           <span class="support-msg">CopyGPT does not currently support these channels.</span>
         </div>
 
+        <!-- Email/Push only -->
         <div id="epBlock" class="hidden">
           <div class="row">
             <div>
@@ -108,7 +117,7 @@
           <div class="row">
             <div>
               <label for="behavior" class="required">What has this user done or not done recently? What’s their current mindset or situation?</label>
-              <textarea id="behavior" placeholder="Start with ‘who…?’ e.g., who haven’t ordered in 30 days and are craving convenience" required></textarea>
+              <textarea id="behavior" placeholder="Start with &quot;who…?&quot; e.g., who haven’t ordered in 30 days and are craving convenience" required></textarea>
               <div class="hint">Please start your response with "who".</div>
               <div class="error" id="behaviorErr">This field is required and must start with "who".</div>
             </div>
@@ -116,7 +125,7 @@
 
           <div class="row">
             <div>
-              <label for="submarkets" class="required">Is this campaign specific to a specific set of submarkets?</label>
+              <label for="submarkets" class="required">Is this asset specific to a specific set of submarkets?</label>
               <textarea id="submarkets" placeholder="e.g., Phoenix, Denver, Minneapolis" required></textarea>
               <div class="error" id="submarketsErr">This field is required.</div>
             </div>
@@ -124,7 +133,7 @@
 
           <div class="row">
             <div>
-              <label for="usecase" class="required">What is your Use Case?</label>
+              <label for="usecase" class="required">What is your use case?</label>
               <select id="usecase" required>
                 <option value="" selected disabled>Select use case</option>
                 <option>Convert New Customers</option>
@@ -136,13 +145,6 @@
                 <option>Other</option>
               </select>
               <div class="error" id="usecaseErr">Use Case is required.</div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="objective">Provide the message objective of this campaign.</label>
-              <textarea id="objective" placeholder="e.g., Remind lapsed users of quick grocery delivery"></textarea>
             </div>
           </div>
 
@@ -164,7 +166,7 @@
 
           <div class="row">
             <div>
-              <label for="feature">Is there a feature or service you want to highlight in this campaign?</label>
+              <label for="feature">Can you provide more details or context about the feature or service you’d like to highlight in this campaign?</label>
               <textarea id="feature" placeholder="e.g., Snap EBT on grocery, DoubleDash, saved addresses"></textarea>
             </div>
           </div>
@@ -214,7 +216,7 @@
             <div id="promoBlock" class="hidden">
               <div class="row">
                 <div>
-                  <label for="promoType" class="required">What is your primary Promo Deal</label>
+                  <label for="promoType" class="required">What is your primary promo deal</label>
                   <select id="promoType">
                     <option value="" selected disabled>Select promo type</option>
                     <option>X Off Your Order</option>
@@ -257,7 +259,7 @@
                   <div class="error" id="maxErr">Enter a non-negative number.</div>
                 </div>
                 <div>
-                  <label for="pickupOnly">Is this promotion for pick-up orders only?</label>
+                  <label for="pickupOnly">Is this promotion for pickup orders only?</label>
                   <select id="pickupOnly">
                     <option>No</option>
                     <option>Yes</option>
@@ -284,21 +286,26 @@
           <!-- Secondary module (Consumer) -->
           <fieldset>
             <legend>Secondary Module</legend>
-            <div class="row">
-              <div>
-                <label for="hasSecondary">Is there a secondary module needed for your campaign?</label>
-                <select id="hasSecondary">
-                  <option>No</option>
-                  <option>Yes</option>
-                </select>
-              </div>
-            </div>
+  <div class="row">
+    <div>
+      <label for="hasSecondary">Does your asset need a secondary module?</label>
+      <select id="hasSecondary">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+      <p class="subtext">
+        Add a secondary module if you’re featuring multiple categories or adding necessary context. 
+        Keep the message clear, scannable, and distinct from the lead.
+      </p>
+    </div>
+  </div>
 
             <div id="secondaryBlock" class="hidden">
               <div class="row">
                 <div>
                   <label for="secondaryObjective">Provide the message objective of this secondary module</label>
-                  <textarea id="secondaryObjective" placeholder="What do you want them to do? What method, offer, or feature supports that action?"></textarea>
+                  <textarea id="secondaryObjective" placeholder="What value prop, product offering, or feature supports that action?
+"></textarea>
                 </div>
               </div>
               <div class="row">
@@ -339,7 +346,7 @@
         <legend>Dasher Campaign Details</legend>
         <div class="row">
           <div>
-            <label for="d_channel" class="required">What channel is your campaign?</label>
+            <label for="d_channel" class="required">What channel is your asset?</label>
             <select id="d_channel" required>
               <option value="" selected disabled>Select channel</option>
               <option>Email</option>
@@ -370,7 +377,7 @@
         <div class="row">
           <div>
             <label for="d_behavior" class="required">What has this Dasher done or not done recently? What’s their current mindset or situation?</label>
-            <textarea id="d_behavior" placeholder="Start with ‘who…?’" required></textarea>
+            <textarea id="d_behavior" placeholder="Start with &quot;who…?&quot;" required></textarea>
             <div class="hint">Please start your response with "who".</div>
             <div class="error" id="d_behaviorErr">This field is required and must start with "who".</div>
           </div>
@@ -378,14 +385,14 @@
 
         <div class="row">
           <div>
-            <label for="d_submarkets">Is this campaign specific to a specific set of submarkets?</label>
+            <label for="d_submarkets">Is this asset specific to a specific set of submarkets?</label>
             <textarea id="d_submarkets" placeholder="e.g., Phoenix, Denver, Minneapolis"></textarea>
           </div>
         </div>
 
         <div class="row">
           <div>
-            <label for="d_usecase" class="required">What is your Use Case?</label>
+            <label for="d_usecase" class="required">What is your use case?</label>
             <select id="d_usecase" required>
               <option value="" selected disabled>Select use case</option>
               <option>First Dash Conversion (New Dx)</option>
@@ -398,13 +405,6 @@
               <option>Other</option>
             </select>
             <div class="error" id="d_usecaseErr">Use Case is required.</div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="d_objective">Provide the message objective of this campaign.</label>
-            <textarea id="d_objective"></textarea>
           </div>
         </div>
 
@@ -463,7 +463,7 @@
           <div id="d_promoBlock" class="hidden">
             <div class="row">
               <div>
-                <label for="d_promoType" class="required">What is your primary Promotion?</label>
+                <label for="d_promoType" class="required">What is your primary promotion?</label>
                 <select id="d_promoType">
                   <option value="" selected disabled>Select promotion</option>
                   <option>Complete x dashers, receive $x</option>
@@ -513,7 +513,7 @@
             <div id="d_streaksBlock" class="hidden">
               <div class="row">
                 <div>
-                  <label for="d_consecDays" class="required">How many consecutive days required to earn payout?</label>
+                  <label for="d_consecDays" class="required">How many consecutive days are required to earn the payout?</label>
                   <input id="d_consecDays" type="text" placeholder="e.g., 3" />
                   <div class="error" id="d_daysErr">Enter a non-negative number.</div>
                 </div>
@@ -531,14 +531,20 @@
         <fieldset>
           <legend>Secondary Module</legend>
           <div class="row">
-            <div>
-              <label for="d_hasSecondary">Is there a secondary module needed for your campaign?</label>
-              <select id="d_hasSecondary">
-                <option>No</option>
-                <option>Yes</option>
-              </select>
-            </div>
-          </div>
+    <div>
+      <label for="hasSecondary">Does your asset need a secondary module?</label>
+      <select id="hasSecondary">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+      <p class="subtext">
+        Add a secondary module if you’re featuring multiple categories or adding necessary context. 
+        Keep the message clear, scannable, and distinct from the lead.
+      </p>
+    </div>
+  </div>
+
+          
 
           <div id="d_secondaryBlock" class="hidden">
             <div class="row">
@@ -585,16 +591,18 @@
 
       <div class="actions">
         <button type="button" class="primary" id="generateBtn">Generate Response</button>
-        <button type="button" id="copyBtn">Copy Text</button>
         <button type="reset" class="ghost" id="resetBtn">Reset</button>
       </div>
 
       <fieldset>
-        <legend>Generated Response</legend>
-        <div id="output" class="output" aria-live="polite"></div>
-      </fieldset>
-    </form>
-  </div>
+<legend>Generated Response</legend>
+<div id="output" class="output" aria-live="polite"></div>
+<div class="copy-section">
+<button type="button" id="copyBtn">Copy Text</button>
+</div>
+</fieldset>
+</form>
+</div>
 
   <script>
     const el = (id) => document.getElementById(id);
@@ -605,8 +613,9 @@
     const copyBtn = el('copyBtn');
     const generateBtn = el('generateBtn');
     const resetBtn = el('resetBtn');
+    
 
-    // Consumer refs
+    // Consumer refs (kept from original & extended)
     const consumerBlock = el('consumerBlock');
     const channel = el('channel');
     const unsupportedMsg = el('unsupportedMsg');
@@ -668,13 +677,6 @@
     const d_consecDays = el('d_consecDays');
     const d_additionalPayout = el('d_additionalPayout');
 
-    // NEW: Dasher secondary refs
-    const d_hasSecondary = el('d_hasSecondary');
-    const d_secondaryBlock = el('d_secondaryBlock');
-    const d_secondaryObjective = el('d_secondaryObjective');
-    const d_secondaryLOB = el('d_secondaryLOB');
-    const d_secondaryCTA = el('d_secondaryCTA');
-
     // Merchant placeholder
     const merchantBlock = el('merchantBlock');
 
@@ -682,7 +684,11 @@
     const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; // mm/dd/yy
     const reMoneyNum = /^\d+(?:\.\d{1,2})?$/;
 
-    function showError(id, show) { const e = el(id); if (!e) return; e.style.display = show ? 'block' : 'none'; }
+    function showError(id, show) {
+      const e = el(id);
+      if (!e) return;
+      e.style.display = show ? 'block' : 'none';
+    }
     function validateRequired(node, errId){ const ok = !!(node && node.value && node.value.trim().length); showError(errId, !ok); return ok; }
     function validateStartsWithWho(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok=v.length>0 && v.startsWith('who'); showError(errId,!ok); return ok; }
     function validateDate(node, errId){ const v=(node.value||'').trim(); const ok=reDate.test(v); showError(errId,!ok); return ok; }
@@ -712,12 +718,8 @@
       d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
       d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
       d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
-
-      // NEW: toggle Dasher secondary module
-      d_secondaryBlock.classList.toggle('hidden', d_hasSecondary.value!=='Yes');
     }
 
-    // Events
     audience.addEventListener('change', updateVisibility);
     channel.addEventListener('change', updateVisibility);
     hasPromo.addEventListener('change', updateVisibility);
@@ -725,10 +727,8 @@
 
     d_hasPromo.addEventListener('change', updateVisibility);
     d_promoType.addEventListener('change', updateVisibility);
-    // NEW: listen for Dasher secondary
-    d_hasSecondary.addEventListener('change', updateVisibility);
 
-    // Generate (Consumer)
+    // Generate
     function generateConsumer(){
       let valid = true;
       valid &= validateRequired(channel, 'channelErr');
@@ -744,7 +744,7 @@
 
         if (hasPromo.value==='Yes'){
           valid &= validateRequired(promoType,'promoTypeErr');
-          valid &= (function(node, errId){const v=(node.value||'').trim();const ok=/[$%]/.test(v)&&v.length>0;showError(errId,!ok);return ok;})(discount,'discountErr');
+          valid &= validateHasDollarOrPercent(discount,'discountErr');
           valid &= validateDate(startDate,'startErr');
           valid &= validateDate(endDate,'endErr');
           valid &= validateNumber(minSubtotal,'minErr');
@@ -761,7 +761,7 @@
       const obj = (objective.value||'').trim() || 'N/A';
       const callToAction = cta.value || 'N/A';
 
-      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
+      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
 
       if (hasPromo.value==='Yes'){
         const pType = promoType.value;
@@ -805,9 +805,15 @@
       }
 
       return txt.trim();
+
+      function validateHasDollarOrPercent(node, errId){
+        const v=(node.value||'').trim();
+        const ok = /[$%]/.test(v) && v.length>0;
+        showError(errId,!ok);
+        return ok;
+      }
     }
 
-    // Generate (Dasher)
     function generateDasher(){
       let valid = true;
       valid &= validateRequired(d_channel,'d_channelErr');
@@ -863,7 +869,7 @@
         }
       }
 
-      if (d_hasSecondary.value==='Yes'){
+      if (el('d_hasSecondary').value==='Yes'){
         const sObj = (d_secondaryObjective.value||'N/A').trim();
         const sLOB = d_secondaryLOB.value || 'N/A';
         const sCTA = d_secondaryCTA.value || 'N/A';
@@ -898,7 +904,8 @@
       return ok;
     }
 
-    // Events (global)
+    // Events
+    audience.addEventListener('change', updateVisibility);
     generateBtn.addEventListener('click', gatherAndGenerate);
     copyBtn.addEventListener('click', async () => {
       const text = output.textContent.trim();
@@ -916,7 +923,6 @@
     resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
 
     // init
-    audience.addEventListener('change', updateVisibility);
     updateVisibility();
   </script>
 </body>
