@@ -53,8 +53,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>CopyGPT Campaign Intake</h1>
-    <p class="lead">Fill out the form. Fields marked with * are required. Visibility updates as you choose options.</p>
+    <h1>CopyGPT Prompt Generator</h1>
+    <p class="lead">Fill out the form to generate a complete prompt for you. The fields will update as you make selections.</p>
 
     <form id="intakeForm" novalidate>
       <!-- Audience -->
@@ -590,7 +590,6 @@
 
       <div class="actions">
         <button type="button" class="primary" id="generateBtn">Generate Response</button>
-        <button type="button" id="copyBtn">Copy Text</button>
         <button type="reset" class="ghost" id="resetBtn">Reset</button>
       </div>
 
@@ -600,6 +599,9 @@
       </fieldset>
     </form>
   </div>
+  <div class="actions">
+        <button type="button" id="copyBtn">Copy Text</button>
+      </div>
 
   <script>
     const el = (id) => document.getElementById(id);
