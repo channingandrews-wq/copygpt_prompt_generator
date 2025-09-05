@@ -605,163 +605,325 @@
 </div>
 
   <script>
-  const el = (id) => document.getElementById(id);
+    const el = (id) => document.getElementById(id);
 
-  // Shared
-  const audience = el('audience');
-  const output = el('output');
-  const copyBtn = el('copyBtn');
-  const generateBtn = el('generateBtn');
-  const resetBtn = el('resetBtn');
+    // Shared
+    const audience = el('audience');
+    const output = el('output');
+    const copyBtn = el('copyBtn');
+    const generateBtn = el('generateBtn');
+    const resetBtn = el('resetBtn');
+    
 
-  // Consumer refs
-  const consumerBlock = el('consumerBlock');
-  const channel = el('channel');
-  const unsupportedMsg = el('unsupportedMsg');
-  const epBlock = el('epBlock');
-  const segment = el('segment');
-  const behavior = el('behavior');
-  const submarkets = el('submarkets');
-  const usecase = el('usecase');
-  const action = el('action');
-  const takeaway = el('takeaway');
-  const feature = el('feature');
-  const cta = el('cta');
-  const hasPromo = el('hasPromo');
-  const promoBlock = el('promoBlock');
-  const promoType = el('promoType');
-  const discount = el('discount');
-  const startDate = el('startDate');
-  const endDate = el('endDate');
-  const minSubtotal = el('minSubtotal');
-  const maxDiscount = el('maxDiscount');
-  const pickupOnly = el('pickupOnly');
-  const promoCode = el('promoCode');
-  const dashpassOnly = el('dashpassOnly');
-  const hasSecondary = el('hasSecondary');
-  const secondaryObjective = el('secondaryObjective');
-  const secondaryLOB = el('secondaryLOB');
-  const secondaryCTA = el('secondaryCTA');
+    // Consumer refs (kept from original & extended)
+    const consumerBlock = el('consumerBlock');
+    const channel = el('channel');
+    const unsupportedMsg = el('unsupportedMsg');
+    const epBlock = el('epBlock');
 
-  // Dasher refs
-  const dasherBlock = el('dasherBlock');
-  const d_channel = el('d_channel');
-  const d_segment = el('d_segment');
-  const d_behavior = el('d_behavior');
-  const d_submarkets = el('d_submarkets');
-  const d_usecase = el('d_usecase');
-  const d_action = el('d_action');
-  const d_takeaway = el('d_takeaway');
-  const d_feature = el('d_feature');
-  const d_cta = el('d_cta');
-  const d_hasPromo = el('d_hasPromo');
-  const d_promoBlock = el('d_promoBlock');
-  const d_promoType = el('d_promoType');
-  const d_otherPromo = el('d_otherPromo');
-  const d_startDate = el('d_startDate');
-  const d_endDate = el('d_endDate');
-  const d_minDeliveries = el('d_minDeliveries');
-  const d_stdPayout = el('d_stdPayout');
-  const d_maxPayout = el('d_maxPayout');
-  const d_consecDays = el('d_consecDays');
-  const d_additionalPayout = el('d_additionalPayout');
-  const d_secondaryObjective = el('d_secondaryObjective');
-  const d_secondaryLOB = el('d_secondaryLOB');
-  const d_secondaryCTA = el('d_secondaryCTA');
+    const segment = el('segment');
+    const behavior = el('behavior');
+    const submarkets = el('submarkets');
+    const usecase = el('usecase');
+    const action = el('action');
+    const takeaway = el('takeaway');
+    const feature = el('feature');
+    const lob = el('lob');
+    const cta = el('cta');
 
-  // Validation helpers (unchanged)...
+    const hasPromo = el('hasPromo');
+    const promoBlock = el('promoBlock');
+    const promoType = el('promoType');
+    const discount = el('discount');
+    const startDate = el('startDate');
+    const endDate = el('endDate');
+    const minSubtotal = el('minSubtotal');
+    const maxDiscount = el('maxDiscount');
+    const pickupOnly = el('pickupOnly');
+    const promoCode = el('promoCode');
+    const dashpassOnly = el('dashpassOnly');
 
-  // Generate Consumer
-  function generateConsumer(){
-    let valid = true;
-    valid &= validateRequired(channel, 'channelErr');
-    const ch = channel.value;
-    const isEP = ch==='Email' || ch==='Push Notification';
-    if (isEP){
-      valid &= validateRequired(segment,'segmentErr');
-      valid &= validateStartsWithWho(behavior,'behaviorErr');
-      valid &= validateRequired(submarkets,'submarketsErr');
-      valid &= validateRequired(usecase,'usecaseErr');
-      valid &= validateRequired(action,'actionErr');
-      valid &= validateRequired(takeaway,'takeawayErr');
+    const hasSecondary = el('hasSecondary');
+    const secondaryBlock = el('secondaryBlock');
+    const secondaryObjective = el('secondaryObjective');
+    const secondaryLOB = el('secondaryLOB');
+    const secondaryCTA = el('secondaryCTA');
+
+    // Dasher refs
+    const dasherBlock = el('dasherBlock');
+    const d_channel = el('d_channel');
+    const d_segment = el('d_segment');
+    const d_behavior = el('d_behavior');
+    const d_submarkets = el('d_submarkets');
+    const d_usecase = el('d_usecase');
+    const d_action = el('d_action');
+    const d_takeaway = el('d_takeaway');
+    const d_feature = el('d_feature');
+    const d_cta = el('d_cta');
+
+    const d_hasPromo = el('d_hasPromo');
+    const d_promoBlock = el('d_promoBlock');
+    const d_promoType = el('d_promoType');
+    const d_otherWrap = el('d_otherWrap');
+    const d_otherPromo = el('d_otherPromo');
+    const d_startDate = el('d_startDate');
+    const d_endDate = el('d_endDate');
+    const d_minDeliveries = el('d_minDeliveries');
+    const d_stdPayout = el('d_stdPayout');
+    const d_maxPayout = el('d_maxPayout');
+    const d_streaksBlock = el('d_streaksBlock');
+    const d_consecDays = el('d_consecDays');
+    const d_additionalPayout = el('d_additionalPayout');
+
+    // Merchant placeholder
+    const merchantBlock = el('merchantBlock');
+
+    // Validation helpers
+    const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; // mm/dd/yy
+    const reMoneyNum = /^\d+(?:\.\d{1,2})?$/;
+
+    function showError(id, show) {
+      const e = el(id);
+      if (!e) return;
+      e.style.display = show ? 'block' : 'none';
     }
-    if (!valid) return '';
+    function validateRequired(node, errId){ const ok = !!(node && node.value && node.value.trim().length); showError(errId, !ok); return ok; }
+    function validateStartsWithWho(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok=v.length>0 && v.startsWith('who'); showError(errId,!ok); return ok; }
+    function validateDate(node, errId){ const v=(node.value||'').trim(); const ok=reDate.test(v); showError(errId,!ok); return ok; }
+    function validateNumber(node, errId){ const v=(node.value||'').trim(); const ok=reMoneyNum.test(v); showError(errId,!ok); return ok; }
+    function validateHasDollar(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok = v.includes('$'); showError(errId, !ok); return ok; }
+    function validateHasDollarOrNA(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok = v==='n/a' || v.includes('$'); showError(errId, !ok); return ok; }
 
-    const aud = 'Consumer';
-    const seg = segment.value || '';
-    const beh = (behavior.value||'').trim();
-    const loc = (submarkets.value||'').trim();
-    const uc  = usecase.value || '';
-    const callToAction = cta.value || 'N/A';
-    const actVal = (action.value||'').trim() || 'N/A';
-    const takeVal = (takeaway.value||'').trim() || 'N/A';
+    // Visibility
+    function updateVisibility(){
+      consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
+      dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
+      merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
 
-    let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
-The main action we want the consumer to take: ${actVal}
-The most important takeaway for Consumer: ${takeVal}
-CTA: ${callToAction}.`;
+      if (audience.value==='Consumer'){
+        const ch = channel.value;
+        const isEP = ch==='Email' || ch==='Push Notification';
+        epBlock.classList.toggle('hidden', !isEP);
+        unsupportedMsg.classList.toggle('hidden', isEP || !ch);
+      } else {
+        unsupportedMsg.classList.add('hidden');
+        epBlock.classList.add('hidden');
+      }
 
-    return txt.trim();
-  }
+      promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
+      secondaryBlock.classList.toggle('hidden', hasSecondary.value!=='Yes');
 
-  // Generate Dasher
-  function generateDasher(){
-    let valid = true;
-    valid &= validateRequired(d_channel,'d_channelErr');
-    valid &= validateRequired(d_segment,'d_segmentErr');
-    valid &= validateStartsWithWho(d_behavior,'d_behaviorErr');
-    valid &= validateRequired(d_usecase,'d_usecaseErr');
-    valid &= validateRequired(d_action,'d_actionErr');
-    valid &= validateRequired(d_takeaway,'d_takeawayErr');
-    if (!valid) return '';
-
-    const aud = 'Dasher';
-    const ch = d_channel.value || '';
-    const seg = d_segment.value || '';
-    const beh = (d_behavior.value||'').trim();
-    const loc = (d_submarkets.value||'').trim();
-    const uc  = d_usecase.value || '';
-    const callToAction = d_cta.value || 'N/A';
-    const actVal = (d_action.value||'').trim() || 'N/A';
-    const takeVal = (d_takeaway.value||'').trim() || 'N/A';
-
-    let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
-The main action we want the Dasher to take: ${actVal}
-The most important takeaway for Dasher: ${takeVal}
-CTA: ${callToAction}.`;
-
-    return txt.trim();
-  }
-
-  function gatherAndGenerate(){
-    output.textContent='';
-    if (!validateRequired(audience,'audienceErr')) return;
-    let text='';
-    if (audience.value==='Consumer'){ text = generateConsumer(); }
-    else if (audience.value==='Dasher'){ text = generateDasher(); }
-    else if (audience.value==='Merchant'){ text = 'Merchant workflow not yet supported in this form.'; }
-    output.textContent = (text||'').trim();
-    if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
-  }
-
-  // Events
-  generateBtn.addEventListener('click', gatherAndGenerate);
-  copyBtn.addEventListener('click', async () => {
-    const text = output.textContent.trim();
-    if (!text) return;
-    try{
-      await navigator.clipboard.writeText(text);
-      copyBtn.textContent = 'Copied!';
-      setTimeout(()=>{copyBtn.textContent='Copy Text';},1200);
-    }catch(e){
-      const ta=document.createElement('textarea');
-      ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
+      d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
+      d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
     }
-  });
-  resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
 
-  // init
-  updateVisibility();
-</script>
+    audience.addEventListener('change', updateVisibility);
+    channel.addEventListener('change', updateVisibility);
+    hasPromo.addEventListener('change', updateVisibility);
+    hasSecondary.addEventListener('change', updateVisibility);
+
+    d_hasPromo.addEventListener('change', updateVisibility);
+    d_promoType.addEventListener('change', updateVisibility);
+
+    // Generate
+    function generateConsumer(){
+      let valid = true;
+      valid &= validateRequired(channel, 'channelErr');
+      const ch = channel.value;
+      const isEP = ch==='Email' || ch==='Push Notification';
+      if (isEP){
+        valid &= validateRequired(segment,'segmentErr');
+        valid &= validateStartsWithWho(behavior,'behaviorErr');
+        valid &= validateRequired(submarkets,'submarketsErr');
+        valid &= validateRequired(usecase,'usecaseErr');
+        valid &= validateRequired(action,'actionErr');
+        valid &= validateRequired(takeaway,'takeawayErr');
+
+        if (hasPromo.value==='Yes'){
+          valid &= validateRequired(promoType,'promoTypeErr');
+          valid &= validateHasDollarOrPercent(discount,'discountErr');
+          valid &= validateDate(startDate,'startErr');
+          valid &= validateDate(endDate,'endErr');
+          valid &= validateNumber(minSubtotal,'minErr');
+          valid &= validateNumber(maxDiscount,'maxErr');
+        }
+      }
+      if (!valid) return '';
+
+      const aud = 'Consumer';
+      const seg = segment.value || '';
+      const beh = (behavior.value||'').trim();
+      const loc = (submarkets.value||'').trim();
+      const uc  = usecase.value || '';
+      const action = (action.value||'').trim() || 'N/A';
+    const takeaway = (takeaway.value||'').trim() || 'N/A';
+      const callToAction = cta.value || 'N/A';
+
+      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Main action we want to the consumer to take : ${action} The main takeaway we want to the consumer to take : ${takeaway} CTA: ${callToAction}.`;
+
+      if (hasPromo.value==='Yes'){
+        const pType = promoType.value;
+        const disc = (discount.value||'').trim();
+        const start = (startDate.value||'').trim();
+        const end = (endDate.value||'').trim();
+        const min = Number((minSubtotal.value||'0').trim());
+        const max = Number((maxDiscount.value||'0').trim());
+        const pickOnly = pickupOnly.value==='Yes';
+        const code = (promoCode.value||'').trim();
+        const dpOnly = dashpassOnly.value==='Yes';
+
+        txt += `\nThis campaign include a [${pType} promo]`;
+
+        const money = (n)=> isNaN(n)?'0':n.toString();
+        const minTxt = `$${money(min)}`;
+        const maxTxt = `$${money(max)}`;
+
+        if (pType==='Save Up To $X'){
+          txt += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
+        } else if (pType==='X Off Your Order'){
+          txt += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
+        } else if (pType==='$0 Delivery Fee'){
+          txt += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
+        } else if (pType==='$ X off Delivery Fee'){
+          txt += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
+        } else {
+          txt += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
+        }
+
+        if (pickOnly) txt += ' Pick up orders only.';
+        if (dpOnly) txt += ' DashPass Members only.';
+        if (code && code.toLowerCase()!=='n/a') txt += ` ${code}.`;
+      }
+
+      if (hasSecondary.value==='Yes'){
+        const sObj = (secondaryObjective.value||'N/A').trim();
+        const sLOB = secondaryLOB.value || 'N/A';
+        const sCTA = secondaryCTA.value || 'N/A';
+        txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+      }
+
+      return txt.trim();
+
+      function validateHasDollarOrPercent(node, errId){
+        const v=(node.value||'').trim();
+        const ok = /[$%]/.test(v) && v.length>0;
+        showError(errId,!ok);
+        return ok;
+      }
+    }
+
+    function generateDasher(){
+      let valid = true;
+      valid &= validateRequired(d_channel,'d_channelErr');
+      valid &= validateRequired(d_segment,'d_segmentErr');
+      valid &= validateStartsWithWho(d_behavior,'d_behaviorErr');
+      valid &= validateRequired(d_usecase,'d_usecaseErr');
+      valid &= validateRequired(d_action,'d_actionErr');
+      valid &= validateRequired(d_takeaway,'d_takeawayErr');
+
+      if (d_hasPromo.value==='Yes'){
+        valid &= validateRequired(d_promoType,'d_promoTypeErr');
+        valid &= validateDate(d_startDate,'d_startErr');
+        valid &= validateDate(d_endDate,'d_endErr');
+        valid &= validateNumber(d_minDeliveries,'d_minErr');
+        valid &= validateHasDollar(d_stdPayout,'d_stdErr');
+        valid &= validateHasDollarOrNA(d_maxPayout,'d_maxErr');
+
+        if (d_promoType.value==='streaks'){
+          valid &= validateNumber(d_consecDays,'d_daysErr');
+          valid &= validateHasDollar(d_additionalPayout,'d_additionalErr');
+        }
+      }
+      if (!valid) return '';
+
+      const aud = 'Dasher';
+      const ch = d_channel.value || '';
+      const seg = d_segment.value || '';
+      const beh = (d_behavior.value||'').trim();
+      const loc = (d_submarkets.value||'').trim();
+      const uc  = d_usecase.value || '';
+      const d_action = (d_action.value||'').trim() || 'N/A';
+    const d_takeaway = (d_takeaway.value||'').trim() || 'N/A';
+      const callToAction = d_cta.value || 'N/A';
+
+      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} The main action we want the Dasher to take is:  ${d_action}. The main takeaway for the Dasher is: ${d_takeaway}  CTA: ${callToAction}.`;
+
+      if (d_hasPromo.value==='Yes'){
+        const pType = d_promoType.value;
+        const start = (d_startDate.value||'').trim();
+        const end = (d_endDate.value||'').trim();
+        const minDel = (d_minDeliveries.value||'0').trim();
+        const stdPay = (d_stdPayout.value||'').trim();
+        const maxPay = (d_maxPayout.value||'').trim();
+
+        if (pType==='Complete x dashers, receive $x'){
+          txt += `\nThis campaign include a promotion say the below:\nOffer: Get ${stdPay} when you complete ${minDel} between ${start} and ${end}`;
+        } else if (pType==='streaks'){
+          const days = (d_consecDays.value||'').trim();
+          const addPay = (d_additionalPayout.value||'').trim();
+          txt += `\nThis campaign include a promotion say the below:\nOffer: Get ${stdPay} when you complete ${minDel} for ${days} plus receive an additional ${addPay} for a max of ${maxPay}  between ${start} and ${end}`;
+        } else {
+          const other = (d_otherPromo.value||'').trim();
+          txt += `\nThis campaign include a promotion say the below:\nOffer: ${other || stdPay} between ${start} and ${end}`;
+        }
+      }
+
+      if (el('d_hasSecondary').value==='Yes'){
+        const sObj = (d_secondaryObjective.value||'N/A').trim();
+        const sLOB = d_secondaryLOB.value || 'N/A';
+        const sCTA = d_secondaryCTA.value || 'N/A';
+        txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+      }
+
+      return txt.trim();
+    }
+
+    function gatherAndGenerate(){
+      output.textContent='';
+      let valid = true;
+      valid &= validateRequired(audience,'audienceErr');
+      if (!valid) return;
+
+      let text='';
+      if (audience.value==='Consumer'){
+        text = generateConsumer();
+      } else if (audience.value==='Dasher'){
+        text = generateDasher();
+      } else if (audience.value==='Merchant'){
+        text = 'Merchant workflow not yet supported in this form.';
+      }
+      output.textContent = (text||'').trim();
+      if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function validateHasDollarOrPercent(node, errId){
+      const v=(node.value||'').trim();
+      const ok = /[$%]/.test(v) && v.length>0;
+      showError(errId,!ok);
+      return ok;
+    }
+
+    // Events
+    audience.addEventListener('change', updateVisibility);
+    generateBtn.addEventListener('click', gatherAndGenerate);
+    copyBtn.addEventListener('click', async () => {
+      const text = output.textContent.trim();
+      if (!text) return;
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = 'Copied!';
+        copyBtn.style.borderColor = 'var(--ok)';
+        setTimeout(()=>{copyBtn.textContent='Copy Text';copyBtn.style.borderColor='var(--border)';},1200);
+      }catch(e){
+        const ta=document.createElement('textarea');
+        ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      }
+    });
+    resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
+
+    // init
+    updateVisibility();
+  </script>
 </body>
 </html>
