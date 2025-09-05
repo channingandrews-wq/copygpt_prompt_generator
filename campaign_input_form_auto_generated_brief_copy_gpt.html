@@ -625,7 +625,6 @@
     const behavior = el('behavior');
     const submarkets = el('submarkets');
     const usecase = el('usecase');
-    const objective = el('objective');
     const action = el('action');
     const takeaway = el('takeaway');
     const feature = el('feature');
@@ -657,7 +656,6 @@
     const d_behavior = el('d_behavior');
     const d_submarkets = el('d_submarkets');
     const d_usecase = el('d_usecase');
-    const d_objective = el('d_objective');
     const d_action = el('d_action');
     const d_takeaway = el('d_takeaway');
     const d_feature = el('d_feature');
@@ -758,10 +756,11 @@
       const beh = (behavior.value||'').trim();
       const loc = (submarkets.value||'').trim();
       const uc  = usecase.value || '';
-      const obj = (objective.value||'').trim() || 'N/A';
+      const action = (action.value||'').trim() || 'N/A';
+    const takeaway = (takeaway.value||'').trim() || 'N/A';
       const callToAction = cta.value || 'N/A';
 
-      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
+      let txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Main action we want to the consumer to take : ${action} The main takeaway we want to the consumer to take : ${takeaway} CTA: ${callToAction}.`;
 
       if (hasPromo.value==='Yes'){
         const pType = promoType.value;
@@ -844,10 +843,11 @@
       const beh = (d_behavior.value||'').trim();
       const loc = (d_submarkets.value||'').trim();
       const uc  = d_usecase.value || '';
-      const obj = (d_objective.value||'').trim() || 'N/A';
+      const d_action = (d_action.value||'').trim() || 'N/A';
+    const d_takeaway = (d_takeaway.value||'').trim() || 'N/A';
       const callToAction = d_cta.value || 'N/A';
 
-      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} Objective: ${obj} CTA: ${callToAction}.`;
+      let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc} The main action we want the Dasher to take is:  ${d_action}. The main takeaway for the Dasher is: ${d_takeaway}  CTA: ${callToAction}.`;
 
       if (d_hasPromo.value==='Yes'){
         const pType = d_promoType.value;
