@@ -387,8 +387,8 @@
               <option>Email</option>
               <option>Push Notification</option>
               <option>Paid Media</option>
-              <option>Organic Social</option>
-              <option>Long-Form Content</option>
+              <option>Paid Social</option>
+              <option>Long Form Content</option>
               <option>In-app Merchandising</option>
             </select>
             <div class="error" id="d_channelErr">Channel is required.</div>
@@ -481,6 +481,40 @@
             </select>
           </div>
         </div>
+
+        <!-- Paid Media / Paid Social (Dasher) -->
+<fieldset id="d_paidBlock" class="hidden">
+  <legend>Paid Media / Paid Social</legend>
+
+  <div class="row">
+    <div>
+      <label for="d_adPlatforms" class="required">What platform is your ad running on?</label>
+      <select id="d_adPlatforms" multiple size="6">
+        <option>Meta ad</option>
+        <option>Snap ad</option>
+        <option>TikTok ad</option>
+        <option>YouTube Short ad</option>
+        <option>Google Demand Gen/Display ad</option>
+        <option>All paid channels</option>
+      </select>
+      <div class="hint">Hold Cmd/Ctrl to select more than one.</div>
+      <div class="error" id="d_adPlatformsErr">Select at least one platform.</div>
+    </div>
+  </div>
+
+  <div id="d_adTypeWrap" class="row hidden">
+    <div>
+      <label for="d_adType" class="required">What type of ad are you running?</label>
+      <select id="d_adType">
+        <option value="" selected disabled>Select ad type</option>
+        <option>Static</option>
+        <option>Video</option>
+        <option>Static and Video</option>
+      </select>
+      <div class="error" id="d_adTypeErr">Ad type is required.</div>
+    </div>
+  </div>
+</fieldset>
 
         <!-- Promotion (Dasher) -->
         <fieldset>
@@ -765,6 +799,14 @@ function validateMultiRequired(msEl, errId){
     epBlock.classList.add('hidden');
     paidBlock.classList.add('hidden');
   }
+if (audience.value==='Dasher') {
+  const dch = d_channel.value;
+  const isPaid = dch==='Paid Media';
+  d_paidBlock.classList.toggle('hidden', !isPaid);
+
+  const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
+  d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+}
 
   // promo/secondary (consumer)
   promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
@@ -891,14 +933,23 @@ CTA: ${callToAction}.`;
 }
     
     function generateDasher(){
-      let valid = true;
-      valid &= validateRequired(d_channel,'d_channelErr');
-      valid &= validateRequired(d_segment,'d_segmentErr');
-      valid &= validateStartsWithWho(d_behavior,'d_behaviorErr');
-      valid &= validateRequired(d_usecase,'d_usecaseErr');
-      valid &= validateRequired(d_action,'d_actionErr');
-      valid &= validateRequired(d_takeaway,'d_takeawayErr');
+  let valid = true;
+  const ch = d_channel.value || '';   // ✅ moved up
 
+  valid &= validateRequired(d_channel,'d_channelErr');
+  valid &= validateRequired(d_segment,'d_segmentErr');
+  valid &= validateStartsWithWho(d_behavior,'d_behaviorErr');
+  valid &= validateRequired(d_usecase,'d_usecaseErr');
+  valid &= validateRequired(d_action,'d_actionErr');
+  valid &= validateRequired(d_takeaway,'d_takeawayErr');
+
+  if (ch==='Paid Media') {
+    valid &= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
+    if (getMultiSelectValues(d_adPlatforms).length > 0){
+      valid &= validateRequired(d_adType, 'd_adTypeErr');
+    }
+  }
+}
       if (d_hasPromo.value==='Yes'){
         valid &= validateRequired(d_promoType,'d_promoTypeErr');
         valid &= validateDate(d_startDate,'d_startErr');
@@ -929,6 +980,15 @@ The main action we want the Dasher to take: ${actVal}
 The most important takeaway for Dasher: ${takeVal}
 CTA: ${callToAction}.`;
 
+      if (ch==='Paid Media') {
+  const platforms = getMultiSelectValues(d_adPlatforms);
+  if (platforms.length) {
+    txt += `\nPlatforms: ${platforms.join(', ')}.`;
+  }
+  if (d_adType.value) {
+    txt += `\nAd type: ${d_adType.value}.`;
+  }
+}
       if (d_hasPromo.value==='Yes'){
         const pType = d_promoType.value;
         const start = (d_startDate.value||'').trim();
