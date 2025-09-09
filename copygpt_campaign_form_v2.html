@@ -792,25 +792,27 @@ function validateMultiRequired(msEl, errId){
     epBlock.classList.toggle('hidden', !isEP);
     unsupportedMsg.classList.toggle('hidden', isEP || !ch);
 
-    // NEW: Paid block + ad-type visibility
+    // Paid block + ad-type visibility
     const isPaid = ch==='Paid Media' || ch==='Paid Social';
     paidBlock.classList.toggle('hidden', !isPaid);
 
     const hasPlatform = getMultiSelectValues(adPlatforms).length > 0;
     adTypeWrap.classList.toggle('hidden', !hasPlatform);
+
+  } else if (audience.value==='Dasher') {
+    const dch = d_channel.value;
+    const isPaid = dch==='Paid Media' || dch==='Paid Social';
+    d_paidBlock.classList.toggle('hidden', !isPaid);
+
+    const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
+    d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+
   } else {
     unsupportedMsg.classList.add('hidden');
     epBlock.classList.add('hidden');
     paidBlock.classList.add('hidden');
+    d_paidBlock.classList.add('hidden');
   }
-else if (audience.value==='Dasher') {
-  const dch = d_channel.value;
-  const isPaid = dch==='Paid Media';dch==='Paid Social'
-  d_paidBlock.classList.toggle('hidden', !isPaid);
-
-  const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
-  d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-}
 
   // promo/secondary (consumer)
   promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
@@ -821,6 +823,7 @@ else if (audience.value==='Dasher') {
   d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
   d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
 }
+
 
     // Generate
     function generateConsumer(){
