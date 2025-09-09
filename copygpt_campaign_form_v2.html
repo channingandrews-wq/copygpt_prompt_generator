@@ -734,7 +734,11 @@ const adType = el('adType');
     const d_takeaway = el('d_takeaway');
     const d_feature = el('d_feature');
     const d_cta = el('d_cta');
-
+const d_paidBlock = el('d_paidBlock');
+const d_adPlatforms = el('d_adPlatforms');
+const d_adTypeWrap = el('d_adTypeWrap');
+const d_adType = el('d_adType');
+    
     const d_hasPromo = el('d_hasPromo');
     const d_promoBlock = el('d_promoBlock');
     const d_promoType = el('d_promoType');
@@ -948,7 +952,6 @@ CTA: ${callToAction}.`;
     if (getMultiSelectValues(d_adPlatforms).length > 0){
       valid &= validateRequired(d_adType, 'd_adTypeErr');
     }
-  }
 }
       if (d_hasPromo.value==='Yes'){
         valid &= validateRequired(d_promoType,'d_promoTypeErr');
@@ -1055,6 +1058,8 @@ hasPromo.addEventListener('change', updateVisibility);
 hasSecondary.addEventListener('change', updateVisibility);
 d_hasPromo.addEventListener('change', updateVisibility);
 d_promoType.addEventListener('change', updateVisibility);
+d_adPlatforms.addEventListener('change', updateVisibility);
+    
 
 generateBtn.addEventListener('click', gatherAndGenerate);
 copyBtn.addEventListener('click', async () => {
