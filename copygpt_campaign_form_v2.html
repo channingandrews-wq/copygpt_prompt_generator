@@ -789,73 +789,59 @@ function updateVisibility(){
 
 // generate Consumer
 function generateConsumer(){
-  let valid=true;
-  valid&=validateRequired(channel,'channelErr');
-  const ch=channel.value;
-  const isEP=['Email','Push Notification','Paid Media','Paid Social'].includes(ch);
-  if(isEP){
-    valid&=validateRequired(segment,'segmentErr');
-    valid&=validateStartsWithWho(behavior,'behaviorErr');
-    valid&=validateRequired(submarkets,'submarketsErr');
-    valid&=validateRequired(usecase,'usecaseErr');
-    valid&=validateRequired(action,'actionErr');
-    valid&=validateRequired(takeaway,'takeawayErr');
-    if(['Paid Media','Paid Social'].includes(ch)){
-      valid&=validateMultiRequired(adPlatforms,'adPlatformsErr');
-      if(getMultiSelectValues(adPlatforms).length>0){
-        valid&=validateRequired(adType,'adTypeErr');
+  let valid = true;
+  valid &= validateRequired(channel, 'channelErr');
+  const ch = channel.value;
+
+  if (['Email','Push Notification','Paid Media','Paid Social'].includes(ch)){
+    valid &= validateRequired(segment,'segmentErr');
+    valid &= validateStartsWithWho(behavior,'behaviorErr');
+    valid &= validateRequired(submarkets,'submarketsErr');
+    valid &= validateRequired(usecase,'usecaseErr');
+    valid &= validateRequired(action,'actionErr');
+    valid &= validateRequired(takeaway,'takeawayErr');
+
+    if (['Paid Media','Paid Social'].includes(ch)){
+      valid &= validateMultiRequired(adPlatforms, 'adPlatformsErr');
+      if (getMultiSelectValues(adPlatforms).length > 0){
+        valid &= validateRequired(adType, 'adTypeErr');
       }
     }
-    if(hasPromo.value==='Yes'){
-      valid&=validateRequired(promoType,'promoTypeErr');
-      const v=(discount.value||'').trim();const ok=/[$%]/.test(v)&&v.length>0;
-      showError('discountErr',!ok);valid&=ok;
-      valid&=validateDate(startDate,'startErr');
-      valid&=validateDate(endDate,'endErr');
-      valid&=validateNumber(minSubtotal,'minErr');
-      valid&=validateNumber(maxDiscount,'maxErr');
-    }
   }
-  if(!valid)return '';
-  let txt=`I need a(n) ${ch} for Consumer targeting ${segment.value} ${behavior.value} in ${submarkets.value}. Use Case: ${usecase.value}.
-The main action: ${action.value}
-Takeaway: ${takeaway.value}
-CTA: ${cta.value||'N/A'}.`;
-  if(['Paid Media','Paid Social'].includes(ch)){
-    const platforms=getMultiSelectValues(adPlatforms);
-    if(platforms.length)txt+=`\nPlatforms: ${platforms.join(', ')}.`;
-    if(adType.value)txt+=`\nAd type: ${adType.value}.`;
-  }
-  return txt;
-}
 
+  if (!valid) return '';
+
+  return `I need a(n) ${ch} campaign targeting ${segment.value} ${behavior.value} in ${submarkets.value}.
+Use Case: ${usecase.value}
+Action: ${action.value}
+Takeaway: ${takeaway.value}
+CTA: ${cta.value || 'N/A'}.`;
+}
 // generate Dasher
 function generateDasher(){
-  let valid=true;
-  valid&=validateRequired(d_channel,'d_channelErr');
-  valid&=validateRequired(d_segment,'d_segmentErr');
-  valid&=validateStartsWithWho(d_behavior,'d_behaviorErr');
-  valid&=validateRequired(d_usecase,'d_usecaseErr');
-  valid&=validateRequired(d_action,'d_actionErr');
-  valid&=validateRequired(d_takeaway,'d_takeawayErr');
-  const ch=d_channel.value;
-  if(['Paid Media','Paid Social'].includes(ch)){
-    valid&=validateMultiRequired(d_adPlatforms,'d_adPlatformsErr');
-    if(getMultiSelectValues(d_adPlatforms).length>0){
-      valid&=validateRequired(d_adType,'d_adTypeErr');
+  let valid = true;
+  valid &= validateRequired(d_channel, 'd_channelErr');
+  valid &= validateRequired(d_segment, 'd_segmentErr');
+  valid &= validateStartsWithWho(d_behavior, 'd_behaviorErr');
+  valid &= validateRequired(d_usecase, 'd_usecaseErr');
+  valid &= validateRequired(d_action, 'd_actionErr');
+  valid &= validateRequired(d_takeaway, 'd_takeawayErr');
+
+  const ch = d_channel.value;
+  if (['Paid Media','Paid Social'].includes(ch)){
+    valid &= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
+    if (getMultiSelectValues(d_adPlatforms).length > 0){
+      valid &= validateRequired(d_adType, 'd_adTypeErr');
     }
   }
-  if(!valid)return '';
-  let txt=`I need a(n) ${ch} for Dasher targeting ${d_segment.value} ${d_behavior.value} in ${d_submarkets.value}. Use Case: ${d_usecase.value}.
-The main action: ${d_action.value}
+
+  if (!valid) return '';
+
+  return `I need a(n) ${ch} campaign for Dasher targeting ${d_segment.value} ${d_behavior.value} in ${d_submarkets.value}.
+Use Case: ${d_usecase.value}
+Action: ${d_action.value}
 Takeaway: ${d_takeaway.value}
-CTA: ${d_cta.value||'N/A'}.`;
-  if(['Paid Media','Paid Social'].includes(ch)){
-    const platforms=getMultiSelectValues(d_adPlatforms);
-    if(platforms.length)txt+=`\nPlatforms: ${platforms.join(', ')}.`;
-    if(d_adType.value)txt+=`\nAd type: ${d_adType.value}.`;
-  }
-  return txt;
+CTA: ${d_cta.value || 'N/A'}.`;
 }
 
 function gatherAndGenerate(){
