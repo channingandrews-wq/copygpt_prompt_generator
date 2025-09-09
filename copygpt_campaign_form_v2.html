@@ -809,7 +809,7 @@ function generateConsumer(){
     }
   }
 
-  if (!valid) return '';
+  if (!valid) return 'Some required fields are missing. Please review the form.';
 
   return `I need a(n) ${ch} campaign targeting ${segment.value} ${behavior.value} in ${submarkets.value}.
 Use Case: ${usecase.value}
@@ -835,7 +835,7 @@ function generateDasher(){
     }
   }
 
-  if (!valid) return '';
+  if (!valid) return 'Some required fields are missing. Please review the form.';
 
   return `I need a(n) ${ch} campaign for Dasher targeting ${d_segment.value} ${d_behavior.value} in ${d_submarkets.value}.
 Use Case: ${d_usecase.value}
