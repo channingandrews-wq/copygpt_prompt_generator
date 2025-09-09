@@ -674,176 +674,216 @@
 </div>
 
   <script>
-    const el = (id) => document.getElementById(id);
+const el = (id) => document.getElementById(id);
 
-    // Shared
-    const audience = el('audience');
-    const output = el('output');
-    const copyBtn = el('copyBtn');
-    const generateBtn = el('generateBtn');
-    const resetBtn = el('resetBtn');
-    
-    // Consumer refs
-    const consumerBlock = el('consumerBlock');
-    const channel = el('channel');
-    const unsupportedMsg = el('unsupportedMsg');
-    const epBlock = el('epBlock');
-    const segment = el('segment');
-    const behavior = el('behavior');
-    const submarkets = el('submarkets');
-    const usecase = el('usecase');
-    const action = el('action');
-    const takeaway = el('takeaway');
-    const feature = el('feature');
-    const lob = el('lob');
-    const cta = el('cta');
-    const paidBlock = el('paidBlock');
-    const adPlatforms = el('adPlatforms');
-    const adTypeWrap = el('adTypeWrap');
-    const adType = el('adType');
-    const hasPromo = el('hasPromo');
-    const promoBlock = el('promoBlock');
-    const promoType = el('promoType');
-    const discount = el('discount');
-    const startDate = el('startDate');
-    const endDate = el('endDate');
-    const minSubtotal = el('minSubtotal');
-    const maxDiscount = el('maxDiscount');
-    const pickupOnly = el('pickupOnly');
-    const promoCode = el('promoCode');
-    const dashpassOnly = el('dashpassOnly');
-    const hasSecondary = el('hasSecondary');
-    const secondaryBlock = el('secondaryBlock');
-    const secondaryObjective = el('secondaryObjective');
-    const secondaryLOB = el('secondaryLOB');
-    const secondaryCTA = el('secondaryCTA');
+// shared refs
+const audience = el('audience');
+const output = el('output');
+const copyBtn = el('copyBtn');
+const generateBtn = el('generateBtn');
+const resetBtn = el('resetBtn');
 
-    // Dasher refs
-    const dasherBlock = el('dasherBlock');
-    const d_channel = el('d_channel');
-    const d_segment = el('d_segment');
-    const d_behavior = el('d_behavior');
-    const d_submarkets = el('d_submarkets');
-    const d_usecase = el('d_usecase');
-    const d_action = el('d_action');
-    const d_takeaway = el('d_takeaway');
-    const d_feature = el('d_feature');
-    const d_cta = el('d_cta');
-    const d_paidBlock = el('d_paidBlock');
-    const d_adPlatforms = el('d_adPlatforms');
-    const d_adTypeWrap = el('d_adTypeWrap');
-    const d_adType = el('d_adType');
-    const d_hasPromo = el('d_hasPromo');
-    const d_promoBlock = el('d_promoBlock');
-    const d_promoType = el('d_promoType');
-    const d_otherWrap = el('d_otherWrap');
-    const d_otherPromo = el('d_otherPromo');
-    const d_startDate = el('d_startDate');
-    const d_endDate = el('d_endDate');
-    const d_minDeliveries = el('d_minDeliveries');
-    const d_stdPayout = el('d_stdPayout');
-    const d_maxPayout = el('d_maxPayout');
-    const d_streaksBlock = el('d_streaksBlock');
-    const d_consecDays = el('d_consecDays');
-    const d_additionalPayout = el('d_additionalPayout');
+// consumer refs
+const consumerBlock = el('consumerBlock');
+const channel = el('channel');
+const unsupportedMsg = el('unsupportedMsg');
+const epBlock = el('epBlock');
+const segment = el('segment');
+const behavior = el('behavior');
+const submarkets = el('submarkets');
+const usecase = el('usecase');
+const action = el('action');
+const takeaway = el('takeaway');
+const cta = el('cta');
+const paidBlock = el('paidBlock');
+const adPlatforms = el('adPlatforms');
+const adTypeWrap = el('adTypeWrap');
+const adType = el('adType');
+const hasPromo = el('hasPromo');
+const promoBlock = el('promoBlock');
+const promoType = el('promoType');
+const discount = el('discount');
+const startDate = el('startDate');
+const endDate = el('endDate');
+const minSubtotal = el('minSubtotal');
+const maxDiscount = el('maxDiscount');
+const pickupOnly = el('pickupOnly');
+const promoCode = el('promoCode');
+const dashpassOnly = el('dashpassOnly');
+const hasSecondary = el('hasSecondary');
+const secondaryBlock = el('secondaryBlock');
+const secondaryObjective = el('secondaryObjective');
+const secondaryLOB = el('secondaryLOB');
+const secondaryCTA = el('secondaryCTA');
 
-    // Merchant placeholder
-    const merchantBlock = el('merchantBlock');
+// dasher refs
+const dasherBlock = el('dasherBlock');
+const d_channel = el('d_channel');
+const d_segment = el('d_segment');
+const d_behavior = el('d_behavior');
+const d_submarkets = el('d_submarkets');
+const d_usecase = el('d_usecase');
+const d_action = el('d_action');
+const d_takeaway = el('d_takeaway');
+const d_cta = el('d_cta');
+const d_paidBlock = el('d_paidBlock');
+const d_adPlatforms = el('d_adPlatforms');
+const d_adTypeWrap = el('d_adTypeWrap');
+const d_adType = el('d_adType');
+const d_hasPromo = el('d_hasPromo');
+const d_promoBlock = el('d_promoBlock');
+const d_promoType = el('d_promoType');
+const d_otherWrap = el('d_otherWrap');
+const d_otherPromo = el('d_otherPromo');
+const d_startDate = el('d_startDate');
+const d_endDate = el('d_endDate');
+const d_minDeliveries = el('d_minDeliveries');
+const d_stdPayout = el('d_stdPayout');
+const d_maxPayout = el('d_maxPayout');
+const d_streaksBlock = el('d_streaksBlock');
+const d_consecDays = el('d_consecDays');
+const d_additionalPayout = el('d_additionalPayout');
+const d_secondaryBlock = el('d_secondaryBlock');
+const d_secondaryObjective = el('d_secondaryObjective');
+const d_secondaryLOB = el('d_secondaryLOB');
+const d_secondaryCTA = el('d_secondaryCTA');
 
-    // Validation helpers
-    const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; 
-    const reMoneyNum = /^\d+(?:\.\d{1,2})?$/;
+// helpers
+const reDate=/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/;
+const reMoneyNum=/^\d+(?:\.\d{1,2})?$/;
+function showError(id,show){const e=el(id);if(!e)return;e.style.display=show?'block':'none';}
+function validateRequired(n,e){const ok=n&&n.value.trim().length;showError(e,!ok);return ok;}
+function validateStartsWithWho(n,e){const v=(n.value||'').trim().toLowerCase();const ok=v.startsWith('who');showError(e,!ok);return ok;}
+function validateDate(n,e){const v=(n.value||'').trim();const ok=reDate.test(v);showError(e,!ok);return ok;}
+function validateNumber(n,e){const v=(n.value||'').trim();const ok=reMoneyNum.test(v);showError(e,!ok);return ok;}
+function validateHasDollar(n,e){const v=(n.value||'').trim().toLowerCase();const ok=v.includes('$');showError(e,!ok);return ok;}
+function validateHasDollarOrNA(n,e){const v=(n.value||'').trim().toLowerCase();const ok=v==='n/a'||v.includes('$');showError(e,!ok);return ok;}
+function getMultiSelectValues(msEl){return Array.from(msEl?.selectedOptions||[]).map(o=>o.value);}
+function validateMultiRequired(msEl,e){const ok=getMultiSelectValues(msEl).length>0;showError(e,!ok);return ok;}
 
-    function showError(id, show) {
-      const e = el(id);
-      if (!e) return;
-      e.style.display = show ? 'block' : 'none';
-    }
-    function validateRequired(node, errId){ const ok = !!(node && node.value && node.value.trim().length); showError(errId, !ok); return ok; }
-    function validateStartsWithWho(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok=v.length>0 && v.startsWith('who'); showError(errId,!ok); return ok; }
-    function validateDate(node, errId){ const v=(node.value||'').trim(); const ok=reDate.test(v); showError(errId,!ok); return ok; }
-    function validateNumber(node, errId){ const v=(node.value||'').trim(); const ok=reMoneyNum.test(v); showError(errId,!ok); return ok; }
-    function validateHasDollar(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok = v.includes('$'); showError(errId, !ok); return ok; }
-    function validateHasDollarOrNA(node, errId){ const v=(node.value||'').trim().toLowerCase(); const ok = v==='n/a' || v.includes('$'); showError(errId, !ok); return ok; }
-    function getMultiSelectValues(msEl){ return Array.from(msEl?.selectedOptions || []).map(o => o.value); }
-    function validateMultiRequired(msEl, errId){ const ok = getMultiSelectValues(msEl).length > 0; showError(errId, !ok); return ok; }
+// visibility
+function updateVisibility(){
+  consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
+  dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
 
-    // Visibility
-    function updateVisibility(){
-      consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
-      dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
-      merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
+  if(audience.value==='Consumer'){
+    const ch=channel.value;
+    const isEP=['Email','Push Notification','Paid Media','Paid Social'].includes(ch);
+    epBlock.classList.toggle('hidden',!isEP);
+    unsupportedMsg.classList.toggle('hidden',isEP||!ch);
+    const isPaid=['Paid Media','Paid Social'].includes(ch);
+    paidBlock.classList.toggle('hidden',!isPaid);
+    adTypeWrap.classList.toggle('hidden',getMultiSelectValues(adPlatforms).length===0);
+  } else if(audience.value==='Dasher'){
+    const dch=d_channel.value;
+    const isPaid=['Paid Media','Paid Social'].includes(dch);
+    d_paidBlock.classList.toggle('hidden',!isPaid);
+    d_adTypeWrap.classList.toggle('hidden',getMultiSelectValues(d_adPlatforms).length===0);
+  }
+  promoBlock.classList.toggle('hidden',hasPromo.value!=='Yes');
+  secondaryBlock.classList.toggle('hidden',hasSecondary.value!=='Yes');
+  d_promoBlock.classList.toggle('hidden',d_hasPromo.value!=='Yes');
+  d_streaksBlock.classList.toggle('hidden',d_promoType.value!=='streaks');
+  d_otherWrap.classList.toggle('hidden',d_promoType.value!=='other');
+}
 
-      if (audience.value==='Consumer'){
-        const ch = channel.value;
-        const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media' || ch==='Paid Social';
-        epBlock.classList.toggle('hidden', !isEP);
-        unsupportedMsg.classList.toggle('hidden', isEP || !ch);
-        const isPaid = ch==='Paid Media' || ch==='Paid Social';
-        paidBlock.classList.toggle('hidden', !isPaid);
-        const hasPlatform = getMultiSelectValues(adPlatforms).length > 0;
-        adTypeWrap.classList.toggle('hidden', !hasPlatform);
-      } else if (audience.value==='Dasher'){
-        const dch = d_channel.value;
-        const isPaid = dch==='Paid Media' || dch==='Paid Social';
-        d_paidBlock.classList.toggle('hidden', !isPaid);
-        const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
-        d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-      } else {
-        unsupportedMsg.classList.add('hidden');
-        epBlock.classList.add('hidden');
-        paidBlock.classList.add('hidden');
-        d_paidBlock.classList.add('hidden');
+// generate Consumer
+function generateConsumer(){
+  let valid=true;
+  valid&=validateRequired(channel,'channelErr');
+  const ch=channel.value;
+  const isEP=['Email','Push Notification','Paid Media','Paid Social'].includes(ch);
+  if(isEP){
+    valid&=validateRequired(segment,'segmentErr');
+    valid&=validateStartsWithWho(behavior,'behaviorErr');
+    valid&=validateRequired(submarkets,'submarketsErr');
+    valid&=validateRequired(usecase,'usecaseErr');
+    valid&=validateRequired(action,'actionErr');
+    valid&=validateRequired(takeaway,'takeawayErr');
+    if(['Paid Media','Paid Social'].includes(ch)){
+      valid&=validateMultiRequired(adPlatforms,'adPlatformsErr');
+      if(getMultiSelectValues(adPlatforms).length>0){
+        valid&=validateRequired(adType,'adTypeErr');
       }
-      promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
-      secondaryBlock.classList.toggle('hidden', hasSecondary.value!=='Yes');
-      d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
-      d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
-      d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
     }
-
-    function generateConsumer(){ /* same as before */ }
-    function generateDasher(){ /* includes Paid Media / Paid Social validation and text */ }
-
-    function gatherAndGenerate(){
-      output.textContent='';
-      let valid = true;
-      valid &= validateRequired(audience,'audienceErr');
-      if (!valid) return;
-      let text='';
-      if (audience.value==='Consumer'){ text = generateConsumer(); }
-      else if (audience.value==='Dasher'){ text = generateDasher(); }
-      else if (audience.value==='Merchant'){ text = 'Merchant workflow not yet supported in this form.'; }
-      output.textContent = (text||'').trim();
-      if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
+    if(hasPromo.value==='Yes'){
+      valid&=validateRequired(promoType,'promoTypeErr');
+      const v=(discount.value||'').trim();const ok=/[$%]/.test(v)&&v.length>0;
+      showError('discountErr',!ok);valid&=ok;
+      valid&=validateDate(startDate,'startErr');
+      valid&=validateDate(endDate,'endErr');
+      valid&=validateNumber(minSubtotal,'minErr');
+      valid&=validateNumber(maxDiscount,'maxErr');
     }
+  }
+  if(!valid)return '';
+  let txt=`I need a(n) ${ch} for Consumer targeting ${segment.value} ${behavior.value} in ${submarkets.value}. Use Case: ${usecase.value}.
+The main action: ${action.value}
+Takeaway: ${takeaway.value}
+CTA: ${cta.value||'N/A'}.`;
+  if(['Paid Media','Paid Social'].includes(ch)){
+    const platforms=getMultiSelectValues(adPlatforms);
+    if(platforms.length)txt+=`\nPlatforms: ${platforms.join(', ')}.`;
+    if(adType.value)txt+=`\nAd type: ${adType.value}.`;
+  }
+  return txt;
+}
 
-    audience.addEventListener('change', updateVisibility);
-    channel.addEventListener('change', updateVisibility);
-    d_channel.addEventListener('change', updateVisibility);
-    adPlatforms.addEventListener('change', updateVisibility);
-    d_adPlatforms.addEventListener('change', updateVisibility);
-    hasPromo.addEventListener('change', updateVisibility);
-    hasSecondary.addEventListener('change', updateVisibility);
-    d_hasPromo.addEventListener('change', updateVisibility);
-    d_promoType.addEventListener('change', updateVisibility);
+// generate Dasher
+function generateDasher(){
+  let valid=true;
+  valid&=validateRequired(d_channel,'d_channelErr');
+  valid&=validateRequired(d_segment,'d_segmentErr');
+  valid&=validateStartsWithWho(d_behavior,'d_behaviorErr');
+  valid&=validateRequired(d_usecase,'d_usecaseErr');
+  valid&=validateRequired(d_action,'d_actionErr');
+  valid&=validateRequired(d_takeaway,'d_takeawayErr');
+  const ch=d_channel.value;
+  if(['Paid Media','Paid Social'].includes(ch)){
+    valid&=validateMultiRequired(d_adPlatforms,'d_adPlatformsErr');
+    if(getMultiSelectValues(d_adPlatforms).length>0){
+      valid&=validateRequired(d_adType,'d_adTypeErr');
+    }
+  }
+  if(!valid)return '';
+  let txt=`I need a(n) ${ch} for Dasher targeting ${d_segment.value} ${d_behavior.value} in ${d_submarkets.value}. Use Case: ${d_usecase.value}.
+The main action: ${d_action.value}
+Takeaway: ${d_takeaway.value}
+CTA: ${d_cta.value||'N/A'}.`;
+  if(['Paid Media','Paid Social'].includes(ch)){
+    const platforms=getMultiSelectValues(d_adPlatforms);
+    if(platforms.length)txt+=`\nPlatforms: ${platforms.join(', ')}.`;
+    if(d_adType.value)txt+=`\nAd type: ${d_adType.value}.`;
+  }
+  return txt;
+}
 
-    generateBtn.addEventListener('click', gatherAndGenerate);
-    copyBtn.addEventListener('click', async () => {
-      const text = output.textContent.trim();
-      if (!text) return;
-      try{
-        await navigator.clipboard.writeText(text);
-        copyBtn.textContent = 'Copied!';
-        copyBtn.style.borderColor = 'var(--ok)';
-        setTimeout(()=>{copyBtn.textContent='Copy Text';copyBtn.style.borderColor='var(--border)';},1200);
-      }catch(e){
-        const ta=document.createElement('textarea');
-        ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-      }
-    });
-    resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
-    updateVisibility();
-  </script>
+function gatherAndGenerate(){
+  output.textContent='';
+  if(!validateRequired(audience,'audienceErr'))return;
+  let text='';
+  if(audience.value==='Consumer')text=generateConsumer();
+  else if(audience.value==='Dasher')text=generateDasher();
+  else text='Merchant workflow not yet supported.';
+  output.textContent=text.trim();
+}
+
+audience.addEventListener('change',updateVisibility);
+channel.addEventListener('change',updateVisibility);
+d_channel.addEventListener('change',updateVisibility);
+adPlatforms.addEventListener('change',updateVisibility);
+d_adPlatforms.addEventListener('change',updateVisibility);
+hasPromo.addEventListener('change',updateVisibility);
+hasSecondary.addEventListener('change',updateVisibility);
+d_hasPromo.addEventListener('change',updateVisibility);
+d_promoType.addEventListener('change',updateVisibility);
+generateBtn.addEventListener('click',gatherAndGenerate);
+copyBtn.addEventListener('click',async()=>{
+  const text=output.textContent.trim();if(!text)return;
+  try{await navigator.clipboard.writeText(text);}catch(e){}
+});
+resetBtn.addEventListener('click',()=>setTimeout(updateVisibility,0));
+updateVisibility();
+</script>
 </body>
 </html>
