@@ -803,9 +803,9 @@ function validateMultiRequired(msEl, errId){
     epBlock.classList.add('hidden');
     paidBlock.classList.add('hidden');
   }
-if (audience.value==='Dasher') {
+else if (audience.value==='Dasher') {
   const dch = d_channel.value;
-  const isPaid = dch==='Paid Media';
+  const isPaid = dch==='Paid Media';dch==='Paid Social'
   d_paidBlock.classList.toggle('hidden', !isPaid);
 
   const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
