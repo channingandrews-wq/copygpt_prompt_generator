@@ -387,7 +387,7 @@
               <option>Email</option>
               <option>Push Notification</option>
               <option>Paid Media</option>
-              <option>Organic Social</option>
+              <option>Paid Social</option>
               <option>Long-Form Content</option>
               <option>In-app Merchandising</option>
             </select>
@@ -481,7 +481,39 @@
             </select>
           </div>
         </div>
+<!-- Paid Media / Paid Social (Dasher) -->
+<fieldset id="d_paidBlock" class="hidden">
+  <legend>Paid Media / Paid Social</legend>
 
+  <div class="row">
+    <div>
+      <label for="d_adPlatforms" class="required">What platform is your ad running on?</label>
+      <select id="d_adPlatforms" multiple size="6">
+        <option>Meta ad</option>
+        <option>Snap ad</option>
+        <option>TikTok ad</option>
+        <option>YouTube Short ad</option>
+        <option>Google Demand Gen/Display ad</option>
+        <option>All paid channels</option>
+      </select>
+      <div class="hint">Hold Cmd/Ctrl to select more than one.</div>
+      <div class="error" id="d_adPlatformsErr">Select at least one platform.</div>
+    </div>
+  </div>
+
+ <div id="d_adTypeWrap" class="row hidden">
+    <div>
+      <label for="d_adType" class="required">What type of ad are you running?</label>
+      <select id="d_adType">
+        <option value="" selected disabled>Select ad type</option>
+        <option>Static</option>
+        <option>Video</option>
+        <option>Static and Video</option>
+      </select>
+      <div class="error" id="adTypeErr">Ad type is required.</div>
+    </div>
+  </div>
+</fieldset>
         <!-- Promotion (Dasher) -->
         <fieldset>
           <legend>Promotion</legend>
@@ -701,6 +733,11 @@ const adType = el('adType');
     const d_feature = el('d_feature');
     const d_cta = el('d_cta');
 
+    const d_paidBlock = el('d_paidBlock');
+const d_adPlatforms = el('d_adPlatforms');
+const d_adTypeWrap = el('d_adTypeWrap');
+const d_adType = el('d_adType');
+    
     const d_hasPromo = el('d_hasPromo');
     const d_promoBlock = el('d_promoBlock');
     const d_promoType = el('d_promoType');
@@ -766,6 +803,23 @@ function validateMultiRequired(msEl, errId){
     paidBlock.classList.add('hidden');
   }
 
+      if (audience.value === 'Dasher') {
+  const ch = d_channel.value;
+
+  // Only show segment for Email/Push
+  const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
+  d_segment.parentElement.parentElement.classList.toggle('hidden', !isEmailOrPush);
+
+  // Paid block visibility
+  const isPaid = ch === 'Paid Media' || ch === 'Paid Social';
+  d_paidBlock.classList.toggle('hidden', !isPaid);
+
+  // Show ad type only when a platform is selected
+  const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
+  d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+}
+  
+
   // promo/secondary (consumer)
   promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
   secondaryBlock.classList.toggle('hidden', hasSecondary.value!=='Yes');
@@ -780,7 +834,7 @@ function validateMultiRequired(msEl, errId){
     function generateConsumer(){
   let valid = true;
 
-  valid &= validateRequired(channel, 'channelErr');
+  valid &&= validateRequired(channel, 'channelErr');
   const ch = channel.value;
   const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media' || ch==='Paid Social';
 
@@ -988,6 +1042,8 @@ CTA: ${callToAction}.`;
     // Events
 audience.addEventListener('change', updateVisibility);
 channel.addEventListener('change', updateVisibility);
+d_channel.addEventListener('change', updateVisibility);
+
 
 // NEW: reveal ad type once any platform is selected
 adPlatforms.addEventListener('change', updateVisibility);
