@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dora Campaign Intake</title>
+  <title>Dora Campaign Intake 9/9 630pm</title>
   <style>
     :root{
       --bg:#ffffff;
@@ -599,8 +599,8 @@
           <legend>Secondary Module</legend>
           <div class="row">
     <div>
-      <label for="hasSecondary">Does your asset need a secondary module?</label>
-      <select id="hasSecondary">
+      <label for="d_hasSecondary">Does your asset need a secondary module?</label>
+      <select id="d_hasSecondary">
         <option>No</option>
         <option>Yes</option>
       </select>
@@ -946,12 +946,12 @@ CTA: ${callToAction}.`;
     
     function generateDasher(){
       let valid = true;
-      valid &= validateRequired(d_channel,'d_channelErr');
-      valid &= validateRequired(d_segment,'d_segmentErr');
-      valid &= validateStartsWithWho(d_behavior,'d_behaviorErr');
-      valid &= validateRequired(d_usecase,'d_usecaseErr');
-      valid &= validateRequired(d_action,'d_actionErr');
-      valid &= validateRequired(d_takeaway,'d_takeawayErr');
+      valid &&= validateRequired(d_channel,'d_channelErr');
+      valid &&= validateRequired(d_segment,'d_segmentErr');
+      valid &&= validateStartsWithWho(d_behavior,'d_behaviorErr');
+      valid &&= validateRequired(d_usecase,'d_usecaseErr');
+      valid &&= validateRequired(d_action,'d_actionErr');
+      valid &&= validateRequired(d_takeaway,'d_takeawayErr');
 
       if (d_hasPromo.value==='Yes'){
         valid &= validateRequired(d_promoType,'d_promoTypeErr');
