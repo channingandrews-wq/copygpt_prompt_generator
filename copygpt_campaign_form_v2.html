@@ -954,95 +954,100 @@ CTA: ${callToAction}.`;
   }
 }
     
-    function generateDasher(){
-      let valid = true;
-      valid &&= validateRequired(d_channel,'d_channelErr');
-      valid &&= validateRequired(d_segment,'d_segmentErr');
-      valid &&= validateStartsWithWho(d_behavior,'d_behaviorErr');
-      valid &&= validateRequired(d_usecase,'d_usecaseErr');
-      valid &&= validateRequired(d_action,'d_actionErr');
-      valid &&= validateRequired(d_takeaway,'d_takeawayErr');
+   function generateDasher(){
+  let valid = true;
+  valid &&= validateRequired(d_channel,'d_channelErr');
+  valid &&= validateRequired(d_segment,'d_segmentErr');
+  valid &&= validateStartsWithWho(d_behavior,'d_behaviorErr');
+  valid &&= validateRequired(d_usecase,'d_usecaseErr');
+  valid &&= validateRequired(d_action,'d_actionErr');
+  valid &&= validateRequired(d_takeaway,'d_takeawayErr');
 
-// Dasher Paid Media / Dasher Paid Social extras// Paid Media / Paid Social extras
-    if (ch==='Paid Media' || ch==='Paid Social'){
-      valid &= validateMultiRequired(d_adPlatforms, 'adPlatformsErr');
-      // Only require ad type once a platform is chosen
-      if (getMultiSelectValues(d_adPlatforms).length > 0){
-        valid &= validateRequired(d_adType, 'adTypeErr');
-      }
+  // Paid Media / Paid Social extras validation
+  if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
+    valid &= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
+    if (getMultiSelectValues(d_adPlatforms).length > 0){
+      valid &= validateRequired(d_adType, 'd_adTypeErr');
     }
-      if (d_hasPromo.value==='Yes'){
-        valid &= validateRequired(d_promoType,'d_promoTypeErr');
-        valid &= validateDate(d_startDate,'d_startErr');
-        valid &= validateDate(d_endDate,'d_endErr');
-        valid &= validateNumber(d_minDeliveries,'d_minErr');
-        valid &= validateHasDollar(d_stdPayout,'d_stdErr');
-        valid &= validateHasDollarOrNA(d_maxPayout,'d_maxErr');
+  }
 
-        if (d_promoType.value==='streaks'){
-          valid &= validateNumber(d_consecDays,'d_daysErr');
-          valid &= validateHasDollar(d_additionalPayout,'d_additionalErr');
-        }
-      }
-      if (!valid) return '';
+  // Promotion validation
+  if (d_hasPromo.value==='Yes'){
+    valid &= validateRequired(d_promoType,'d_promoTypeErr');
+    valid &= validateDate(d_startDate,'d_startErr');
+    valid &= validateDate(d_endDate,'d_endErr');
+    valid &= validateNumber(d_minDeliveries,'d_minErr');
+    valid &= validateHasDollar(d_stdPayout,'d_stdErr');
+    valid &= validateHasDollarOrNA(d_maxPayout,'d_maxErr');
 
-      const aud = 'Dasher';
-      const ch = d_channel.value || '';
-      const seg = d_segment.value || '';
-      const beh = (d_behavior.value||'').trim();
-      const loc = (d_submarkets.value||'').trim();
-      const uc  = d_usecase.value || '';
-      const callToAction = d_cta.value || 'N/A';
-const actVal = (d_action.value||'').trim() || 'N/A';
-const takeVal = (d_takeaway.value||'').trim() || 'N/A';
+    if (d_promoType.value==='streaks'){
+      valid &= validateNumber(d_consecDays,'d_daysErr');
+      valid &= validateHasDollar(d_additionalPayout,'d_additionalErr');
+    }
+  }
 
+  if (!valid) return '';
 
-      if (ch === 'Paid Media' || ch === 'Paid Social') {
-  txt = `I need ${d_adType.value} for ${getMultiSelectValues(d_adPlatforms).join(', ')} 
-for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+  const aud = 'Dasher';
+  const ch = d_channel.value || '';
+  const seg = d_segment.value || '';
+  const beh = (d_behavior.value||'').trim();
+  const loc = (d_submarkets.value||'').trim();
+  const uc  = d_usecase.value || '';
+  const callToAction = d_cta.value || 'N/A';
+  const actVal = (d_action.value||'').trim() || 'N/A';
+  const takeVal = (d_takeaway.value||'').trim() || 'N/A';
+
+  // Always initialize txt with a base prompt
+  let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. 
+Use Case: ${uc}.
 The main action we want the Dasher to take: ${actVal}
 The most important takeaway for Dasher: ${takeVal}
 CTA: ${callToAction}.`;
 
-  const platforms = getMultiSelectValues(d_adPlatforms);
-  if (platforms.length) {
-    txt += `\nPlatforms: ${platforms.join(', ')}.`;
+  // Append Paid Media / Paid Social details
+  if (ch === 'Paid Media' || ch === 'Paid Social') {
+    const platforms = getMultiSelectValues(d_adPlatforms);
+    if (platforms.length) {
+      txt += `\nPlatforms: ${platforms.join(', ')}.`;
+    }
+    if (d_adType.value) {
+      txt += `\nAd type: ${d_adType.value}.`;
+    }
   }
-  if (d_adType.value) {
-    txt += `\nAd type: ${d_adType.value}.`;
+
+  // Append promotion details
+  if (d_hasPromo.value==='Yes'){
+    const pType = d_promoType.value;
+    const start = (d_startDate.value||'').trim();
+    const end = (d_endDate.value||'').trim();
+    const minDel = (d_minDeliveries.value||'0').trim();
+    const stdPay = (d_stdPayout.value||'').trim();
+    const maxPay = (d_maxPayout.value||'').trim();
+
+    if (pType==='Complete x dashers, receive $x'){
+      txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} between ${start} and ${end}`;
+    } else if (pType==='streaks'){
+      const days = (d_consecDays.value||'').trim();
+      const addPay = (d_additionalPayout.value||'').trim();
+      txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} for ${days} days plus an additional ${addPay} (max ${maxPay}) between ${start} and ${end}`;
+    } else {
+      const other = (d_otherPromo.value||'').trim();
+      txt += `\nThis campaign includes a promotion:\nOffer: ${other || stdPay} between ${start} and ${end}`;
+    }
   }
+
+  // Append secondary module details
+  if (el('d_hasSecondary').value==='Yes'){
+    const sObj = (d_secondaryObjective.value||'N/A').trim();
+    const sLOB = d_secondaryLOB.value || 'N/A';
+    const sCTA = d_secondaryCTA.value || 'N/A';
+    txt += `\nAlso include a secondary message where the objective is ${sObj}, focused on ${sLOB}, with CTA ${sCTA}.`;
+  }
+
+  return txt.trim();
 }
 
-
-      if (d_hasPromo.value==='Yes'){
-        const pType = d_promoType.value;
-        const start = (d_startDate.value||'').trim();
-        const end = (d_endDate.value||'').trim();
-        const minDel = (d_minDeliveries.value||'0').trim();
-        const stdPay = (d_stdPayout.value||'').trim();
-        const maxPay = (d_maxPayout.value||'').trim();
-
-        if (pType==='Complete x dashers, receive $x'){
-          txt += `\nThis campaign include a promotion say the below:\nOffer: Get ${stdPay} when you complete ${minDel} between ${start} and ${end}`;
-        } else if (pType==='streaks'){
-          const days = (d_consecDays.value||'').trim();
-          const addPay = (d_additionalPayout.value||'').trim();
-          txt += `\nThis campaign include a promotion say the below:\nOffer: Get ${stdPay} when you complete ${minDel} for ${days} plus receive an additional ${addPay} for a max of ${maxPay}  between ${start} and ${end}`;
-        } else {
-          const other = (d_otherPromo.value||'').trim();
-          txt += `\nThis campaign include a promotion say the below:\nOffer: ${other || stdPay} between ${start} and ${end}`;
-        }
-      }
-
-      if (el('d_hasSecondary').value==='Yes'){
-        const sObj = (d_secondaryObjective.value||'N/A').trim();
-        const sLOB = d_secondaryLOB.value || 'N/A';
-        const sCTA = d_secondaryCTA.value || 'N/A';
-        txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
-      }
-
-      return txt.trim();
-    }
 
     function gatherAndGenerate(){
       output.textContent='';
