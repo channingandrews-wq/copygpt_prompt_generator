@@ -956,12 +956,24 @@ CTA: ${callToAction}.`;
     
    function generateDasher(){
   let valid = true;
-  valid &&= validateRequired(d_channel,'d_channelErr');
+  const isEP = d_channel.value === 'Email' || d_channel.value === 'Push Notification';
+if (isEP) {
   valid &&= validateRequired(d_segment,'d_segmentErr');
   valid &&= validateStartsWithWho(d_behavior,'d_behaviorErr');
-  valid &&= validateRequired(d_usecase,'d_usecaseErr');
-  valid &&= validateRequired(d_action,'d_actionErr');
-  valid &&= validateRequired(d_takeaway,'d_takeawayErr');
+}
+
+// Always required regardless of channel
+valid &&= validateRequired(d_usecase,'d_usecaseErr');
+valid &&= validateRequired(d_action,'d_actionErr');
+valid &&= validateRequired(d_takeaway,'d_takeawayErr');
+
+// Paid Media / Paid Social extras
+if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
+  valid &&= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
+  if (getMultiSelectValues(d_adPlatforms).length > 0){
+    valid &&= validateRequired(d_adType, 'd_adTypeErr');
+  }
+}
 
   // Paid Media / Paid Social extras validation
   if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
@@ -1109,3 +1121,4 @@ resetBtn.addEventListener('click', ()=> setTimeout(updateVisibility, 0));
 updateVisibility();
   </script>
 </body>
+</html>
