@@ -965,10 +965,17 @@ CTA: ${callToAction}.`;
 
   // Paid Media / Paid Social extras validation
   if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
-    valid &&= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
-    if (getMultiSelectValues(d_adPlatforms).length > 0){
-      valid &&= validateRequired(d_adType, 'd_adTypeErr');
-    }
+  const platforms = getMultiSelectValues(d_adPlatforms);
+  if (platforms.length){
+    txt += `\nPlatforms: ${platforms.join(', ')}.`;
+  } else {
+    txt += `\nPlatforms: N/A`;
+  }
+
+  if (d_adType.value){
+    txt += `\nAd type: ${d_adType.value}.`;
+  } else {
+    txt += `\nAd type: N/A`;
   }
 
   // Promotion validation
