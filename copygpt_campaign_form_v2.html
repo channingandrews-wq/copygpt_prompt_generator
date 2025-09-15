@@ -1006,6 +1006,15 @@ The most important takeaway for Dasher: ${takeVal}
 CTA: ${callToAction}.`;
 }
 
+      const platforms = getMultiSelectValues(d_adPlatforms);
+  if (platforms.length) {
+    txt += `\nPlatforms: ${platforms.join(', ')}.`;
+  }
+  if (d_adType.value) {
+    txt += `\nAd type: ${d_adType.value}.`;
+  }
+}
+
       if (d_hasPromo.value==='Yes'){
         const pType = d_promoType.value;
         const start = (d_startDate.value||'').trim();
