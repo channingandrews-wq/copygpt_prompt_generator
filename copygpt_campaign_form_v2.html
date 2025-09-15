@@ -963,8 +963,14 @@ CTA: ${callToAction}.`;
       valid &&= validateRequired(d_action,'d_actionErr');
       valid &&= validateRequired(d_takeaway,'d_takeawayErr');
 
-// Dasher Paid Media / Dasher Paid Social extras
-    
+// Dasher Paid Media / Dasher Paid Social extras// Paid Media / Paid Social extras
+    if (ch==='Paid Media' || ch==='Paid Social'){
+      valid &= validateMultiRequired(d_adPlatforms, 'adPlatformsErr');
+      // Only require ad type once a platform is chosen
+      if (getMultiSelectValues(d_adPlatforms).length > 0){
+        valid &= validateRequired(d_adType, 'adTypeErr');
+      }
+    }
       if (d_hasPromo.value==='Yes'){
         valid &= validateRequired(d_promoType,'d_promoTypeErr');
         valid &= validateDate(d_startDate,'d_startErr');
