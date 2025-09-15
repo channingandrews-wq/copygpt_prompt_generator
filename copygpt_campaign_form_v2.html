@@ -839,29 +839,29 @@ function validateMultiRequired(msEl, errId){
   const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media' || ch==='Paid Social';
 
   if (isEP){
-    valid &= validateRequired(segment,'segmentErr');
-    valid &= validateStartsWithWho(behavior,'behaviorErr');
-    valid &= validateRequired(submarkets,'submarketsErr');
-    valid &= validateRequired(usecase,'usecaseErr');
-    valid &= validateRequired(action,'actionErr');
-    valid &= validateRequired(takeaway,'takeawayErr');
+    valid &&= validateRequired(segment,'segmentErr');
+    valid &&= validateStartsWithWho(behavior,'behaviorErr');
+    valid &&= validateRequired(submarkets,'submarketsErr');
+    valid &&= validateRequired(usecase,'usecaseErr');
+    valid &&= validateRequired(action,'actionErr');
+    valid &&= validateRequired(takeaway,'takeawayErr');
 
     // Paid Media / Paid Social extras
     if (ch==='Paid Media' || ch==='Paid Social'){
-      valid &= validateMultiRequired(adPlatforms, 'adPlatformsErr');
+      valid &&= validateMultiRequired(adPlatforms, 'adPlatformsErr');
       // Only require ad type once a platform is chosen
       if (getMultiSelectValues(adPlatforms).length > 0){
-        valid &= validateRequired(adType, 'adTypeErr');
+        valid &&= validateRequired(adType, 'adTypeErr');
       }
     }
 
     if (hasPromo.value==='Yes'){
-      valid &= validateRequired(promoType,'promoTypeErr');
-      valid &= validateHasDollarOrPercent(discount,'discountErr');
-      valid &= validateDate(startDate,'startErr');
-      valid &= validateDate(endDate,'endErr');
-      valid &= validateNumber(minSubtotal,'minErr');
-      valid &= validateNumber(maxDiscount,'maxErr');
+      valid &&= validateRequired(promoType,'promoTypeErr');
+      valid &&= validateHasDollarOrPercent(discount,'discountErr');
+      valid &&= validateDate(startDate,'startErr');
+      valid &&= validateDate(endDate,'endErr');
+      valid &&= validateNumber(minSubtotal,'minErr');
+      valid &&= validateNumber(maxDiscount,'maxErr');
     }
   }
 
@@ -1007,14 +1007,14 @@ CTA: ${callToAction}.`;
 
   // Append Paid Media / Paid Social details
   if (ch === 'Paid Media' || ch === 'Paid Social') {
-    const platforms = getMultiSelectValues(d_adPlatforms);
-    if (platforms.length) {
-      txt += `\nPlatforms: ${platforms.join(', ')}.`;
-    }
-    if (d_adType.value) {
-      txt += `\nAd type: ${d_adType.value}.`;
-    }
+  const platforms = getMultiSelectValues(d_adPlatforms);
+  if (platforms.length) {
+    txt += `\nPlatforms: ${platforms.join(', ')}.`;
   }
+  if (d_adType.value) {
+    txt += `\nAd type: ${d_adType.value}.`;
+  }
+}
 
   // Append promotion details
   if (d_hasPromo.value==='Yes'){
