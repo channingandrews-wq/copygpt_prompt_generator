@@ -965,24 +965,24 @@ CTA: ${callToAction}.`;
 
   // Paid Media / Paid Social extras validation
   if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
-    valid &= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
+    valid &&= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
     if (getMultiSelectValues(d_adPlatforms).length > 0){
-      valid &= validateRequired(d_adType, 'd_adTypeErr');
+      valid &&= validateRequired(d_adType, 'd_adTypeErr');
     }
   }
 
   // Promotion validation
   if (d_hasPromo.value==='Yes'){
-    valid &= validateRequired(d_promoType,'d_promoTypeErr');
-    valid &= validateDate(d_startDate,'d_startErr');
-    valid &= validateDate(d_endDate,'d_endErr');
-    valid &= validateNumber(d_minDeliveries,'d_minErr');
-    valid &= validateHasDollar(d_stdPayout,'d_stdErr');
-    valid &= validateHasDollarOrNA(d_maxPayout,'d_maxErr');
+    valid &&= validateRequired(d_promoType,'d_promoTypeErr');
+    valid &&= validateDate(d_startDate,'d_startErr');
+    valid &&= validateDate(d_endDate,'d_endErr');
+    valid &&= validateNumber(d_minDeliveries,'d_minErr');
+    valid &&= validateHasDollar(d_stdPayout,'d_stdErr');
+    valid &&= validateHasDollarOrNA(d_maxPayout,'d_maxErr');
 
     if (d_promoType.value==='streaks'){
-      valid &= validateNumber(d_consecDays,'d_daysErr');
-      valid &= validateHasDollar(d_additionalPayout,'d_additionalErr');
+      valid &&= validateNumber(d_consecDays,'d_daysErr');
+      valid &&= validateHasDollar(d_additionalPayout,'d_additionalErr');
     }
   }
 
