@@ -994,7 +994,7 @@ const takeVal = (d_takeaway.value||'').trim() || 'N/A';
       let txt = '';
 
 if (ch === 'Paid Media' || ch === 'Paid Social') {
-  txt = `I need ${adType.value} for ${getMultiSelectValues(adPlatforms).join(', ')} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+  txt = `I need ${d_adType.value} for ${getMultiSelectValues(d_adPlatforms).join(', ')} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for Consumer: ${takeVal}
 CTA: ${callToAction}.`;
