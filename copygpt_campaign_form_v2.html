@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/14 9pm</h1>
+    <h1>Dora Prompt Generator 9/14 920pm</h1>
     <p class="lead">Fill out the form to generate a complete prompt for you. The fields will update as you make selections.</p>
 
     <form id="intakeForm" novalidate>
@@ -650,26 +650,145 @@
         </fieldset>
       </fieldset>
 
-      <!-- MERCHANT (placeholder) -->
-      <fieldset id="merchantBlock" class="hidden">
-        <legend>Merchant</legend>
-        <div class="note"><span class="support-msg">Merchant workflow not yet supported in this form.</span></div>
-      </fieldset>
+      <!-- MERCHANT -->
+<fieldset id="merchantBlock" class="hidden">
+  <legend>Merchant Campaign Details</legend>
 
-      <div class="actions">
-        <button type="button" class="primary" id="generateBtn">Generate Response</button>
-        <button type="reset" class="ghost" id="resetBtn">Reset</button>
+  <div class="row">
+    <div>
+      <label for="m_channel" class="required">What channel is your asset?</label>
+      <select id="m_channel" required>
+        <option value="" selected disabled>Select channel</option>
+        <option>Email</option>
+        <option>Push Notification</option>
+        <option>Paid Media</option>
+        <option>Paid Social</option>
+        <option>Long-Form Content</option>
+        <option>In-app Merchandising</option>
+      </select>
+      <div class="error" id="m_channelErr">Channel is required.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="m_segment" class="required">What is your Audience Segment?</label>
+      <select id="m_segment" required>
+        <option value="" selected disabled>Select segment</option>
+        <option>Active Merchant</option> 
+        <option>Churned Merchant</option>
+        <option>New Merchant</option>
+        <option>Enterprise Merchant</option>
+      </select>
+      <div class="error" id="m_segmentErr">Audience Segment is required.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="m_behavior" class="required">What has this Merchant done or not done recently? What’s their current mindset or situation?</label>
+      <textarea id="m_behavior" placeholder="Start with &quot;who…?&quot;" required></textarea>
+      <div class="hint">Please start your response with "who".</div>
+      <div class="error" id="m_behaviorErr">This field is required and must start with "who".</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="m_usecase" class="required">What is your use case?</label>
+      <select id="m_usecase" required>
+        <option value="" selected disabled>Select use case</option>
+        <option>Acquire New Merchants</option>
+        <option>Reactivate Merchants</option>
+        <option>Promote New Feature / Tool</option>
+        <option>Increase Orders</option>
+        <option>Education / Retention</option>
+        <option>Other</option>
+      </select>
+      <div class="error" id="m_usecaseErr">Use Case is required.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="m_action" class="required">What action do you want the Merchant to take?</label>
+      <textarea id="m_action" placeholder="What do you want them to do? What method, offer, or feature supports that action?" required></textarea>
+      <div class="error" id="m_actionErr">This field is required.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="m_takeaway" class="required">What is the most important takeaway for the Merchant?</label>
+      <textarea id="m_takeaway" placeholder="What's the one thing you want them to remember?" required></textarea>
+      <div class="error" id="m_takeawayErr">This field is required.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="m_cta">What is your primary CTA?</label>
+      <select id="m_cta">
+        <option value="" selected disabled>Select CTA</option>
+        <option>Sign up</option>
+        <option>Activate now</option>
+        <option>Learn more</option>
+        <option>Upgrade plan</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Paid Media / Paid Social (Merchant) -->
+  <fieldset id="m_paidBlock" class="hidden">
+    <legend>Paid Media / Paid Social</legend>
+    <div class="row">
+      <div>
+        <label for="m_adPlatforms" class="required">What platform is your ad running on?</label>
+        <select id="m_adPlatforms" multiple size="6">
+          <option>Meta ad</option>
+          <option>LinkedIn ad</option>
+          <option>Google Display ad</option>
+          <option>YouTube ad</option>
+          <option>All paid channels</option>
+        </select>
+        <div class="hint">Hold Cmd/Ctrl to select more than one.</div>
+        <div class="error" id="m_adPlatformsErr">Select at least one platform.</div>
       </div>
+    </div>
 
-      <fieldset>
-<legend>Generated Response</legend>
-<div id="output" class="output" aria-live="polite"></div>
-<div class="copy-section">
-<button type="button" id="copyBtn">Copy Text</button>
-</div>
+    <div id="m_adTypeWrap" class="row hidden">
+      <div>
+        <label for="m_adType" class="required">What type of ad are you running?</label>
+        <select id="m_adType">
+          <option value="" selected disabled>Select ad type</option>
+          <option>Static</option>
+          <option>Video</option>
+          <option>Static and Video</option>
+        </select>
+        <div class="error" id="m_adTypeErr">Ad type is required.</div>
+      </div>
+    </div>
+  </fieldset>
+
 </fieldset>
-</form>
+
+<!-- Actions -->
+<div class="actions">
+  <button type="button" class="primary" id="generateBtn">Generate Response</button>
+  <button type="reset" class="ghost" id="resetBtn">Reset</button>
 </div>
+
+<!-- Generated Output -->
+<fieldset>
+  <legend>Generated Response</legend>
+  <div id="output" class="output" aria-live="polite"></div>
+  <div class="copy-section">
+    <button type="button" id="copyBtn">Copy Text</button>
+  </div>
+</fieldset>
+
+</form>
+
 
   <script>
     const el = (id) => document.getElementById(id);
@@ -752,8 +871,21 @@ const d_adType = el('d_adType');
     const d_consecDays = el('d_consecDays');
     const d_additionalPayout = el('d_additionalPayout');
 
-    // Merchant placeholder
-    const merchantBlock = el('merchantBlock');
+    // Merchant refs
+const merchantBlock = el('merchantBlock');
+const m_channel = el('m_channel');
+const m_segment = el('m_segment');
+const m_behavior = el('m_behavior');
+const m_usecase = el('m_usecase');
+const m_action = el('m_action');
+const m_takeaway = el('m_takeaway');
+const m_cta = el('m_cta');
+
+const m_paidBlock = el('m_paidBlock');
+const m_adPlatforms = el('m_adPlatforms');
+const m_adTypeWrap = el('m_adTypeWrap');
+const m_adType = el('m_adType');
+
 
     // Validation helpers
     const reDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{2}$/; // mm/dd/yy
@@ -783,7 +915,17 @@ function validateMultiRequired(msEl, errId){
   // audience blocks
   consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
   dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
-  merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
+ merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
+
+if (audience.value==='Merchant'){
+  const ch = m_channel.value;
+  const isPaid = ch==='Paid Media' || ch==='Paid Social';
+  m_paidBlock.classList.toggle('hidden', !isPaid);
+
+  const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
+  m_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+}
+
 
   if (audience.value==='Consumer'){
     const ch = channel.value;
@@ -1060,6 +1202,52 @@ CTA: ${callToAction}.`;
   return txt.trim();
 }
 
+function generateMerchant(){
+  let valid = true;
+  valid &&= validateRequired(m_channel,'m_channelErr');
+  valid &&= validateRequired(m_segment,'m_segmentErr');
+  valid &&= validateStartsWithWho(m_behavior,'m_behaviorErr');
+  valid &&= validateRequired(m_usecase,'m_usecaseErr');
+  valid &&= validateRequired(m_action,'m_actionErr');
+  valid &&= validateRequired(m_takeaway,'m_takeawayErr');
+
+  if (m_channel.value==='Paid Media' || m_channel.value==='Paid Social'){
+    valid &&= validateMultiRequired(m_adPlatforms, 'm_adPlatformsErr');
+    if (getMultiSelectValues(m_adPlatforms).length > 0){
+      valid &&= validateRequired(m_adType, 'm_adTypeErr');
+    }
+  }
+
+  if (!valid) return '';
+
+  const aud = 'Merchant';
+  const ch = m_channel.value || '';
+  const seg = m_segment.value || '';
+  const beh = (m_behavior.value||'').trim();
+  const uc  = m_usecase.value || '';
+  const actVal = (m_action.value||'').trim() || 'N/A';
+  const takeVal = (m_takeaway.value||'').trim() || 'N/A';
+  const callToAction = m_cta.value || 'N/A';
+
+  let txt = `I need a ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+Use Case: ${uc}.
+The main action we want the Merchant to take: ${actVal}
+The most important takeaway for Merchant: ${takeVal}
+CTA: ${callToAction}.`;
+
+  if (ch==='Paid Media' || ch==='Paid Social'){
+    const platforms = getMultiSelectValues(m_adPlatforms);
+    if (platforms.length){
+      txt += `\nPlatforms: ${platforms.join(', ')}.`;
+    }
+    if (m_adType.value){
+      txt += `\nAd type: ${m_adType.value}.`;
+    }
+  }
+
+  return txt.trim();
+}
+
 
     function gatherAndGenerate(){
       output.textContent='';
@@ -1073,8 +1261,9 @@ CTA: ${callToAction}.`;
       } else if (audience.value==='Dasher'){
         text = generateDasher();
       } else if (audience.value==='Merchant'){
-        text = 'Merchant workflow not yet supported in this form.';
-      }
+  text = generateMerchant();
+}
+
       output.textContent = (text||'').trim();
       if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
     }
@@ -1091,7 +1280,8 @@ CTA: ${callToAction}.`;
 audience.addEventListener('change', updateVisibility);
 channel.addEventListener('change', updateVisibility);
 d_channel.addEventListener('change', updateVisibility);
-
+m_channel.addEventListener('change', updateVisibility);
+m_adPlatforms.addEventListener('change', updateVisibility);
 
 // NEW: reveal ad type once any platform is selected
 adPlatforms.addEventListener('change', updateVisibility);
