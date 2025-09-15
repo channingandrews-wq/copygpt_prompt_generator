@@ -675,10 +675,10 @@
       <label for="m_segment" class="required">What is your Audience Segment?</label>
       <select id="m_segment" required>
         <option value="" selected disabled>Select segment</option>
-        <option>Active Merchant</option> 
-        <option>Churned Merchant</option>
+        <option>Applicant</option> 
         <option>New Merchant</option>
-        <option>Enterprise Merchant</option>
+        <option>Active Merchant</option>
+        <option>Prospective Merchant</option>
       </select>
       <div class="error" id="m_segmentErr">Audience Segment is required.</div>
     </div>
@@ -698,11 +698,13 @@
       <label for="m_usecase" class="required">What is your use case?</label>
       <select id="m_usecase" required>
         <option value="" selected disabled>Select use case</option>
-        <option>Acquire New Merchants</option>
-        <option>Reactivate Merchants</option>
-        <option>Promote New Feature / Tool</option>
-        <option>Increase Orders</option>
-        <option>Education / Retention</option>
+        <option>New Merchant Onboarding</option>
+        <option>New Product / Product Upsell</option>
+        <option>Transactional</option>
+        <option>Apology / Outage</option>
+        <option>Occasions and Co-Marketing</option>
+        <option>Educational / Informational</option>
+        <option>Propsective Merchant</option>
         <option>Other</option>
       </select>
       <div class="error" id="m_usecaseErr">Use Case is required.</div>
@@ -720,7 +722,7 @@
   <div class="row">
     <div>
       <label for="m_takeaway" class="required">What is the most important takeaway for the Merchant?</label>
-      <textarea id="m_takeaway" placeholder="What's the one thing you want them to remember?" required></textarea>
+      <textarea id="m_takeaway" placeholder="What's the one thing you want them to remember? Is there a claim or value prop to substantiate it?" required></textarea>
       <div class="error" id="m_takeawayErr">This field is required.</div>
     </div>
   </div>
@@ -730,10 +732,10 @@
       <label for="m_cta">What is your primary CTA?</label>
       <select id="m_cta">
         <option value="" selected disabled>Select CTA</option>
+        <option>Get started</option>
         <option>Sign up</option>
-        <option>Activate now</option>
+        <option>Explore products</option>
         <option>Learn more</option>
-        <option>Upgrade plan</option>
       </select>
     </div>
   </div>
