@@ -1052,7 +1052,7 @@ CTA: ${callToAction}.`;
     function gatherAndGenerate(){
       output.textContent='';
       let valid = true;
-      valid &= validateRequired(audience,'audienceErr');
+      valid &&= validateRequired(audience,'audienceErr');
       if (!valid) return;
 
       let text='';
