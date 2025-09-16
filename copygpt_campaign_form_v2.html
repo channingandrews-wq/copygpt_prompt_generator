@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/14 920pm</h1>
+    <h1>Dora Prompt Generator 9/16 544pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -232,6 +232,19 @@
       <div class="error" id="adTypeErr">Ad type is required.</div>
     </div>
   </div>
+  <div id="videoQWrap" class="row hidden">
+  <div>
+    <label for="videoLength" class="required">How long is your video?</label>
+    <select id="videoLength">
+      <option value="" selected disabled>Select length</option>
+      <option>:06</option>
+      <option>:10</option>
+      <option>:15</option>
+      <option>:30</option>
+    </select>
+    <div class="error" id="videoLengthErr">Video length is required.</div>
+  </div>
+</div>
 </fieldset>
 
           <!-- Promotion toggle (Consumer) -->
@@ -512,6 +525,19 @@
       <div class="error" id="d_adTypeErr">Ad type is required.</div>
     </div>
   </div>
+  <div id="d_videoQWrap" class="row hidden">
+  <div>
+    <label for="d_videoLength" class="required">How long is your video?</label>
+    <select id="d_videoLength">
+      <option value="" selected disabled>Select length</option>
+      <option>:06</option>
+      <option>:10</option>
+      <option>:15</option>
+      <option>:30</option>
+    </select>
+    <div class="error" id="d_videoLengthErr">Video length is required.</div>
+  </div>
+</div>
 </fieldset>
         <!-- Promotion (Dasher) -->
         <fieldset>
@@ -769,6 +795,19 @@
         <div class="error" id="m_adTypeErr">Ad type is required.</div>
       </div>
     </div>
+    <div id="m_videoQWrap" class="row hidden">
+  <div>
+    <label for="m_videoLength" class="required">How long is your video?</label>
+    <select id="m_videoLength">
+      <option value="" selected disabled>Select length</option>
+      <option>:06</option>
+      <option>:10</option>
+      <option>:15</option>
+      <option>:30</option>
+    </select>
+    <div class="error" id="m_videoLengthErr">Video length is required.</div>
+  </div>
+</div>
   </fieldset>
 
 </fieldset>
@@ -918,6 +957,8 @@ function validateMultiRequired(msEl, errId){
   dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
  merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
 
+
+
 if (audience.value==='Merchant'){
   const ch = m_channel.value;
   const isPaid = ch==='Paid Media' || ch==='Paid Social';
@@ -925,6 +966,10 @@ if (audience.value==='Merchant'){
 
   const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
   m_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+  m_videoQWrap.classList.toggle('hidden', !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+
+
+  
 }
 
 
@@ -940,6 +985,8 @@ if (audience.value==='Merchant'){
 
     const hasPlatform = getMultiSelectValues(adPlatforms).length > 0;
     adTypeWrap.classList.toggle('hidden', !hasPlatform);
+    videoQWrap.classList.toggle('hidden', !(adType.value === 'Video' || adType.value === 'Static and Video'));
+
   } else {
     unsupportedMsg.classList.add('hidden');
     epBlock.classList.add('hidden');
@@ -960,6 +1007,8 @@ if (audience.value==='Merchant'){
   // Show ad type only when a platform is selected
   const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
   d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+  d_videoQWrap.classList.toggle('hidden', !(d_adType.value === 'Video' || d_adType.value === 'Static and Video'));
+
 }
   
 
@@ -1283,6 +1332,9 @@ channel.addEventListener('change', updateVisibility);
 d_channel.addEventListener('change', updateVisibility);
 m_channel.addEventListener('change', updateVisibility);
 m_adPlatforms.addEventListener('change', updateVisibility);
+adType.addEventListener('change', updateVisibility);
+d_adType.addEventListener('change', updateVisibility);
+m_adType.addEventListener('change', updateVisibility);
 
 // NEW: reveal ad type once any platform is selected
 adPlatforms.addEventListener('change', updateVisibility);
