@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/16 544pm</h1>
+    <h1>Dora Prompt Generator 9/14 920pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -1071,10 +1071,12 @@ if (audience.value==='Merchant'){
   let txt = '';
 
 if (ch === 'Paid Media' || ch === 'Paid Social') {
-  txt = `I need ${adType.value} for ${getMultiSelectValues(adPlatforms).join(', ')} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+  const duration = (adType.value === 'Video' || adType.value === 'Static and Video') ? (videoLength.value || '') + ' ' : '';
+  txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
-The most important takeaway for Consumer: ${takeVal}
-CTA: ${callToAction}.`;
+The most important takeaway for consumer: ${takeVal}
+CTA: ${callToAction}.
+Ad type: ${adType.value}`;
 } else {
   // your existing email/push/etc. template
   txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
@@ -1203,11 +1205,22 @@ if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
   const takeVal = (d_takeaway.value||'').trim() || 'N/A';
 
   // Always initialize txt with a base prompt
-  let txt = `I need an ${ch} for our DoorDash ${aud} Retention team targeting ${seg} ${beh} in ${loc}. 
+  let txt = '';
+if (ch === 'Paid Media' || ch === 'Paid Social') {
+  const duration = (d_adType.value === 'Video' || d_adType.value === 'Static and Video') ? (d_videoLength.value || '') + ' ' : '';
+  txt = `I need a ${duration}${d_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+The main action we want the Dasher to take: ${actVal}
+The most important takeaway for Dasher: ${takeVal}
+CTA: ${callToAction}.
+Ad type: ${d_adType.value}`;
+} else {
+  txt = `I need an ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. 
 Use Case: ${uc}.
 The main action we want the Dasher to take: ${actVal}
 The most important takeaway for Dasher: ${takeVal}
 CTA: ${callToAction}.`;
+}
+
 
   // Append Paid Media / Paid Social details
   if (ch === 'Paid Media' || ch === 'Paid Social') {
@@ -1286,14 +1299,15 @@ The most important takeaway for Merchant: ${takeVal}
 CTA: ${callToAction}.`;
 
   if (ch==='Paid Media' || ch==='Paid Social'){
-    const platforms = getMultiSelectValues(m_adPlatforms);
-    if (platforms.length){
-      txt += `\nPlatforms: ${platforms.join(', ')}.`;
-    }
-    if (m_adType.value){
-      txt += `\nAd type: ${m_adType.value}.`;
-    }
-  }
+  const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video') ? (m_videoLength.value || '') + ' ' : '';
+  txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+Use Case: ${uc}.
+The main action we want the Merchant to take: ${actVal}
+The most important takeaway for Merchant: ${takeVal}
+CTA: ${callToAction}.
+Ad type: ${m_adType.value}`;
+}
+
 
   return txt.trim();
 }
