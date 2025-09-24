@@ -86,7 +86,6 @@
               <option>Email</option>
               <option>Push Notification</option>
               <option>Paid Media</option>
-              <option>Paid Social</option>
               <option>Long-form Content</option>
               <option>In-app Merchandising</option>
             </select>
@@ -200,9 +199,9 @@
             </div>
           </div>
 
-<!-- Paid Media / Paid Social (Consumer) -->
+<!-- Paid Media (Consumer) -->
 <fieldset id="paidBlock" class="hidden">
-  <legend>Paid Media / Paid Social</legend>
+  <legend>Paid Media</legend>
 
   <div class="row">
     <div>
@@ -399,7 +398,6 @@
               <option>Email</option>
               <option>Push Notification</option>
               <option>Paid Media</option>
-              <option>Paid Social</option>
               <option>Long-Form Content</option>
               <option>In-app Merchandising</option>
             </select>
@@ -493,9 +491,9 @@
             </select>
           </div>
         </div>
-<!-- Paid Media / Paid Social (Dasher) -->
+<!-- Paid Media (Dasher) -->
 <fieldset id="d_paidBlock" class="hidden">
-  <legend>Paid Media / Paid Social</legend>
+  <legend>Paid Media</legend>
 
   <div class="row">
     <div>
@@ -687,7 +685,6 @@
         <option>Email</option>
         <option>Push Notification</option>
         <option>Paid Media</option>
-        <option>Paid Social</option>
         <option>Long-Form Content</option>
         <option>In-app Merchandising</option>
       </select>
@@ -765,9 +762,9 @@
     </div>
   </div>
 
-  <!-- Paid Media / Paid Social (Merchant) -->
+  <!-- Paid Media  (Merchant) -->
   <fieldset id="m_paidBlock" class="hidden">
-    <legend>Paid Media / Paid Social</legend>
+    <legend>Paid Media</legend>
     <div class="row">
       <div>
         <label for="m_adPlatforms" class="required">What platform is your ad running on?</label>
@@ -961,7 +958,7 @@ function validateMultiRequired(msEl, errId){
 
 if (audience.value==='Merchant'){
   const ch = m_channel.value;
-  const isPaid = ch==='Paid Media' || ch==='Paid Social';
+  const isPaid = ch==='Paid Media';
   m_paidBlock.classList.toggle('hidden', !isPaid);
 
   const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
@@ -975,12 +972,12 @@ if (audience.value==='Merchant'){
 
   if (audience.value==='Consumer'){
     const ch = channel.value;
-    const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media' || ch==='Paid Social';
+    const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
     epBlock.classList.toggle('hidden', !isEP);
     unsupportedMsg.classList.toggle('hidden', isEP || !ch);
 
     // NEW: Paid block + ad-type visibility
-    const isPaid = ch==='Paid Media' || ch==='Paid Social';
+    const isPaid = ch==='Paid Media';
     paidBlock.classList.toggle('hidden', !isPaid);
 
     const hasPlatform = getMultiSelectValues(adPlatforms).length > 0;
@@ -1001,7 +998,7 @@ if (audience.value==='Merchant'){
   d_segment.parentElement.parentElement.classList.toggle('hidden', !isEmailOrPush);
 
   // Paid block visibility
-  const isPaid = ch === 'Paid Media' || ch === 'Paid Social';
+  const isPaid = ch === 'Paid Media';
   d_paidBlock.classList.toggle('hidden', !isPaid);
 
   // Show ad type only when a platform is selected
@@ -1028,7 +1025,7 @@ if (audience.value==='Merchant'){
 
   valid &&= validateRequired(channel, 'channelErr');
   const ch = channel.value;
-  const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media' || ch==='Paid Social';
+  const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
 
   if (isEP){
     valid &&= validateRequired(segment,'segmentErr');
@@ -1038,8 +1035,8 @@ if (audience.value==='Merchant'){
     valid &&= validateRequired(action,'actionErr');
     valid &&= validateRequired(takeaway,'takeawayErr');
 
-    // Paid Media / Paid Social extras
-    if (ch==='Paid Media' || ch==='Paid Social'){
+    // Paid Media extras
+    if (ch==='Paid Media'){
       valid &&= validateMultiRequired(adPlatforms, 'adPlatformsErr');
       // Only require ad type once a platform is chosen
       if (getMultiSelectValues(adPlatforms).length > 0){
@@ -1070,7 +1067,7 @@ if (audience.value==='Merchant'){
 
   let txt = '';
 
-if (ch === 'Paid Media' || ch === 'Paid Social') {
+if (ch === 'Paid Media') {
   const duration = (adType.value === 'Video' || adType.value === 'Static and Video') ? (videoLength.value || '') + ' ' : '';
   txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
@@ -1086,7 +1083,7 @@ CTA: ${callToAction}.`;
 }
 
   // Include Paid selections in output
-  if (ch==='Paid Media' || ch==='Paid Social'){
+  if (ch==='Paid Media'){
     const platforms = getMultiSelectValues(adPlatforms);
     if (platforms.length){
       txt += `\nPlatforms: ${platforms.join(', ')}.`;
@@ -1161,16 +1158,16 @@ valid &&= validateRequired(d_usecase,'d_usecaseErr');
 valid &&= validateRequired(d_action,'d_actionErr');
 valid &&= validateRequired(d_takeaway,'d_takeawayErr');
 
-// Paid Media / Paid Social extras
-if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
+// Paid Media  extras
+if (d_channel.value==='Paid Media'){
   valid &&= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
   if (getMultiSelectValues(d_adPlatforms).length > 0){
     valid &&= validateRequired(d_adType, 'd_adTypeErr');
   }
 }
 
-  // Paid Media / Paid Social extras validation
-  if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
+  // Paid Media extras validation
+  if (d_channel.value==='Paid Media'){
     valid &&= validateMultiRequired(d_adPlatforms, 'd_adPlatformsErr');
     if (getMultiSelectValues(d_adPlatforms).length > 0){
       valid &&= validateRequired(d_adType, 'd_adTypeErr');
@@ -1206,7 +1203,7 @@ if (d_channel.value==='Paid Media' || d_channel.value==='Paid Social'){
 
   // Always initialize txt with a base prompt
   let txt = '';
-if (ch === 'Paid Media' || ch === 'Paid Social') {
+if (ch === 'Paid Media') {
   const duration = (d_adType.value === 'Video' || d_adType.value === 'Static and Video') ? (d_videoLength.value || '') + ' ' : '';
   txt = `I need a ${duration}${d_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the Dasher to take: ${actVal}
@@ -1222,8 +1219,8 @@ CTA: ${callToAction}.`;
 }
 
 
-  // Append Paid Media / Paid Social details
-  if (ch === 'Paid Media' || ch === 'Paid Social') {
+  // Append Paid Media  details
+  if (ch === 'Paid Media') {
   const platforms = getMultiSelectValues(d_adPlatforms);
   if (platforms.length) {
     txt += `\nPlatforms: ${platforms.join(', ')}.`;
@@ -1274,7 +1271,7 @@ function generateMerchant(){
   valid &&= validateRequired(m_action,'m_actionErr');
   valid &&= validateRequired(m_takeaway,'m_takeawayErr');
 
-  if (m_channel.value==='Paid Media' || m_channel.value==='Paid Social'){
+  if (m_channel.value==='Paid Media'){
     valid &&= validateMultiRequired(m_adPlatforms, 'm_adPlatformsErr');
     if (getMultiSelectValues(m_adPlatforms).length > 0){
       valid &&= validateRequired(m_adType, 'm_adTypeErr');
@@ -1298,7 +1295,7 @@ The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
 CTA: ${callToAction}.`;
 
-  if (ch==='Paid Media' || ch==='Paid Social'){
+  if (ch==='Paid Media'){
   const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video') ? (m_videoLength.value || '') + ' ' : '';
   txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh}. 
 Use Case: ${uc}.
