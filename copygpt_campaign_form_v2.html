@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/26 215pm</h1>
+    <h1>Dora Prompt Generator 9/26 245pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -184,6 +184,9 @@
             </div>
             <div>
               <label for="cta">What is your primary CTA?</label>
+              <div id="c_ctaHint" class="hint hidden">
+    (Note: for Meta ads, CTA buttons are predetermined through the Meta UI. Work with your channel manager to determine which one is best.)
+  </div>
               <select id="cta">
                 <option value="" selected disabled>Select CTA</option>
                 <option>Order now</option>
@@ -330,7 +333,7 @@
           </fieldset>
 
           <!-- Secondary module (Consumer) -->
-          <fieldset>
+          <fieldset id="c_secondaryFS">
             <legend>Secondary Module</legend>
             <div class="row">
               <div>
@@ -478,6 +481,9 @@
         <div class="row">
           <div>
             <label for="d_cta">What is your primary CTA?</label>
+            <div id="d_ctaHint" class="hint hidden">
+    (Note: for Meta ads, CTA buttons are predetermined through the Meta UI. Work with your channel manager to determine which one is best.)
+  </div>
             <select id="d_cta">
               <option value="" selected disabled>Select CTA</option>
               <option>Dash now</option>
@@ -618,7 +624,7 @@
         </fieldset>
 
         <!-- Secondary module (Dasher) -->
-        <fieldset>
+        <fieldset id="d_secondaryFS">
           <legend>Secondary Module</legend>
           <div class="row">
             <div>
@@ -757,6 +763,9 @@
         <div class="row">
           <div>
             <label for="m_cta">What is your primary CTA?</label>
+            <div id="m_ctaHint" class="hint hidden">
+    (Note: for Meta ads, CTA buttons are predetermined through the Meta UI. Work with your channel manager to determine which one is best.)
+  </div>
             <select id="m_cta">
               <option value="" selected disabled>Select CTA</option>
               <option>Get started</option>
@@ -813,7 +822,7 @@
         </fieldset>
 
         <!-- Secondary module (Merchant) -->
-        <fieldset>
+        <fieldset id="m_secondaryFS">
           <legend>Secondary Module</legend>
           <div class="row">
             <div>
@@ -838,15 +847,10 @@
                 <label for="m_secondaryCTA">What is your CTA for this secondary module</label>
                 <select id="m_secondaryCTA">
                   <option value="" selected disabled>Select CTA</option>
-                  <option>Order now</option>
-                  <option>Get DashPass</option>
-                  <option>Sign up</option>
-                  <option>Upgrade now</option>
-                  <option>Activate now</option>
-                  <option>Shop now</option>
-                  <option>Order drinks</option>
-                  <option>Shop gifts</option>
-                  <option>See deals</option>
+                  <option>Get started</option>
+              <option>Sign up</option>
+              <option>Explore products</option>
+              <option>Learn more</option>
                 </select>
               </div>
             </div>
@@ -897,6 +901,7 @@
       const feature = el('feature');
       const lob = el('lob');
       const cta = el('cta');
+      const c_ctaHint = el('c_ctaHint');
 
       const paidBlock = el('paidBlock');
       const adPlatforms = el('adPlatforms');
@@ -917,6 +922,7 @@
       const promoCode = el('promoCode');
       const dashpassOnly = el('dashpassOnly');
 
+      const c_secondaryFS = el('c_secondaryFS');
       const hasSecondary = el('hasSecondary');
       const secondaryBlock = el('secondaryBlock');
       const secondaryObjective = el('secondaryObjective');
@@ -934,7 +940,8 @@
       const d_takeaway = el('d_takeaway');
       const d_feature = el('d_feature');
       const d_cta = el('d_cta');
-
+      const d_ctaHint = el('d_ctaHint');
+      
       const d_paidBlock = el('d_paidBlock');
       const d_adPlatforms = el('d_adPlatforms');
       const d_adTypeWrap = el('d_adTypeWrap');
@@ -955,7 +962,8 @@
       const d_streaksBlock = el('d_streaksBlock');
       const d_consecDays = el('d_consecDays');
       const d_additionalPayout = el('d_additionalPayout');
-
+      
+      const d_secondaryFS = el('d_secondaryFS');
       const d_hasSecondary = el('d_hasSecondary');
       const d_secondaryBlock = el('d_secondaryBlock');
       const d_secondaryObjective = el('d_secondaryObjective');
@@ -972,7 +980,8 @@
       const m_takeaway = el('m_takeaway');
       const m_feature = el('m_feature');
       const m_cta = el('m_cta');
-
+      const m_ctaHint = el('m_ctaHint');
+      
       const m_paidBlock = el('m_paidBlock');
       const m_adPlatforms = el('m_adPlatforms');
       const m_adTypeWrap = el('m_adTypeWrap');
@@ -980,6 +989,7 @@
       const m_videoQWrap = el('m_videoQWrap');
       const m_videoLength = el('m_videoLength');
 
+      const m_secondaryFS = el('m_secondaryFS');
       const m_hasSecondary = el('m_hasSecondary');
       const m_secondaryBlock = el('m_secondaryBlock');
       const m_secondaryObjective = el('m_secondaryObjective');
@@ -1011,70 +1021,101 @@
 
       // Visibility
       function updateVisibility(){
-        // audience blocks
-        consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
-        dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
-        merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
+  // audience blocks
+  consumerBlock.classList.toggle('hidden', audience.value!=='Consumer');
+  dasherBlock.classList.toggle('hidden', audience.value!=='Dasher');
+  merchantBlock.classList.toggle('hidden', audience.value!=='Merchant');
 
-        // Merchant paid + video q
-        if (audience.value==='Merchant'){
-          const ch = m_channel.value;
-          const isPaid = ch==='Paid Media';
-          m_paidBlock.classList.toggle('hidden', !isPaid);
-          const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
-          m_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-          m_videoQWrap.classList.toggle('hidden', !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
-        }
+  // ----- Consumer -----
+  if (audience.value==='Consumer'){
+    const ch = channel.value;
+    const isEP_any = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
+    const isEmailOrPush = ch==='Email' || ch==='Push Notification';
+    c_ctaHint.classList.toggle('hidden', channel.value !== 'Paid Media');
 
-        // Consumer
-        if (audience.value==='Consumer'){
-          const ch = channel.value;
-          const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
-          epBlock.classList.toggle('hidden', !isEP);
-          unsupportedMsg.classList.toggle('hidden', isEP || !ch);
+    epBlock.classList.toggle('hidden', !isEP_any);
+    unsupportedMsg.classList.toggle('hidden', isEP_any || !ch);
 
-          const isPaid = ch==='Paid Media';
-          paidBlock.classList.toggle('hidden', !isPaid);
+    const isPaid = ch==='Paid Media';
+    paidBlock.classList.toggle('hidden', !isPaid);
 
-          const hasPlatform = getMultiSelectValues(adPlatforms).length > 0;
-          adTypeWrap.classList.toggle('hidden', !hasPlatform);
-          videoQWrap.classList.toggle('hidden', !(adType.value === 'Video' || adType.value === 'Static and Video'));
-        } else {
-          unsupportedMsg.classList.add('hidden');
-          epBlock.classList.add('hidden');
-          paidBlock.classList.add('hidden');
-        }
+    const hasPlatform = getMultiSelectValues(adPlatforms).length > 0;
+    adTypeWrap.classList.toggle('hidden', !hasPlatform);
+    videoQWrap.classList.toggle('hidden', !(adType.value === 'Video' || adType.value === 'Static and Video'));
 
-        // Dasher
-        if (audience.value === 'Dasher') {
-          const ch = d_channel.value;
-          const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
-          d_segment.parentElement.parentElement.classList.toggle('hidden', !isEmailOrPush);
-          const isPaid = ch === 'Paid Media';
-          d_paidBlock.classList.toggle('hidden', !isPaid);
-          const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
-          d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-          d_videoQWrap.classList.toggle('hidden', !(d_adType.value === 'Video' || d_adType.value === 'Static and Video'));
-        }
+    // Secondary allowed only for Email/Push
+    c_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
+    if (!isEmailOrPush){
+      hasSecondary.value = 'No';
+      secondaryBlock.classList.add('hidden');
+    }
+  } else {
+    unsupportedMsg.classList.add('hidden');
+    epBlock.classList.add('hidden');
+    paidBlock.classList.add('hidden');
+    c_secondaryFS.classList.add('hidden');
+  }
 
-        // promo/secondary (consumer)
-        promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
-        secondaryBlock.classList.toggle('hidden', hasSecondary.value!=='Yes');
+  // ----- Dasher -----
+  if (audience.value === 'Dasher') {
+    const ch = d_channel.value;
+    const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
+    d_ctaHint.classList.toggle('hidden', d_channel.value !== 'Paid Media');
+    // Only show segment for Email/Push
+    d_segment.parentElement.parentElement.classList.toggle('hidden', !isEmailOrPush);
 
-        // promo (dasher)
-        d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
-        d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
-        d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
+    // Paid visibility
+    const isPaid = ch === 'Paid Media';
+    d_paidBlock.classList.toggle('hidden', !isPaid);
+    const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
+    d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+    d_videoQWrap.classList.toggle('hidden', !(d_adType.value === 'Video' || d_adType.value === 'Static and Video'));
 
-        // Dasher secondary toggle
-        if (audience.value === 'Dasher') {
-          d_secondaryBlock.classList.toggle('hidden', d_hasSecondary.value !== 'Yes');
-        }
-        // Merchant secondary toggle
-        if (audience.value === 'Merchant') {
-          m_secondaryBlock.classList.toggle('hidden', m_hasSecondary.value !== 'Yes');
-        }
-      }
+    // Secondary allowed only for Email/Push
+    d_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
+    if (!isEmailOrPush){
+      d_hasSecondary.value = 'No';
+      d_secondaryBlock.classList.add('hidden');
+    }
+  } else {
+    d_secondaryFS.classList.add('hidden');
+  }
+
+  // ----- Merchant -----
+  if (audience.value==='Merchant'){
+    const ch = m_channel.value;
+    const isEmailOrPush = ch==='Email' || ch==='Push Notification';
+    m_ctaHint.classList.toggle('hidden', m_channel.value !== 'Paid Media');
+
+    // Paid visibility
+    const isPaid = ch==='Paid Media';
+    m_paidBlock.classList.toggle('hidden', !isPaid);
+    const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
+    m_adTypeWrap.classList.toggle('hidden', !hasPlatform);
+    m_videoQWrap.classList.toggle('hidden', !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+
+    // Secondary allowed only for Email/Push
+    m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
+    if (!isEmailOrPush){
+      m_hasSecondary.value = 'No';
+      m_secondaryBlock.classList.add('hidden');
+    }
+  } else {
+    m_secondaryFS.classList.add('hidden');
+  }
+
+  // ----- Existing promo toggles -----
+  promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
+  d_promoBlock.classList.toggle('hidden', d_hasPromo.value!=='Yes');
+  d_streaksBlock.classList.toggle('hidden', d_promoType.value!=='streaks');
+  d_otherWrap.classList.toggle('hidden', d_promoType.value!=='other');
+
+  // Inner secondary blocks tied to their toggles
+  secondaryBlock.classList.toggle('hidden', hasSecondary.value!=='Yes');
+  d_secondaryBlock.classList.toggle('hidden', d_hasSecondary.value!=='Yes');
+  m_secondaryBlock.classList.toggle('hidden', m_hasSecondary.value!=='Yes');
+}
+
 
       // Generate
       function generateConsumer(){
@@ -1119,6 +1160,7 @@
         const callToAction = cta.value || 'N/A';
         const actVal = (action.value||'').trim() || 'N/A';
         const takeVal = (takeaway.value||'').trim() || 'N/A';
+const feat = (feature?.value || '').trim() || 'N/A';
 
         let txt = '';
 
@@ -1127,12 +1169,14 @@
           txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for consumer: ${takeVal}
+Feature / service details: ${feat}
 CTA: ${callToAction}.
 Ad type: ${adType.value}`;
         } else {
           txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for Consumer: ${takeVal}
+Feature / service details: ${feat}
 CTA: ${callToAction}.`;
         }
 
