@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/26 135pm</h1>
+    <h1>Dora Prompt Generator 9/26 150pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -752,8 +752,8 @@
 
   <div class="row">
             <div>
-              <label for="feature">Can you provide more details or context about the feature or service you’d like to highlight?</label>
-              <textarea id="feature" placeholder="Description of your product or service. Focus on what it is in simple language."></textarea>
+              <label for="m_feature">Can you provide more details or context about the feature or service you’d like to highlight?</label>
+<textarea id="m_feature" placeholder="Description of your product or service. Focus on what it is in simple language."></textarea>
             </div>
           </div>
   
@@ -924,12 +924,15 @@ const m_behavior = el('m_behavior');
 const m_usecase = el('m_usecase');
 const m_action = el('m_action');
 const m_takeaway = el('m_takeaway');
+const m_feature = el('m_feature');
 const m_cta = el('m_cta');
 
 const m_paidBlock = el('m_paidBlock');
 const m_adPlatforms = el('m_adPlatforms');
 const m_adTypeWrap = el('m_adTypeWrap');
 const m_adType = el('m_adType');
+const m_videoQWrap = el('m_videoQWrap');
+const m_videoLength = el('m_videoLength');
 
 
     // Validation helpers
@@ -1285,7 +1288,6 @@ function generateMerchant(){
       valid &&= validateRequired(m_adType, 'm_adTypeErr');
     }
   }
-
   if (!valid) return '';
 
   const aud = 'Merchant';
@@ -1296,23 +1298,29 @@ function generateMerchant(){
   const actVal = (m_action.value||'').trim() || 'N/A';
   const takeVal = (m_takeaway.value||'').trim() || 'N/A';
   const callToAction = m_cta.value || 'N/A';
+  const productAns = (m_feature?.value || '').trim() || 'N/A';
 
+  // Default (non–Paid Media)
   let txt = `I need a ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh}. 
 Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
+Product/Serview overview: ${productAns}
 CTA: ${callToAction}.`;
 
+  // Paid Media override
   if (ch==='Paid Media'){
-  const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video') ? (m_videoLength.value || '') + ' ' : '';
-  txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+    const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video')
+      ? (m_videoLength?.value || '') + ' '
+      : '';
+    txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh}. 
 Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
+Product/Serview overview: ${productAns}
 CTA: ${callToAction}.
 Ad type: ${m_adType.value}`;
-}
-
+  }
 
   return txt.trim();
 }
