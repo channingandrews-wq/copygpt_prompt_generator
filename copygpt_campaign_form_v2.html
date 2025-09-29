@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/26 245pm</h1>
+    <h1>Dora Prompt Generator 9/29 4:30pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -93,7 +93,7 @@
           </div>
         </div>
         <div id="unsupportedMsg" class="note hidden">
-          <span class="support-msg">CopyGPT does not currently support these channels.</span>
+          <span class="support-msg">Dora does not currently support these channels.</span>
         </div>
 
         <!-- Email/Push only -->
@@ -402,7 +402,9 @@
               <option>Paid Media</option>
               <option>Long-Form Content</option>
               <option>In-app Merchandising</option>
-            </select>
+            </select><div id="d_unsupportedMsg" class="note hidden">
+  <span class="support-msg">Dora does not currently support these channels.</span>
+</div>
             <div class="error" id="d_channelErr">Channel is required.</div>
           </div>
         </div>
@@ -932,6 +934,7 @@
       // Dasher refs
       const dasherBlock = el('dasherBlock');
       const d_channel = el('d_channel');
+      const d_unsupportedMsg = el('d_unsupportedMsg');
       const d_segment = el('d_segment');
       const d_behavior = el('d_behavior');
       const d_submarkets = el('d_submarkets');
@@ -1058,11 +1061,12 @@
 
   // ----- Dasher -----
   if (audience.value === 'Dasher') {
-    const ch = d_channel.value;
-    const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
-    d_ctaHint.classList.toggle('hidden', d_channel.value !== 'Paid Media');
-    // Only show segment for Email/Push
-    d_segment.parentElement.parentElement.classList.toggle('hidden', !isEmailOrPush);
+  const ch = d_channel.value;
+  const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
+
+  // show “unsupported” for these two channels
+  const notSupported = ch === 'Long-Form Content' || ch === 'In-app Merchandising';
+  d_unsupportedMsg.classList.toggle('hidden', !notSupported);
 
     // Paid visibility
     const isPaid = ch === 'Paid Media';
