@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/29 4:30pm</h1>
+    <h1>Dora Prompt Generator 9/29 4pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -867,6 +867,9 @@
       </div>
 
       <!-- Generated Output -->
+      <div id="formErr" class="note hidden" role="alert" aria-live="polite">
+  <span class="support-msg">Please complete the required fields to generate your prompt</span>
+</div>
       <fieldset>
         <legend>Generated Response</legend>
         <div id="output" class="output" aria-live="polite"></div>
@@ -887,6 +890,8 @@
       const copyBtn = el('copyBtn');
       const generateBtn = el('generateBtn');
       const resetBtn = el('resetBtn');
+      const formErr = el('formErr');
+
 
       // Consumer refs
       const consumerBlock = el('consumerBlock');
@@ -1021,6 +1026,27 @@
         showError(errId, !ok);
         return ok;
       }
+      
+      // --- Global error helpers (ADD THESE HERE) ---
+function showGlobalError(msg){
+  if (!formErr) return;
+  formErr.classList.remove('hidden');
+  if (msg) formErr.querySelector('.support-msg').textContent = msg;
+}
+function hideGlobalError(){
+  if (!formErr) return;
+  formErr.classList.add('hidden');
+}
+function scrollToFirstError(){
+  const firstErr = Array.from(document.querySelectorAll('.error'))
+    .find(e => e.style.display === 'block');
+  if (firstErr){
+    const container = firstErr.parentElement;
+    const focusable = container && container.querySelector('input, select, textarea');
+    if (focusable && typeof focusable.focus === 'function') focusable.focus();
+    firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
 
       // Visibility
       function updateVisibility(){
@@ -1407,23 +1433,40 @@ Ad type: ${m_adType.value}`;
       }
 
       function gatherAndGenerate(){
-        output.textContent='';
-        let valid = true;
-        valid &&= validateRequired(audience,'audienceErr');
-        if (!valid) return;
+  hideGlobalError();
+  output.textContent = '';
 
-        let text='';
-        if (audience.value==='Consumer'){
-          text = generateConsumer();
-        } else if (audience.value==='Dasher'){
-          text = generateDasher();
-        } else if (audience.value==='Merchant'){
-          text = generateMerchant();
-        }
+  let valid = true;
+  valid &&= validateRequired(audience,'audienceErr');
 
-        output.textContent = (text||'').trim();
-        if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
-      }
+  if (!valid){
+    showGlobalError();
+    scrollToFirstError();
+    return;
+  }
+
+  let text = '';
+  if (audience.value === 'Consumer'){
+    text = generateConsumer();
+  } else if (audience.value === 'Dasher'){
+    text = generateDasher();
+  } else if (audience.value === 'Merchant'){
+    text = generateMerchant();
+  }
+
+  // If any audience-specific validation failed, their generator returns ''
+  if (!text){
+    showGlobalError();
+    scrollToFirstError();
+    return;
+  }
+
+  // Success
+  hideGlobalError();
+  output.textContent = text.trim();
+  if (text) output.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
 
       function validateHasDollarOrPercent(node, errId){
         const v=(node.value||'').trim();
