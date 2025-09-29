@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/29 4pm</h1>
+    <h1>Dora Prompt Generator 9/29 5:15pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -697,6 +697,59 @@
             <div class="error" id="m_channelErr">Channel is required.</div>
           </div>
         </div>
+        <!-- MERCHANT Long-Form Content -->
+<div id="m_longform" class="hidden">
+  <div class="row">
+    <div>
+      <label for="m_longType" class="required">What type of long form content are you creating?</label>
+      <select id="m_longType">
+        <option value="" selected disabled>Select content type</option>
+        <option>Blog Post</option>
+        <option>Success Story / Case Study</option>
+        <option>SEO Landing Page</option>
+      </select>
+      <div class="error" id="m_longTypeErr">Content type is required.</div>
+    </div>
+  </div>
+
+  <!-- Success Story / Case Study fields -->
+  <div id="m_successFields" class="hidden">
+    <div class="row">
+      <div>
+        <label for="m_successMerchant" class="required">Please provide details about Merchant</label>
+        <textarea id="m_successMerchant"></textarea>
+        <div class="error" id="m_successMerchantErr">This field is required.</div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="m_successQuotes" class="required">Please provide key quotes from your Merchant for your success story.</label>
+        <textarea id="m_successQuotes"></textarea>
+        <div class="error" id="m_successQuotesErr">This field is required.</div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="m_successResults" class="required">Please provide key performance results from your merchants.</label>
+        <textarea id="m_successResults"></textarea>
+        <div class="error" id="m_successResultsErr">This field is required.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO Landing Page fields -->
+  <div id="m_seoFields" class="hidden">
+    <div class="row">
+      <div>
+        <label for="m_seoKeywords" class="required">What are your SEO keywords for your landing pages?</label>
+        <textarea id="m_seoKeywords"></textarea>
+        <div class="error" id="m_seoKeywordsErr">This field is required.</div>
+      </div>
+    </div>
+    </div> <!-- end m_seoFields -->
+</div> <!-- end m_longform -->
+  
+
 
         <div class="row">
           <div>
@@ -990,6 +1043,16 @@
       const m_cta = el('m_cta');
       const m_ctaHint = el('m_ctaHint');
       
+      const m_longform = el('m_longform');
+const m_longType = el('m_longType');
+const m_successFields = el('m_successFields');
+const m_successMerchant = el('m_successMerchant');
+const m_successQuotes = el('m_successQuotes');
+const m_successResults = el('m_successResults');
+const m_seoFields = el('m_seoFields');
+const m_seoKeywords = el('m_seoKeywords');
+
+      
       const m_paidBlock = el('m_paidBlock');
       const m_adPlatforms = el('m_adPlatforms');
       const m_adTypeWrap = el('m_adTypeWrap');
@@ -1112,27 +1175,44 @@ function scrollToFirstError(){
   }
 
   // ----- Merchant -----
-  if (audience.value==='Merchant'){
-    const ch = m_channel.value;
-    const isEmailOrPush = ch==='Email' || ch==='Push Notification';
-    m_ctaHint.classList.toggle('hidden', m_channel.value !== 'Paid Media');
+if (audience.value==='Merchant'){
+  const ch = m_channel.value;
+  const isEmailOrPush = ch==='Email' || ch==='Push Notification';
+  const isPaid = ch==='Paid Media';
+  const isLongForm = ch==='Long-Form Content';
 
-    // Paid visibility
-    const isPaid = ch==='Paid Media';
-    m_paidBlock.classList.toggle('hidden', !isPaid);
-    const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
-    m_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-    m_videoQWrap.classList.toggle('hidden', !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+  m_ctaHint.classList.toggle('hidden', m_channel.value !== 'Paid Media');
 
-    // Secondary allowed only for Email/Push
-    m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
-    if (!isEmailOrPush){
-      m_hasSecondary.value = 'No';
-      m_secondaryBlock.classList.add('hidden');
-    }
-  } else {
-    m_secondaryFS.classList.add('hidden');
+  // Long-form visibility
+  m_longform.classList.toggle('hidden', !isLongForm);
+
+  // Hide "behavior" for long-form (we'll skip its validation too)
+  const mBehaviorRow = m_behavior.parentElement.parentElement;
+  mBehaviorRow.classList.toggle('hidden', isLongForm);
+
+  // Paid visibility (off for long-form)
+  m_paidBlock.classList.toggle('hidden', !isPaid);
+  const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
+  m_adTypeWrap.classList.toggle('hidden', !hasPlatform || !isPaid);
+  m_videoQWrap.classList.toggle('hidden', !isPaid || !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+
+  // Secondary allowed only for Email/Push
+  m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
+  if (!isEmailOrPush){
+    m_hasSecondary.value = 'No';
+    m_secondaryBlock.classList.add('hidden');
   }
+
+  // Long-form subtype toggles
+  const lt = (m_longType?.value || '').toLowerCase();
+  const isSuccess = lt === 'success story / case study';
+  const isSeo = lt === 'seo landing page';
+  m_successFields.classList.toggle('hidden', !(isLongForm && isSuccess));
+  m_seoFields.classList.toggle('hidden', !(isLongForm && isSeo));
+} else {
+  m_secondaryFS.classList.add('hidden');
+}
+
 
   // ----- Existing promo toggles -----
   promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
@@ -1374,63 +1454,113 @@ CTA: ${callToAction}.`;
       }
 
       function generateMerchant(){
-        let valid = true;
-        valid &&= validateRequired(m_channel,'m_channelErr');
-        valid &&= validateRequired(m_segment,'m_segmentErr');
-        valid &&= validateStartsWithWho(m_behavior,'m_behaviorErr');
-        valid &&= validateRequired(m_usecase,'m_usecaseErr');
-        valid &&= validateRequired(m_action,'m_actionErr');
-        valid &&= validateRequired(m_takeaway,'m_takeawayErr');
+  let valid = true;
 
-        if (m_channel.value==='Paid Media'){
-          valid &&= validateMultiRequired(m_adPlatforms, 'm_adPlatformsErr');
-          if (getMultiSelectValues(m_adPlatforms).length > 0){
-            valid &&= validateRequired(m_adType, 'm_adTypeErr');
-          }
-        }
-        if (!valid) return '';
+  valid &&= validateRequired(m_channel,'m_channelErr');
+  const ch = m_channel.value || '';
 
-        const aud = 'Merchant';
-        const ch = m_channel.value || '';
-        const seg = m_segment.value || '';
-        const beh = (m_behavior.value||'').trim();
-        const uc  = m_usecase.value || '';
-        const actVal = (m_action.value||'').trim() || 'N/A';
-        const takeVal = (m_takeaway.value||'').trim() || 'N/A';
-        const callToAction = m_cta.value || 'N/A';
-        const productAns = (m_feature?.value || '').trim() || 'N/A';
+  // Always need segment/usecase/action/takeaway
+  valid &&= validateRequired(m_segment,'m_segmentErr');
 
-        // Default (non–Paid Media)
-        let txt = `I need a ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+  // Behavior is required for non–long-form only
+  if (ch !== 'Long-Form Content'){
+    valid &&= validateStartsWithWho(m_behavior,'m_behaviorErr');
+  }
+
+  valid &&= validateRequired(m_usecase,'m_usecaseErr');
+  valid &&= validateRequired(m_action,'m_actionErr');
+  valid &&= validateRequired(m_takeaway,'m_takeawayErr');
+
+  // Paid Media validations
+  if (ch === 'Paid Media'){
+    valid &&= validateMultiRequired(m_adPlatforms, 'm_adPlatformsErr');
+    if (getMultiSelectValues(m_adPlatforms).length > 0){
+      valid &&= validateRequired(m_adType, 'm_adTypeErr');
+    }
+  }
+
+  // If Long-Form, validate subtype & subtype-specific fields
+  if (ch === 'Long-Form Content'){
+    valid &&= validateRequired(m_longType, 'm_longTypeErr');
+    const lt = (m_longType.value || '').toLowerCase();
+    if (lt === 'success story / case study'){
+      valid &&= validateRequired(m_successMerchant, 'm_successMerchantErr');
+      valid &&= validateRequired(m_successQuotes, 'm_successQuotesErr');
+      valid &&= validateRequired(m_successResults, 'm_successResultsErr');
+    }
+    if (lt === 'seo landing page'){
+      valid &&= validateRequired(m_seoKeywords, 'm_seoKeywordsErr');
+    }
+  }
+
+  if (!valid) return '';
+
+  // ----- Common fields (define BEFORE any output building) -----
+  const seg = m_segment.value || '';
+  const uc  = m_usecase.value || '';
+  const actVal = (m_action.value||'').trim() || 'N/A';
+  const takeVal = (m_takeaway.value||'').trim() || 'N/A';
+  const callToAction = m_cta.value || 'N/A';
+  const productAns = (m_feature?.value || '').trim() || 'N/A';
+
+  // ----- Long-Form OUTPUT (single, final version) -----
+  if (ch === 'Long-Form Content'){
+    const longType = m_longType.value || 'Long-Form Content';
+    const lt = (m_longType.value || '').toLowerCase();
+    const article = /^[aeiou]/i.test(longType) ? 'an' : 'a';
+
+    let txt = `I need ${article} ${longType} for our DoorDash Merchant Content team targeting ${seg}. Use Case: ${uc}. The action we want the Merchant to take: ${actVal}. The most important takeaway for the Merchant: ${takeVal}. Highlight the following product/service: ${productAns}. CTA: ${callToAction}.`;
+
+    if (lt === 'success story / case study'){
+      const merchantDetails = (m_successMerchant?.value || '').trim();
+      const quotes = (m_successQuotes?.value || '').trim();
+      const results = (m_successResults?.value || '').trim();
+      txt += `\nIn this article highlight these details about the merchant: ${merchantDetails}.`
+           + ` \nPlease use these quotes: ${quotes}.`
+           + ` \nAlso highlight these key results: ${results}.`;
+    }
+
+    if (lt === 'seo landing page'){
+      const keywords = (m_seoKeywords?.value || '').trim();
+      if (keywords) txt += `\nSEO keywords to target: ${keywords}`;
+    }
+
+    return txt.trim();
+  }
+
+  // ----- Default (non–Paid Media) -----
+  let txt = `I need a ${ch} for our DoorDash Merchant team targeting ${seg} ${(m_behavior.value||'').trim()}. 
 Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
-Product/Serview overview: ${productAns}
+Product/Service overview: ${productAns}
 CTA: ${callToAction}.`;
 
-        // Paid Media override
-        if (ch==='Paid Media'){
-          const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video')
-            ? (m_videoLength?.value || '') + ' '
-            : '';
-          txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+  // ----- Paid Media override -----
+  if (ch === 'Paid Media'){
+    const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video')
+      ? (m_videoLength?.value || '') + ' '
+      : '';
+    txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash Merchant team targeting ${seg} ${(m_behavior.value||'').trim()}. 
 Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
-Product/Serview overview: ${productAns}
+Product/Service overview: ${productAns}
 CTA: ${callToAction}.
 Ad type: ${m_adType.value}`;
-        }
+  }
 
-        // Append secondary module details (Merchant)
-        if (m_hasSecondary.value === 'Yes') {
-          const sObj = (m_secondaryObjective.value || 'N/A').trim();
-          const sCTA2 = m_secondaryCTA.value || 'N/A';
-          txt += `\nAlso include a secondary message where the objective is ${sObj} with CTA ${sCTA2}.`;
-        }
+  // Secondary Merchant
+  if (m_hasSecondary.value === 'Yes') {
+    const sObj = (m_secondaryObjective.value || 'N/A').trim();
+    const sCTA2 = m_secondaryCTA.value || 'N/A';
+    txt += `\nAlso include a secondary message where the objective is ${sObj} with CTA ${sCTA2}.`;
+  }
 
-        return txt.trim();
-      }
+  return txt.trim();
+}
+
+
 
       function gatherAndGenerate(){
   hideGlobalError();
@@ -1484,6 +1614,8 @@ Ad type: ${m_adType.value}`;
       adType.addEventListener('change', updateVisibility);
       d_adType.addEventListener('change', updateVisibility);
       m_adType.addEventListener('change', updateVisibility);
+      m_longType.addEventListener('change', updateVisibility);
+
 
       adPlatforms.addEventListener('change', updateVisibility);
       d_adPlatforms.addEventListener('change', updateVisibility);
