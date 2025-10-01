@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/30 6pm</h1>
+    <h1>Dora Prompt Generator 9/30 6:30pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -1280,8 +1280,7 @@ const feat = (feature?.value || '').trim() || 'N/A';
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for consumer: ${takeVal}
 Feature / service details: ${feat}
-CTA: ${callToAction}.
-Ad type: ${adType.value}`;
+CTA: ${callToAction}.`;
         } else {
           txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
@@ -1295,9 +1294,7 @@ CTA: ${callToAction}.`;
           if (platforms.length){
             txt += `\nPlatforms: ${platforms.join(', ')}.`;
           }
-          if (adType.value){
-            txt += `\nAd type: ${adType.value}.`;
-          }
+          
         }
 
         if (hasPromo.value==='Yes'){
@@ -1402,8 +1399,7 @@ CTA: ${callToAction}.`;
           txt = `I need a ${duration}${d_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the Dasher to take: ${actVal}
 The most important takeaway for Dasher: ${takeVal}
-CTA: ${callToAction}.
-Ad type: ${d_adType.value}`;
+CTA: ${callToAction}.`;
         } else {
           txt = `I need an ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. 
 Use Case: ${uc}.
@@ -1417,9 +1413,7 @@ CTA: ${callToAction}.`;
           if (platforms.length) {
             txt += `\nPlatforms: ${platforms.join(', ')}.`;
           }
-          if (d_adType.value) {
-            txt += `\nAd type: ${d_adType.value}.`;
-          }
+          
         }
 
         if (d_hasPromo.value==='Yes'){
@@ -1546,9 +1540,16 @@ Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
 Product/Service overview: ${productAns}
-CTA: ${callToAction}.
-Ad type: ${m_adType.value}`;
+CTA: ${callToAction}.`;
   }
+  
+  if (ch === 'Paid Media') {
+          const platforms = getMultiSelectValues(m_adPlatforms);
+          if (platforms.length) {
+            txt += `\nPlatforms: ${platforms.join(', ')}.`;
+          }
+          
+        }
 
   // Secondary Merchant
   if (m_hasSecondary.value === 'Yes') {
