@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/29 4pm</h1>
+    <h1>Dora Prompt Generator</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -93,7 +93,7 @@
           </div>
         </div>
         <div id="unsupportedMsg" class="note hidden">
-          <span class="support-msg">CopyGPT does not currently support these channels.</span>
+          <span class="support-msg">Dora does not currently support these channels.</span>
         </div>
 
         <!-- Email/Push only -->
@@ -402,7 +402,9 @@
               <option>Paid Media</option>
               <option>Long-Form Content</option>
               <option>In-app Merchandising</option>
-            </select>
+            </select><div id="d_unsupportedMsg" class="note hidden">
+  <span class="support-msg">Dora does not currently support these channels.</span>
+</div>
             <div class="error" id="d_channelErr">Channel is required.</div>
           </div>
         </div>
@@ -695,6 +697,59 @@
             <div class="error" id="m_channelErr">Channel is required.</div>
           </div>
         </div>
+        <!-- MERCHANT Long-Form Content -->
+<div id="m_longform" class="hidden">
+  <div class="row">
+    <div>
+      <label for="m_longType" class="required">What type of long form content are you creating?</label>
+      <select id="m_longType">
+        <option value="" selected disabled>Select content type</option>
+        <option>Blog Post</option>
+        <option>Success Story / Case Study</option>
+        <option>SEO Landing Page</option>
+      </select>
+      <div class="error" id="m_longTypeErr">Content type is required.</div>
+    </div>
+  </div>
+
+  <!-- Success Story / Case Study fields -->
+  <div id="m_successFields" class="hidden">
+    <div class="row">
+      <div>
+        <label for="m_successMerchant" class="required">Please provide details about Merchant</label>
+        <textarea id="m_successMerchant"></textarea>
+        <div class="error" id="m_successMerchantErr">This field is required.</div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="m_successQuotes" class="required">Please provide key quotes from your Merchant for your success story.</label>
+        <textarea id="m_successQuotes"></textarea>
+        <div class="error" id="m_successQuotesErr">This field is required.</div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="m_successResults" class="required">Please provide key performance results from your merchants.</label>
+        <textarea id="m_successResults"></textarea>
+        <div class="error" id="m_successResultsErr">This field is required.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO Landing Page fields -->
+  <div id="m_seoFields" class="hidden">
+    <div class="row">
+      <div>
+        <label for="m_seoKeywords" class="required">What are your SEO keywords for your landing pages?</label>
+        <textarea id="m_seoKeywords"></textarea>
+        <div class="error" id="m_seoKeywordsErr">This field is required.</div>
+      </div>
+    </div>
+    </div> <!-- end m_seoFields -->
+</div> <!-- end m_longform -->
+  
+
 
         <div class="row">
           <div>
@@ -730,7 +785,7 @@
               <option>Apology / Outage</option>
               <option>Occasions and Co-Marketing</option>
               <option>Educational / Informational</option>
-              <option>Propsective Merchant</option>
+              <option>Prospective Merchant</option>
               <option>Other</option>
             </select>
             <div class="error" id="m_usecaseErr">Use Case is required.</div>
@@ -865,6 +920,9 @@
       </div>
 
       <!-- Generated Output -->
+      <div id="formErr" class="note hidden" role="alert" aria-live="polite">
+  <span class="support-msg">Please complete the required fields to generate your prompt</span>
+</div>
       <fieldset>
         <legend>Generated Response</legend>
         <div id="output" class="output" aria-live="polite"></div>
@@ -885,6 +943,8 @@
       const copyBtn = el('copyBtn');
       const generateBtn = el('generateBtn');
       const resetBtn = el('resetBtn');
+      const formErr = el('formErr');
+
 
       // Consumer refs
       const consumerBlock = el('consumerBlock');
@@ -932,6 +992,7 @@
       // Dasher refs
       const dasherBlock = el('dasherBlock');
       const d_channel = el('d_channel');
+      const d_unsupportedMsg = el('d_unsupportedMsg');
       const d_segment = el('d_segment');
       const d_behavior = el('d_behavior');
       const d_submarkets = el('d_submarkets');
@@ -982,6 +1043,16 @@
       const m_cta = el('m_cta');
       const m_ctaHint = el('m_ctaHint');
       
+      const m_longform = el('m_longform');
+const m_longType = el('m_longType');
+const m_successFields = el('m_successFields');
+const m_successMerchant = el('m_successMerchant');
+const m_successQuotes = el('m_successQuotes');
+const m_successResults = el('m_successResults');
+const m_seoFields = el('m_seoFields');
+const m_seoKeywords = el('m_seoKeywords');
+
+      
       const m_paidBlock = el('m_paidBlock');
       const m_adPlatforms = el('m_adPlatforms');
       const m_adTypeWrap = el('m_adTypeWrap');
@@ -1018,6 +1089,27 @@
         showError(errId, !ok);
         return ok;
       }
+      
+      // --- Global error helpers (ADD THESE HERE) ---
+function showGlobalError(msg){
+  if (!formErr) return;
+  formErr.classList.remove('hidden');
+  if (msg) formErr.querySelector('.support-msg').textContent = msg;
+}
+function hideGlobalError(){
+  if (!formErr) return;
+  formErr.classList.add('hidden');
+}
+function scrollToFirstError(){
+  const firstErr = Array.from(document.querySelectorAll('.error'))
+    .find(e => e.style.display === 'block');
+  if (firstErr){
+    const container = firstErr.parentElement;
+    const focusable = container && container.querySelector('input, select, textarea');
+    if (focusable && typeof focusable.focus === 'function') focusable.focus();
+    firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
 
       // Visibility
       function updateVisibility(){
@@ -1058,11 +1150,12 @@
 
   // ----- Dasher -----
   if (audience.value === 'Dasher') {
-    const ch = d_channel.value;
-    const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
-    d_ctaHint.classList.toggle('hidden', d_channel.value !== 'Paid Media');
-    // Only show segment for Email/Push
-    d_segment.parentElement.parentElement.classList.toggle('hidden', !isEmailOrPush);
+  const ch = d_channel.value;
+  const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
+
+  // show “unsupported” for these two channels
+  const notSupported = ch === 'Long-Form Content' || ch === 'In-app Merchandising';
+  d_unsupportedMsg.classList.toggle('hidden', !notSupported);
 
     // Paid visibility
     const isPaid = ch === 'Paid Media';
@@ -1082,27 +1175,44 @@
   }
 
   // ----- Merchant -----
-  if (audience.value==='Merchant'){
-    const ch = m_channel.value;
-    const isEmailOrPush = ch==='Email' || ch==='Push Notification';
-    m_ctaHint.classList.toggle('hidden', m_channel.value !== 'Paid Media');
+if (audience.value==='Merchant'){
+  const ch = m_channel.value;
+  const isEmailOrPush = ch==='Email' || ch==='Push Notification';
+  const isPaid = ch==='Paid Media';
+  const isLongForm = ch==='Long-Form Content';
 
-    // Paid visibility
-    const isPaid = ch==='Paid Media';
-    m_paidBlock.classList.toggle('hidden', !isPaid);
-    const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
-    m_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-    m_videoQWrap.classList.toggle('hidden', !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+  m_ctaHint.classList.toggle('hidden', m_channel.value !== 'Paid Media');
 
-    // Secondary allowed only for Email/Push
-    m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
-    if (!isEmailOrPush){
-      m_hasSecondary.value = 'No';
-      m_secondaryBlock.classList.add('hidden');
-    }
-  } else {
-    m_secondaryFS.classList.add('hidden');
+  // Long-form visibility
+  m_longform.classList.toggle('hidden', !isLongForm);
+
+  // Hide "behavior" for long-form (we'll skip its validation too)
+  const mBehaviorRow = m_behavior.parentElement.parentElement;
+  mBehaviorRow.classList.toggle('hidden', isLongForm);
+
+  // Paid visibility (off for long-form)
+  m_paidBlock.classList.toggle('hidden', !isPaid);
+  const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
+  m_adTypeWrap.classList.toggle('hidden', !hasPlatform || !isPaid);
+  m_videoQWrap.classList.toggle('hidden', !isPaid || !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+
+  // Secondary allowed only for Email/Push
+  m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
+  if (!isEmailOrPush){
+    m_hasSecondary.value = 'No';
+    m_secondaryBlock.classList.add('hidden');
   }
+
+  // Long-form subtype toggles
+  const lt = (m_longType?.value || '').toLowerCase();
+  const isSuccess = lt === 'success story / case study';
+  const isSeo = lt === 'seo landing page';
+  m_successFields.classList.toggle('hidden', !(isLongForm && isSuccess));
+  m_seoFields.classList.toggle('hidden', !(isLongForm && isSeo));
+} else {
+  m_secondaryFS.classList.add('hidden');
+}
+
 
   // ----- Existing promo toggles -----
   promoBlock.classList.toggle('hidden', hasPromo.value!=='Yes');
@@ -1119,127 +1229,133 @@
 
       // Generate
       function generateConsumer(){
-        let valid = true;
+  let valid = true;
 
-        valid &&= validateRequired(channel, 'channelErr');
-        const ch = channel.value;
-        const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
+  valid &&= validateRequired(channel, 'channelErr');
+  const ch = channel.value;
+  const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
 
-        if (isEP){
-          valid &&= validateRequired(segment,'segmentErr');
-          valid &&= validateStartsWithWho(behavior,'behaviorErr');
-          valid &&= validateRequired(submarkets,'submarketsErr');
-          valid &&= validateRequired(usecase,'usecaseErr');
-          valid &&= validateRequired(action,'actionErr');
-          valid &&= validateRequired(takeaway,'takeawayErr');
+  if (isEP){
+    valid &&= validateRequired(segment,'segmentErr');
+    valid &&= validateStartsWithWho(behavior,'behaviorErr');
+    valid &&= validateRequired(submarkets,'submarketsErr');
+    valid &&= validateRequired(usecase,'usecaseErr');
+    valid &&= validateRequired(action,'actionErr');
+    valid &&= validateRequired(takeaway,'takeawayErr');
 
-          if (ch==='Paid Media'){
-            valid &&= validateMultiRequired(adPlatforms, 'adPlatformsErr');
-            if (getMultiSelectValues(adPlatforms).length > 0){
-              valid &&= validateRequired(adType, 'adTypeErr');
-            }
-          }
+    if (ch==='Paid Media'){
+      valid &&= validateMultiRequired(adPlatforms, 'adPlatformsErr');
+      if (getMultiSelectValues(adPlatforms).length > 0){
+        valid &&= validateRequired(adType, 'adTypeErr');
+      }
+    }
 
-          if (hasPromo.value==='Yes'){
-            valid &&= validateRequired(promoType,'promoTypeErr');
-            valid &&= validateHasDollarOrPercent(discount,'discountErr');
-            valid &&= validateDate(startDate,'startErr');
-            valid &&= validateDate(endDate,'endErr');
-            valid &&= validateNumber(minSubtotal,'minErr');
-            valid &&= validateNumber(maxDiscount,'maxErr');
-          }
-        }
+    if (hasPromo.value==='Yes'){
+      valid &&= validateRequired(promoType,'promoTypeErr');
+      valid &&= validateHasDollarOrPercent(discount,'discountErr');
+      valid &&= validateDate(startDate,'startErr');
+      valid &&= validateDate(endDate,'endErr');
+      valid &&= validateNumber(minSubtotal,'minErr');
+      valid &&= validateNumber(maxDiscount,'maxErr');
+    }
+  }
 
-        if (!valid) return '';
+  if (!valid) return '';
 
-        const aud = 'Consumer';
-        const seg = segment.value || '';
-        const beh = (behavior.value||'').trim();
-        const loc = (submarkets.value||'').trim();
-        const uc  = usecase.value || '';
-        const callToAction = cta.value || 'N/A';
-        const actVal = (action.value||'').trim() || 'N/A';
-        const takeVal = (takeaway.value||'').trim() || 'N/A';
-const feat = (feature?.value || '').trim() || 'N/A';
+  const aud = 'Consumer';
+  const seg = segment.value || '';
+  const beh = (behavior.value||'').trim();
+  const loc = (submarkets.value||'').trim();
+  const uc  = usecase.value || '';
+  const callToAction = cta.value || 'N/A';
+  const actVal = (action.value||'').trim() || 'N/A';
+  const takeVal = (takeaway.value||'').trim() || 'N/A';
+  const feat = (feature?.value || '').trim() || 'N/A';
 
-        let txt = '';
+  // NEW: LOB handling
+  const lobVal = (lob?.value || '').trim();
+  const lobValid = !!lobVal && lobVal.toLowerCase() !== 'n/a';
 
-        if (ch === 'Paid Media') {
-          const duration = (adType.value === 'Video' || adType.value === 'Static and Video') ? (videoLength.value || '') + ' ' : '';
-          txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+  let txt = '';
+
+  if (ch === 'Paid Media') {
+    const duration = (adType.value === 'Video' || adType.value === 'Static and Video') ? (videoLength.value || '') + ' ' : '';
+    const lobSuffix = lobValid ? ` and it has focused on ${lobVal}` : '';
+    txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}${lobSuffix}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for consumer: ${takeVal}
 Feature / service details: ${feat}
-CTA: ${callToAction}.
-Ad type: ${adType.value}`;
-        } else {
-          txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+CTA: ${callToAction}.`;
+  } else {
+    // If LOB present, use the exact requested sentence
+    const opener = lobValid
+      ? `I need an ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc} and it has focused on ${lobVal}.`
+      : `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}.`;
+    txt = `${opener} Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for Consumer: ${takeVal}
 Feature / service details: ${feat}
 CTA: ${callToAction}.`;
-        }
+  }
 
-        if (ch==='Paid Media'){
-          const platforms = getMultiSelectValues(adPlatforms);
-          if (platforms.length){
-            txt += `\nPlatforms: ${platforms.join(', ')}.`;
-          }
-          if (adType.value){
-            txt += `\nAd type: ${adType.value}.`;
-          }
-        }
+  if (ch==='Paid Media'){
+    const platforms = getMultiSelectValues(adPlatforms);
+    if (platforms.length){
+      txt += `\nPlatforms: ${platforms.join(', ')}.`;
+    }
+  }
 
-        if (hasPromo.value==='Yes'){
-          const pType = promoType.value;
-          const disc = (discount.value||'').trim();
-          const start = (startDate.value||'').trim();
-          const end = (endDate.value||'').trim();
-          const min = Number((minSubtotal.value||'0').trim());
-          const max = Number((maxDiscount.value||'0').trim());
-          const pickOnly = pickupOnly.value==='Yes';
-          const code = (promoCode.value||'').trim();
-          const dpOnly = dashpassOnly.value==='Yes';
+  if (hasPromo.value==='Yes'){
+    const pType = promoType.value;
+    const disc = (discount.value||'').trim();
+    const start = (startDate.value||'').trim();
+    const end = (endDate.value||'').trim();
+    const min = Number((minSubtotal.value||'0').trim());
+    const max = Number((maxDiscount.value||'0').trim());
+    const pickOnly = pickupOnly.value==='Yes';
+    const code = (promoCode.value||'').trim();
+    const dpOnly = dashpassOnly.value==='Yes';
 
-          txt += `\nThis campaign include a [${pType} promo]`;
+    txt += `\nThis campaign include a [${pType} promo]`;
 
-          const money = (n)=> isNaN(n)?'0':n.toString();
-          const minTxt = `$${money(min)}`;
-          const maxTxt = `$${money(max)}`;
+    const money = (n)=> isNaN(n)?'0':n.toString();
+    const minTxt = `$${money(min)}`;
+    const maxTxt = `$${money(max)}`;
 
-          if (pType==='Save Up To $X'){
-            txt += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
-          } else if (pType==='X Off Your Order'){
-            txt += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
-          } else if (pType==='$0 Delivery Fee'){
-            txt += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
-          } else if (pType==='$ X off Delivery Fee'){
-            txt += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
-          } else {
-            txt += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
-          }
+    if (pType==='Save Up To $X'){
+      txt += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
+    } else if (pType==='X Off Your Order'){
+      txt += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
+    } else if (pType==='$0 Delivery Fee'){
+      txt += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
+    } else if (pType==='$ X off Delivery Fee'){
+      txt += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
+    } else {
+      txt += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
+    }
 
-          if (pickOnly) txt += ' Pick up orders only.';
-          if (dpOnly) txt += ' DashPass Members only.';
-          if (code && code.toLowerCase()!=='n/a') txt += ` ${code}.`;
-        }
+    if (pickOnly) txt += ' Pick up orders only.';
+    if (dpOnly) txt += ' DashPass Members only.';
+    if (code && code.toLowerCase()!=='n/a') txt += ` ${code}.`;
+  }
 
-        if (hasSecondary.value==='Yes'){
-          const sObj = (secondaryObjective.value||'N/A').trim();
-          const sLOB = secondaryLOB.value || 'N/A';
-          const sCTA = secondaryCTA.value || 'N/A';
-          txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
-        }
+  if (hasSecondary.value==='Yes'){
+    const sObj = (secondaryObjective.value||'N/A').trim();
+    const sLOB = secondaryLOB.value || 'N/A';
+    const sCTA = secondaryCTA.value || 'N/A';
+    txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+  }
 
-        return txt.trim();
+  return txt.trim();
 
-        function validateHasDollarOrPercent(node, errId){
-          const v=(node.value||'').trim();
-          const ok = /[$%]/.test(v) && v.length>0;
-          showError(errId,!ok);
-          return ok;
-        }
-      }
+  function validateHasDollarOrPercent(node, errId){
+    const v=(node.value||'').trim();
+    const ok = /[$%]/.test(v) && v.length>0;
+    showError(errId,!ok);
+    return ok;
+  }
+}
+
 
       function generateDasher(){
         let valid = true;
@@ -1292,8 +1408,7 @@ CTA: ${callToAction}.`;
           txt = `I need a ${duration}${d_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
 The main action we want the Dasher to take: ${actVal}
 The most important takeaway for Dasher: ${takeVal}
-CTA: ${callToAction}.
-Ad type: ${d_adType.value}`;
+CTA: ${callToAction}.`;
         } else {
           txt = `I need an ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. 
 Use Case: ${uc}.
@@ -1307,9 +1422,7 @@ CTA: ${callToAction}.`;
           if (platforms.length) {
             txt += `\nPlatforms: ${platforms.join(', ')}.`;
           }
-          if (d_adType.value) {
-            txt += `\nAd type: ${d_adType.value}.`;
-          }
+          
         }
 
         if (d_hasPromo.value==='Yes'){
@@ -1321,11 +1434,11 @@ CTA: ${callToAction}.`;
           const maxPay = (d_maxPayout.value||'').trim();
 
           if (pType==='Complete x dashers, receive $x'){
-            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} between ${start} and ${end}`;
+            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} dashes between ${start} and ${end}`;
           } else if (pType==='streaks'){
             const days = (d_consecDays.value||'').trim();
             const addPay = (d_additionalPayout.value||'').trim();
-            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} for ${days} days plus an additional ${addPay} (max ${maxPay}) between ${start} and ${end}`;
+            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} dashes for ${days} days plus an additional ${addPay} (max ${maxPay}) between ${start} and ${end}`;
           } else {
             const other = (d_otherPromo.value||'').trim();
             txt += `\nThis campaign includes a promotion:\nOffer: ${other || stdPay} between ${start} and ${end}`;
@@ -1344,82 +1457,156 @@ CTA: ${callToAction}.`;
       }
 
       function generateMerchant(){
-        let valid = true;
-        valid &&= validateRequired(m_channel,'m_channelErr');
-        valid &&= validateRequired(m_segment,'m_segmentErr');
-        valid &&= validateStartsWithWho(m_behavior,'m_behaviorErr');
-        valid &&= validateRequired(m_usecase,'m_usecaseErr');
-        valid &&= validateRequired(m_action,'m_actionErr');
-        valid &&= validateRequired(m_takeaway,'m_takeawayErr');
+  let valid = true;
 
-        if (m_channel.value==='Paid Media'){
-          valid &&= validateMultiRequired(m_adPlatforms, 'm_adPlatformsErr');
-          if (getMultiSelectValues(m_adPlatforms).length > 0){
-            valid &&= validateRequired(m_adType, 'm_adTypeErr');
-          }
-        }
-        if (!valid) return '';
+  valid &&= validateRequired(m_channel,'m_channelErr');
+  const ch = m_channel.value || '';
 
-        const aud = 'Merchant';
-        const ch = m_channel.value || '';
-        const seg = m_segment.value || '';
-        const beh = (m_behavior.value||'').trim();
-        const uc  = m_usecase.value || '';
-        const actVal = (m_action.value||'').trim() || 'N/A';
-        const takeVal = (m_takeaway.value||'').trim() || 'N/A';
-        const callToAction = m_cta.value || 'N/A';
-        const productAns = (m_feature?.value || '').trim() || 'N/A';
+  // Always need segment/usecase/action/takeaway
+  valid &&= validateRequired(m_segment,'m_segmentErr');
 
-        // Default (non–Paid Media)
-        let txt = `I need a ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+  // Behavior is required for non–long-form only
+  if (ch !== 'Long-Form Content'){
+    valid &&= validateStartsWithWho(m_behavior,'m_behaviorErr');
+  }
+
+  valid &&= validateRequired(m_usecase,'m_usecaseErr');
+  valid &&= validateRequired(m_action,'m_actionErr');
+  valid &&= validateRequired(m_takeaway,'m_takeawayErr');
+
+  // Paid Media validations
+  if (ch === 'Paid Media'){
+    valid &&= validateMultiRequired(m_adPlatforms, 'm_adPlatformsErr');
+    if (getMultiSelectValues(m_adPlatforms).length > 0){
+      valid &&= validateRequired(m_adType, 'm_adTypeErr');
+    }
+  }
+
+  // If Long-Form, validate subtype & subtype-specific fields
+  if (ch === 'Long-Form Content'){
+    valid &&= validateRequired(m_longType, 'm_longTypeErr');
+    const lt = (m_longType.value || '').toLowerCase();
+    if (lt === 'success story / case study'){
+      valid &&= validateRequired(m_successMerchant, 'm_successMerchantErr');
+      valid &&= validateRequired(m_successQuotes, 'm_successQuotesErr');
+      valid &&= validateRequired(m_successResults, 'm_successResultsErr');
+    }
+    if (lt === 'seo landing page'){
+      valid &&= validateRequired(m_seoKeywords, 'm_seoKeywordsErr');
+    }
+  }
+
+  if (!valid) return '';
+
+  // ----- Common fields (define BEFORE any output building) -----
+  const seg = m_segment.value || '';
+  const uc  = m_usecase.value || '';
+  const actVal = (m_action.value||'').trim() || 'N/A';
+  const takeVal = (m_takeaway.value||'').trim() || 'N/A';
+  const callToAction = m_cta.value || 'N/A';
+  const productAns = (m_feature?.value || '').trim() || 'N/A';
+
+  // ----- Long-Form OUTPUT (single, final version) -----
+  if (ch === 'Long-Form Content'){
+    const longType = m_longType.value || 'Long-Form Content';
+    const lt = (m_longType.value || '').toLowerCase();
+    const article = /^[aeiou]/i.test(longType) ? 'an' : 'a';
+
+    let txt = `I need ${article} ${longType} for our DoorDash Merchant Content team targeting ${seg}. Use Case: ${uc}. The action we want the Merchant to take: ${actVal}. The most important takeaway for the Merchant: ${takeVal}. Highlight the following product/service: ${productAns}. CTA: ${callToAction}.`;
+
+    if (lt === 'success story / case study'){
+      const merchantDetails = (m_successMerchant?.value || '').trim();
+      const quotes = (m_successQuotes?.value || '').trim();
+      const results = (m_successResults?.value || '').trim();
+      txt += `\nIn this article highlight these details about the merchant: ${merchantDetails}.`
+           + ` \nPlease use these quotes: ${quotes}.`
+           + ` \nAlso highlight these key results: ${results}.`;
+    }
+
+    if (lt === 'seo landing page'){
+      const keywords = (m_seoKeywords?.value || '').trim();
+      if (keywords) txt += `\nSEO keywords to target: ${keywords}`;
+    }
+
+    return txt.trim();
+  }
+
+  // ----- Default (non–Paid Media) -----
+  let txt = `I need a ${ch} for our DoorDash Merchant team targeting ${seg} ${(m_behavior.value||'').trim()}. 
 Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
-Product/Serview overview: ${productAns}
+Product/Service overview: ${productAns}
 CTA: ${callToAction}.`;
 
-        // Paid Media override
-        if (ch==='Paid Media'){
-          const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video')
-            ? (m_videoLength?.value || '') + ' '
-            : '';
-          txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh}. 
+  // ----- Paid Media override -----
+  if (ch === 'Paid Media'){
+    const duration = (m_adType.value === 'Video' || m_adType.value === 'Static and Video')
+      ? (m_videoLength?.value || '') + ' '
+      : '';
+    txt = `I need a ${duration}${m_adType.value} ${ch} ad for our DoorDash Merchant team targeting ${seg} ${(m_behavior.value||'').trim()}. 
 Use Case: ${uc}.
 The main action we want the Merchant to take: ${actVal}
 The most important takeaway for Merchant: ${takeVal}
-Product/Serview overview: ${productAns}
-CTA: ${callToAction}.
-Ad type: ${m_adType.value}`;
+Product/Service overview: ${productAns}
+CTA: ${callToAction}.`;
+  }
+  
+  if (ch === 'Paid Media') {
+          const platforms = getMultiSelectValues(m_adPlatforms);
+          if (platforms.length) {
+            txt += `\nPlatforms: ${platforms.join(', ')}.`;
+          }
+          
         }
 
-        // Append secondary module details (Merchant)
-        if (m_hasSecondary.value === 'Yes') {
-          const sObj = (m_secondaryObjective.value || 'N/A').trim();
-          const sCTA2 = m_secondaryCTA.value || 'N/A';
-          txt += `\nAlso include a secondary message where the objective is ${sObj} with CTA ${sCTA2}.`;
-        }
+  // Secondary Merchant
+  if (m_hasSecondary.value === 'Yes') {
+    const sObj = (m_secondaryObjective.value || 'N/A').trim();
+    const sCTA2 = m_secondaryCTA.value || 'N/A';
+    txt += `\nAlso include a secondary message where the objective is ${sObj} with CTA ${sCTA2}.`;
+  }
 
-        return txt.trim();
-      }
+  return txt.trim();
+}
+
+
 
       function gatherAndGenerate(){
-        output.textContent='';
-        let valid = true;
-        valid &&= validateRequired(audience,'audienceErr');
-        if (!valid) return;
+  hideGlobalError();
+  output.textContent = '';
 
-        let text='';
-        if (audience.value==='Consumer'){
-          text = generateConsumer();
-        } else if (audience.value==='Dasher'){
-          text = generateDasher();
-        } else if (audience.value==='Merchant'){
-          text = generateMerchant();
-        }
+  let valid = true;
+  valid &&= validateRequired(audience,'audienceErr');
 
-        output.textContent = (text||'').trim();
-        if (text) output.scrollIntoView({behavior:'smooth', block:'center'});
-      }
+  if (!valid){
+    showGlobalError();
+    scrollToFirstError();
+    return;
+  }
+
+  let text = '';
+  if (audience.value === 'Consumer'){
+    text = generateConsumer();
+  } else if (audience.value === 'Dasher'){
+    text = generateDasher();
+  } else if (audience.value === 'Merchant'){
+    text = generateMerchant();
+  }
+
+  // If any audience-specific validation failed, their generator returns ''
+  if (!text){
+    showGlobalError();
+    scrollToFirstError();
+    return;
+  }
+
+  // Success
+  hideGlobalError();
+  output.textContent = text.trim();
+  if (text) output.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
 
       function validateHasDollarOrPercent(node, errId){
         const v=(node.value||'').trim();
@@ -1437,6 +1624,8 @@ Ad type: ${m_adType.value}`;
       adType.addEventListener('change', updateVisibility);
       d_adType.addEventListener('change', updateVisibility);
       m_adType.addEventListener('change', updateVisibility);
+      m_longType.addEventListener('change', updateVisibility);
+
 
       adPlatforms.addEventListener('change', updateVisibility);
       d_adPlatforms.addEventListener('change', updateVisibility);
