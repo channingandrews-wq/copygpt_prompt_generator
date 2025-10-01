@@ -1229,124 +1229,133 @@ if (audience.value==='Merchant'){
 
       // Generate
       function generateConsumer(){
-        let valid = true;
+  let valid = true;
 
-        valid &&= validateRequired(channel, 'channelErr');
-        const ch = channel.value;
-        const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
+  valid &&= validateRequired(channel, 'channelErr');
+  const ch = channel.value;
+  const isEP = ch==='Email' || ch==='Push Notification' || ch==='Paid Media';
 
-        if (isEP){
-          valid &&= validateRequired(segment,'segmentErr');
-          valid &&= validateStartsWithWho(behavior,'behaviorErr');
-          valid &&= validateRequired(submarkets,'submarketsErr');
-          valid &&= validateRequired(usecase,'usecaseErr');
-          valid &&= validateRequired(action,'actionErr');
-          valid &&= validateRequired(takeaway,'takeawayErr');
+  if (isEP){
+    valid &&= validateRequired(segment,'segmentErr');
+    valid &&= validateStartsWithWho(behavior,'behaviorErr');
+    valid &&= validateRequired(submarkets,'submarketsErr');
+    valid &&= validateRequired(usecase,'usecaseErr');
+    valid &&= validateRequired(action,'actionErr');
+    valid &&= validateRequired(takeaway,'takeawayErr');
 
-          if (ch==='Paid Media'){
-            valid &&= validateMultiRequired(adPlatforms, 'adPlatformsErr');
-            if (getMultiSelectValues(adPlatforms).length > 0){
-              valid &&= validateRequired(adType, 'adTypeErr');
-            }
-          }
+    if (ch==='Paid Media'){
+      valid &&= validateMultiRequired(adPlatforms, 'adPlatformsErr');
+      if (getMultiSelectValues(adPlatforms).length > 0){
+        valid &&= validateRequired(adType, 'adTypeErr');
+      }
+    }
 
-          if (hasPromo.value==='Yes'){
-            valid &&= validateRequired(promoType,'promoTypeErr');
-            valid &&= validateHasDollarOrPercent(discount,'discountErr');
-            valid &&= validateDate(startDate,'startErr');
-            valid &&= validateDate(endDate,'endErr');
-            valid &&= validateNumber(minSubtotal,'minErr');
-            valid &&= validateNumber(maxDiscount,'maxErr');
-          }
-        }
+    if (hasPromo.value==='Yes'){
+      valid &&= validateRequired(promoType,'promoTypeErr');
+      valid &&= validateHasDollarOrPercent(discount,'discountErr');
+      valid &&= validateDate(startDate,'startErr');
+      valid &&= validateDate(endDate,'endErr');
+      valid &&= validateNumber(minSubtotal,'minErr');
+      valid &&= validateNumber(maxDiscount,'maxErr');
+    }
+  }
 
-        if (!valid) return '';
+  if (!valid) return '';
 
-        const aud = 'Consumer';
-        const seg = segment.value || '';
-        const beh = (behavior.value||'').trim();
-        const loc = (submarkets.value||'').trim();
-        const uc  = usecase.value || '';
-        const callToAction = cta.value || 'N/A';
-        const actVal = (action.value||'').trim() || 'N/A';
-        const takeVal = (takeaway.value||'').trim() || 'N/A';
-const feat = (feature?.value || '').trim() || 'N/A';
+  const aud = 'Consumer';
+  const seg = segment.value || '';
+  const beh = (behavior.value||'').trim();
+  const loc = (submarkets.value||'').trim();
+  const uc  = usecase.value || '';
+  const callToAction = cta.value || 'N/A';
+  const actVal = (action.value||'').trim() || 'N/A';
+  const takeVal = (takeaway.value||'').trim() || 'N/A';
+  const feat = (feature?.value || '').trim() || 'N/A';
 
-        let txt = '';
+  // NEW: LOB handling
+  const lobVal = (lob?.value || '').trim();
+  const lobValid = !!lobVal && lobVal.toLowerCase() !== 'n/a';
 
-        if (ch === 'Paid Media') {
-          const duration = (adType.value === 'Video' || adType.value === 'Static and Video') ? (videoLength.value || '') + ' ' : '';
-          txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+  let txt = '';
+
+  if (ch === 'Paid Media') {
+    const duration = (adType.value === 'Video' || adType.value === 'Static and Video') ? (videoLength.value || '') + ' ' : '';
+    const lobSuffix = lobValid ? ` and it has focused on ${lobVal}` : '';
+    txt = `I need a ${duration}${adType.value} ${ch} ad for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}${lobSuffix}. Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for consumer: ${takeVal}
 Feature / service details: ${feat}
 CTA: ${callToAction}.`;
-        } else {
-          txt = `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}. Use Case: ${uc}.
+  } else {
+    // If LOB present, use the exact requested sentence
+    const opener = lobValid
+      ? `I need an ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc} and it has focused on ${lobVal}.`
+      : `I need a(n) ${ch} for our DoorDash ${aud} team targeting ${seg} ${beh} in ${loc}.`;
+    txt = `${opener} Use Case: ${uc}.
 The main action we want the consumer to take: ${actVal}
 The most important takeaway for Consumer: ${takeVal}
 Feature / service details: ${feat}
 CTA: ${callToAction}.`;
-        }
+  }
 
-        if (ch==='Paid Media'){
-          const platforms = getMultiSelectValues(adPlatforms);
-          if (platforms.length){
-            txt += `\nPlatforms: ${platforms.join(', ')}.`;
-          }
-          
-        }
+  if (ch==='Paid Media'){
+    const platforms = getMultiSelectValues(adPlatforms);
+    if (platforms.length){
+      txt += `\nPlatforms: ${platforms.join(', ')}.`;
+    }
+  }
 
-        if (hasPromo.value==='Yes'){
-          const pType = promoType.value;
-          const disc = (discount.value||'').trim();
-          const start = (startDate.value||'').trim();
-          const end = (endDate.value||'').trim();
-          const min = Number((minSubtotal.value||'0').trim());
-          const max = Number((maxDiscount.value||'0').trim());
-          const pickOnly = pickupOnly.value==='Yes';
-          const code = (promoCode.value||'').trim();
-          const dpOnly = dashpassOnly.value==='Yes';
+  if (hasPromo.value==='Yes'){
+    const pType = promoType.value;
+    const disc = (discount.value||'').trim();
+    const start = (startDate.value||'').trim();
+    const end = (endDate.value||'').trim();
+    const min = Number((minSubtotal.value||'0').trim());
+    const max = Number((maxDiscount.value||'0').trim());
+    const pickOnly = pickupOnly.value==='Yes';
+    const code = (promoCode.value||'').trim();
+    const dpOnly = dashpassOnly.value==='Yes';
 
-          txt += `\nThis campaign include a [${pType} promo]`;
+    txt += `\nThis campaign include a [${pType} promo]`;
 
-          const money = (n)=> isNaN(n)?'0':n.toString();
-          const minTxt = `$${money(min)}`;
-          const maxTxt = `$${money(max)}`;
+    const money = (n)=> isNaN(n)?'0':n.toString();
+    const minTxt = `$${money(min)}`;
+    const maxTxt = `$${money(max)}`;
 
-          if (pType==='Save Up To $X'){
-            txt += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
-          } else if (pType==='X Off Your Order'){
-            txt += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
-          } else if (pType==='$0 Delivery Fee'){
-            txt += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
-          } else if (pType==='$ X off Delivery Fee'){
-            txt += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
-          } else {
-            txt += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
-          }
+    if (pType==='Save Up To $X'){
+      txt += `\nOffer: ${disc} off their next order of ${minTxt} up to ${maxTxt} – valid between ${start} and ${end}.`;
+    } else if (pType==='X Off Your Order'){
+      txt += `\nOffer: ${disc} off their next order of ${minTxt}– valid between ${start} and ${end}.`;
+    } else if (pType==='$0 Delivery Fee'){
+      txt += `\nOffer: $0 Delivery Fee off their next order of ${minTxt} – valid between ${start} and ${end}.`;
+    } else if (pType==='$ X off Delivery Fee'){
+      txt += `\nOffer: ${disc} off your Delivery Fee on their next order of ${minTxt} – valid between ${start} and ${end}.`;
+    } else {
+      txt += `\nOffer: ${disc} – valid between ${start} and ${end}.`;
+    }
 
-          if (pickOnly) txt += ' Pick up orders only.';
-          if (dpOnly) txt += ' DashPass Members only.';
-          if (code && code.toLowerCase()!=='n/a') txt += ` ${code}.`;
-        }
+    if (pickOnly) txt += ' Pick up orders only.';
+    if (dpOnly) txt += ' DashPass Members only.';
+    if (code && code.toLowerCase()!=='n/a') txt += ` ${code}.`;
+  }
 
-        if (hasSecondary.value==='Yes'){
-          const sObj = (secondaryObjective.value||'N/A').trim();
-          const sLOB = secondaryLOB.value || 'N/A';
-          const sCTA = secondaryCTA.value || 'N/A';
-          txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
-        }
+  if (hasSecondary.value==='Yes'){
+    const sObj = (secondaryObjective.value||'N/A').trim();
+    const sLOB = secondaryLOB.value || 'N/A';
+    const sCTA = secondaryCTA.value || 'N/A';
+    txt += `\nAlso include a secondary message where the objective is ${sObj} focused on ${sLOB} and cta should be ${sCTA}`;
+  }
 
-        return txt.trim();
+  return txt.trim();
 
-        function validateHasDollarOrPercent(node, errId){
-          const v=(node.value||'').trim();
-          const ok = /[$%]/.test(v) && v.length>0;
-          showError(errId,!ok);
-          return ok;
-        }
-      }
+  function validateHasDollarOrPercent(node, errId){
+    const v=(node.value||'').trim();
+    const ok = /[$%]/.test(v) && v.length>0;
+    showError(errId,!ok);
+    return ok;
+  }
+}
+
 
       function generateDasher(){
         let valid = true;
