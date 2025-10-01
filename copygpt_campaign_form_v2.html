@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/29 5:15pm</h1>
+    <h1>Dora Prompt Generator 9/30 6pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -1431,11 +1431,11 @@ CTA: ${callToAction}.`;
           const maxPay = (d_maxPayout.value||'').trim();
 
           if (pType==='Complete x dashers, receive $x'){
-            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} between ${start} and ${end}`;
+            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} dashes between ${start} and ${end}`;
           } else if (pType==='streaks'){
             const days = (d_consecDays.value||'').trim();
             const addPay = (d_additionalPayout.value||'').trim();
-            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} for ${days} days plus an additional ${addPay} (max ${maxPay}) between ${start} and ${end}`;
+            txt += `\nThis campaign includes a promotion:\nOffer: Get ${stdPay} when you complete ${minDel} dashes for ${days} days plus an additional ${addPay} (max ${maxPay}) between ${start} and ${end}`;
           } else {
             const other = (d_otherPromo.value||'').trim();
             txt += `\nThis campaign includes a promotion:\nOffer: ${other || stdPay} between ${start} and ${end}`;
