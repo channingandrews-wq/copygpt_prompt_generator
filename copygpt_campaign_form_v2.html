@@ -6,14 +6,14 @@
   <title>Dora Campaign Intake</title>
   <style>
     :root{
-      --bg:#ffffff;
-      --panel:#f7f7f7;
-      --text:#111111;
+      --bg:#fff5eaff;
+      --panel:#ffffffff;
+      --text:#570000;
       --muted:#444444;
       --accent:#0b57d0;
       --danger:#c62828;
       --ok:#2e7d32;
-      --border:#dddddd;
+      --border:#570000ff;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -45,7 +45,7 @@
     .hidden{display:none !important}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
     button{appearance:none;border:1px solid var(--border);background:#ffffff;color:var(--text);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
-    button.primary{background:linear-gradient(135deg,#0b57d0,#3b82f6);border:none;color:#fff}
+    button.primary{background:linear-gradient(135deg,#cc0001,#cc0001);border:none;color:#fff}
     button.ghost{background:transparent}
     .output{white-space:pre-wrap;background:#fff;border:1px dashed #cfcfcf;border-radius:12px;padding:14px;min-height:120px}
     .copy-section {margin-top: 10px;text-align: center;}
@@ -54,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dora Prompt Generator 9/30 6:30pm</h1>
+    <h1>Dora Prompt Generator 9/30 7pm</h1>
     <p class="lead">Building for marketing channels? Fill out this form to generate a complete, ready-to-use prompt. Fields will update as you go.</p>
 
     <form id="intakeForm" novalidate>
@@ -692,10 +692,12 @@
               <option>Push Notification</option>
               <option>Paid Media</option>
               <option>Long-Form Content</option>
-              <option>In-app Merchandising</option>
+              <option>Merchant Portal Feed Card</option>
             </select>
             <div class="error" id="m_channelErr">Channel is required.</div>
-          </div>
+          </div><div id="m_unsupportedMsg" class="note hidden">
+  <span class="support-msg">Dora does not currently support this channel.</span>
+</div>
         </div>
         <!-- MERCHANT Long-Form Content -->
 <div id="m_longform" class="hidden">
@@ -1042,7 +1044,8 @@
       const m_feature = el('m_feature');
       const m_cta = el('m_cta');
       const m_ctaHint = el('m_ctaHint');
-      
+      const m_unsupportedMsg = el('m_unsupportedMsg');
+
       const m_longform = el('m_longform');
 const m_longType = el('m_longType');
 const m_successFields = el('m_successFields');
@@ -1149,69 +1152,154 @@ function scrollToFirstError(){
   }
 
   // ----- Dasher -----
-  if (audience.value === 'Dasher') {
+if (audience.value === 'Dasher') {
   const ch = d_channel.value;
   const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
+  const isPaid = ch === 'Paid Media';
+  const isUnsupported = ch === 'Long-Form Content' || ch === 'In-app Merchandising';
 
-  // show “unsupported” for these two channels
-  const notSupported = ch === 'Long-Form Content' || ch === 'In-app Merchandising';
-  d_unsupportedMsg.classList.toggle('hidden', !notSupported);
+  // Unsupported notice
+  d_unsupportedMsg.classList.toggle('hidden', !isUnsupported);
 
-    // Paid visibility
-    const isPaid = ch === 'Paid Media';
+  // CTA hint only for Paid Media
+  d_ctaHint.classList.toggle('hidden', d_channel.value !== 'Paid Media');
+
+  // Common rows
+  const dSegmentRow     = d_segment.parentElement.parentElement;
+  const dBehaviorRow    = d_behavior.parentElement.parentElement;
+  const dSubmarketsRow  = d_submarkets.parentElement.parentElement;
+  const dUsecaseRow     = d_usecase.parentElement.parentElement;
+  const dActionRow      = d_action.parentElement.parentElement;
+  const dTakeawayRow    = d_takeaway.parentElement.parentElement;
+  const dFeatureRow     = d_feature.parentElement.parentElement;
+  const dCtaRow         = d_cta.parentElement.parentElement;
+
+  // Promotion fieldset (whole block) + inner block
+  const dPromoFS = d_hasPromo.closest('fieldset'); // wraps the whole Promotion section
+
+  if (isUnsupported) {
+    // Hide EVERYTHING except the unsupported note
+    d_paidBlock.classList.add('hidden');
+    d_adTypeWrap.classList.add('hidden');
+    d_videoQWrap.classList.add('hidden');
+    d_secondaryFS.classList.add('hidden');
+
+    [dSegmentRow, dBehaviorRow, dSubmarketsRow, dUsecaseRow, dActionRow, dTakeawayRow, dFeatureRow, dCtaRow]
+      .forEach(r => r && r.classList.add('hidden'));
+
+    // Hide Promotion section and reset it so nothing leaks into validation
+    if (dPromoFS) dPromoFS.classList.add('hidden');
+    d_hasPromo.value = 'No';
+    d_promoBlock.classList.add('hidden');
+  } else {
+    // Normal Dasher flow
+    [dSegmentRow, dBehaviorRow, dSubmarketsRow, dUsecaseRow, dActionRow, dTakeawayRow, dFeatureRow, dCtaRow]
+      .forEach(r => r && r.classList.remove('hidden'));
+
+    // Paid Media visibility
     d_paidBlock.classList.toggle('hidden', !isPaid);
     const hasPlatform = getMultiSelectValues(d_adPlatforms).length > 0;
-    d_adTypeWrap.classList.toggle('hidden', !hasPlatform);
-    d_videoQWrap.classList.toggle('hidden', !(d_adType.value === 'Video' || d_adType.value === 'Static and Video'));
+    d_adTypeWrap.classList.toggle('hidden', !hasPlatform || !isPaid);
+    d_videoQWrap.classList.toggle(
+      'hidden',
+      !isPaid || !(d_adType.value === 'Video' || d_adType.value === 'Static and Video')
+    );
 
-    // Secondary allowed only for Email/Push
+    // Secondary only for Email/Push
     d_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
-    if (!isEmailOrPush){
+    if (!isEmailOrPush) {
       d_hasSecondary.value = 'No';
       d_secondaryBlock.classList.add('hidden');
     }
-  } else {
-    d_secondaryFS.classList.add('hidden');
+
+    // Promotion section visible in supported channels; inner block follows Yes/No
+    if (dPromoFS) dPromoFS.classList.remove('hidden');
+    d_promoBlock.classList.toggle('hidden', d_hasPromo.value !== 'Yes');
   }
+} else {
+  d_secondaryFS.classList.add('hidden');
+  d_unsupportedMsg.classList.add('hidden');
+}
+
 
   // ----- Merchant -----
-if (audience.value==='Merchant'){
+if (audience.value === 'Merchant') {
   const ch = m_channel.value;
-  const isEmailOrPush = ch==='Email' || ch==='Push Notification';
-  const isPaid = ch==='Paid Media';
-  const isLongForm = ch==='Long-Form Content';
+  const isEmailOrPush = ch === 'Email' || ch === 'Push Notification';
+  const isPaid = ch === 'Paid Media';
+  const isLongForm = ch === 'Long-Form Content';
+  const isPortal = ch === 'Merchant Portal Feed Card' || ch === 'Portal Feed Card';
 
+  // Unsupported note for Portal Feed Card
+  m_unsupportedMsg.classList.toggle('hidden', !isPortal);
+
+  // Hide/show the CTA hint only for Paid Media
   m_ctaHint.classList.toggle('hidden', m_channel.value !== 'Paid Media');
 
-  // Long-form visibility
-  m_longform.classList.toggle('hidden', !isLongForm);
-
-  // Hide "behavior" for long-form (we'll skip its validation too)
+  // Get common rows
   const mBehaviorRow = m_behavior.parentElement.parentElement;
-  mBehaviorRow.classList.toggle('hidden', isLongForm);
+  const mSegmentRow = m_segment.parentElement.parentElement;
+  const mUsecaseRow = m_usecase.parentElement.parentElement;
+  const mActionRow = m_action.parentElement.parentElement;
+  const mTakeawayRow = m_takeaway.parentElement.parentElement;
+  const mFeatureRow = m_feature.parentElement.parentElement;
+  const mCtaRow = m_cta.parentElement.parentElement;
 
-  // Paid visibility (off for long-form)
-  m_paidBlock.classList.toggle('hidden', !isPaid);
-  const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
-  m_adTypeWrap.classList.toggle('hidden', !hasPlatform || !isPaid);
-  m_videoQWrap.classList.toggle('hidden', !isPaid || !(m_adType.value === 'Video' || m_adType.value === 'Static and Video'));
+  if (isPortal) {
+    // Hide all questions if Portal Feed Card
+    m_longform.classList.add('hidden');
+    m_paidBlock.classList.add('hidden');
+    m_adTypeWrap.classList.add('hidden');
+    m_videoQWrap.classList.add('hidden');
+    m_secondaryFS.classList.add('hidden');
 
-  // Secondary allowed only for Email/Push
-  m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
-  if (!isEmailOrPush){
-    m_hasSecondary.value = 'No';
-    m_secondaryBlock.classList.add('hidden');
+    [mSegmentRow, mBehaviorRow, mUsecaseRow, mActionRow, mTakeawayRow, mFeatureRow, mCtaRow]
+      .forEach(r => r && r.classList.add('hidden'));
+  } else {
+    // Normal Merchant flow
+    [mSegmentRow, mUsecaseRow, mActionRow, mTakeawayRow, mFeatureRow, mCtaRow]
+      .forEach(r => r && r.classList.remove('hidden'));
+
+    // Long-form visibility
+    m_longform.classList.toggle('hidden', !isLongForm);
+
+    // Hide "behavior" only for long-form
+    if (mBehaviorRow) {
+      mBehaviorRow.classList.toggle('hidden', isLongForm);
+    }
+
+    // Paid visibility
+    m_paidBlock.classList.toggle('hidden', !isPaid);
+    const hasPlatform = getMultiSelectValues(m_adPlatforms).length > 0;
+    m_adTypeWrap.classList.toggle('hidden', !hasPlatform || !isPaid);
+    m_videoQWrap.classList.toggle(
+      'hidden',
+      !isPaid || !(m_adType.value === 'Video' || m_adType.value === 'Static and Video')
+    );
+
+    // Secondary allowed only for Email/Push
+    m_secondaryFS.classList.toggle('hidden', !isEmailOrPush);
+    if (!isEmailOrPush) {
+      m_hasSecondary.value = 'No';
+      m_secondaryBlock.classList.add('hidden');
+    }
+
+    // Long-form subtype toggles
+    const lt = (m_longType?.value || '').toLowerCase();
+    const isSuccess = lt === 'success story / case study';
+    const isSeo = lt === 'seo landing page';
+    m_successFields.classList.toggle('hidden', !(isLongForm && isSuccess));
+    m_seoFields.classList.toggle('hidden', !(isLongForm && isSeo));
   }
-
-  // Long-form subtype toggles
-  const lt = (m_longType?.value || '').toLowerCase();
-  const isSuccess = lt === 'success story / case study';
-  const isSeo = lt === 'seo landing page';
-  m_successFields.classList.toggle('hidden', !(isLongForm && isSuccess));
-  m_seoFields.classList.toggle('hidden', !(isLongForm && isSeo));
 } else {
   m_secondaryFS.classList.add('hidden');
+  m_unsupportedMsg.classList.add('hidden');
 }
+
+
+
+
+
 
 
   // ----- Existing promo toggles -----
